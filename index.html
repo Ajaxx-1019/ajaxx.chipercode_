@@ -1,0 +1,3311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Cipher Code</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* SOLUSI SIMPLE: Hilangkan SEMUA highlight di seluruh website */
+* {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Kecuali untuk textarea dan input (biar bisa ketik) */
+textarea, 
+input[type="text"], 
+input[type="number"], 
+input[type="password"],
+input[type="email"],
+.counter-textarea,
+.game-input {
+    -webkit-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    user-select: auto !important;
+}
+
+/* Hilangkan outline biru saat focus */
+*:focus {
+    outline: none !important;
+}
+
+/* Hilangkan highlight saat active/click di mobile */
+@media (max-width: 768px) {
+    *:active {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+    }
+}
+/* === PERBAIKAN: CEGAH TEXT SELECTION === */
+body {
+    user-select: none; /* Tidak bisa select text */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+}
+
+/* Input dan textarea masih boleh dipilih */
+input, 
+textarea, 
+[contenteditable="true"],
+.result-text, /* Biarkan hasil cipher bisa dicopy */
+.password-result, /* Biarkan password bisa dicopy */
+.calc-display, /* Biarkan calculator display */
+.counter-textarea, /* Biarkan counter textarea */
+#textToBinaryOutput,
+#binaryToTextOutput,
+#caesarEncryptOutput,
+#caesarDecryptOutput,
+#textToMorseOutput,
+#morseToTextOutput,
+#textToT9Output,
+#t9ToTextOutput,
+#qwertyEncryptOutput,
+#qwertyDecryptOutput,
+#vigenereEncryptOutput,
+#vigenereDecryptOutput,
+#reverseOutput,
+#qrToTextOutput,
+#barcodeScanResult
+{
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+/* === END PERBAIKAN === */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: #0a0e27;
+    min-height: 100vh;
+    padding: 20px;
+    padding-bottom: 100px;
+    color: #e8eaf0;
+}
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.header-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.tools-btn {
+    margin-left: auto; /* INI NIH YANG DORONG KE KANAN! */
+    background: #1a2235;
+    color: #6b9bd1;
+    border: 1px solid #2a3f5f;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap; /* Biar text ga wrap */
+}
+.tools-btn:hover {
+    background: #243047;
+    border-color: #6b9bd1;
+    transform: translateY(-2px);
+}
+.back-btn {
+    background: #1a2235;
+    color: #6b9bd1;
+    border: 1px solid #2a3f5f;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+}
+.back-btn:hover {
+    background: #243047;
+    border-color: #6b9bd1;
+    transform: translateX(-3px);
+}
+h1 {
+    color: #e8eaf0;
+    font-size: 2em;
+    font-weight: 600;
+}
+/* Watermark Footer - PERBAIKAN: SEJAJAR HORIZONTAL */
+.watermark {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #141b2d 0%, #1a2235 100%);
+    border-top: 1px solid #2a3f5f;
+    padding: 15px;
+    z-index: 100;
+}
+.watermark-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: nowrap;
+}
+.watermark-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.watermark span {
+    color: #6b9bd1;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+.watermark a {
+    color: #5ec78a;
+    text-decoration: none;
+    font-weight: 600;
+}
+.watermark a:hover {
+    text-decoration: underline;
+}
+.visitor-count {
+    background: #0f1420;
+    padding: 5px 12px;
+    border-radius: 15px;
+    border: 1px solid #2a3f5f;
+}
+.visitor-count span {
+    color: #f39c12;
+}
+/* Tools Modal */
+.tools-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+.tools-modal.show {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+.tools-content {
+    background: #141b2d;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid #2a3f5f;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.tools-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.tools-header h2 {
+    color: #6b9bd1;
+    font-size: 1.5em;
+}
+.close-btn {
+    background: none;
+    border: none;
+    color: #6b9bd1;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+.close-btn:hover {
+    background: #1a2235;
+}
+.tool-section-title {
+    color: #8a95a8;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 20px 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #2a3f5f;
+}
+.tool-item {
+    background: #0f1420;
+    border: 1px solid #2a3f5f;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.tool-item:hover {
+    border-color: #6b9bd1;
+    transform: translateX(5px);
+}
+.tool-item h3 {
+    color: #6b9bd1;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+.tool-item p {
+    color: #8a95a8;
+    font-size: 0.9em;
+}
+/* Tool Content Box */
+.tool-content-box {
+    background: #0f1420;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 15px;
+    display: none;
+}
+.tool-content-box.show {
+    display: block;
+}
+.calc-display {
+    background: #0a0e1a;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    text-align: right;
+    font-size: 1.5em;
+    color: #e8eaf0;
+    min-height: 50px;
+    word-break: break-all;
+}
+.calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+.calc-btn {
+    background: #1a2235;
+    border: 1px solid #2a3f5f;
+    color: #e8eaf0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.calc-btn:hover {
+    background: #243047;
+    border-color: #6b9bd1;
+}
+.calc-btn.operator {
+    background: #2d4a6e;
+    color: #6b9bd1;
+}
+.calc-btn.equals {
+    background: linear-gradient(135deg, #4a7ba7 0%, #6b9bd1 100%);
+    color: white;
+    grid-column: span 2;
+}
+/* Password Generator */
+.password-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.password-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e8eaf0;
+    cursor: pointer;
+}
+.password-options input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+.password-length {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.password-length input[type="range"] {
+    flex: 1;
+    cursor: pointer;
+}
+.password-length span {
+    color: #6b9bd1;
+    min-width: 30px;
+}
+.password-result {
+    background: #0a0e1a;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 15px;
+    font-family: monospace;
+    font-size: 1.2em;
+    color: #5ec78a;
+    word-break: break-all;
+    margin-bottom: 15px;
+}
+.tool-btn {
+    background: linear-gradient(135deg, #4a7ba7 0%, #6b9bd1 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.tool-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(107, 155, 209, 0.3);
+}
+/* Text Counter */
+.counter-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+.counter-stat {
+    background: #0a0e1a;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+}
+.counter-stat h4 {
+    color: #8a95a8;
+    font-size: 0.8em;
+    margin-bottom: 5px;
+}
+.counter-stat span {
+    color: #6b9bd1;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+.counter-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 15px;
+    font-size: 1em;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    background: #0a0e1a;
+    color: #e8eaf0;
+    resize: vertical;
+}
+/* Game Styles */
+.game-container {
+    text-align: center;
+}
+.game-display {
+    background: #0a0e1a;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: #e8eaf0;
+}
+.game-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    background: #0a0e1a;
+    color: #e8eaf0;
+    text-align: center;
+    margin-bottom: 15px;
+}
+.game-input:focus {
+    outline: none;
+    border-color: #6b9bd1;
+}
+/* Memory Card Game */
+.memory-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+.memory-card {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #2d4a6e 0%, #1e3a5f 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8em;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.memory-card.flipped {
+    transform: rotateY(180deg);
+    background: #1a2235;
+}
+.memory-card.matched {
+    background: #2d5a3d;
+    cursor: default;
+}
+.memory-card .card-front {
+    display: none;
+}
+.memory-card.flipped .card-front {
+    display: block;
+    color: #6b9bd1;
+}
+.memory-card .card-back {
+    color: #8a95a8;
+}
+.memory-card.flipped .card-back {
+    display: none;
+}
+.memory-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 15px;
+}
+/* Whack-a-Mole Game */
+.mole-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+.mole-hole {
+    aspect-ratio: 1;
+    background: #1a2235;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    cursor: pointer;
+    border: 2px solid #2a3f5f;
+    transition: all 0.2s;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.mole-hole.active {
+    background: #e74c3c;
+    border-color: #c0392b;
+    transform: scale(0.95);
+}
+.mole-hole.hit {
+    background: #5ec78a;
+    border-color: #27ae60;
+    transform: scale(1.1);
+}
+.mole-timer {
+    width: 100%;
+    height: 10px;
+    background: #1a2235;
+    border-radius: 5px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+.mole-timer-bar {
+    height: 100%;
+    background: linear-gradient(135deg, #4a7ba7 0%, #6b9bd1 100%);
+    width: 100%;
+    transition: width 0.1s linear;
+}
+/* Reaction Time */
+.reaction-box {
+    width: 100%;
+    height: 150px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 15px;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.reaction-box.waiting {
+    background: #e74c3c;
+    color: white;
+}
+.reaction-box.ready {
+    background: #2ecc71;
+    color: white;
+}
+.reaction-box.result {
+    background: #3498db;
+    color: white;
+}
+/* Color Picker */
+.color-picker-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.color-preview {
+    width: 100%;
+    height: 80px;
+    border-radius: 10px;
+    border: 2px solid #2a3f5f;
+}
+.color-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.color-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.color-input-group label {
+    color: #8a95a8;
+    font-size: 0.85em;
+}
+.color-input-group input {
+    padding: 10px;
+    border: 1px solid #2a3f5f;
+    border-radius: 6px;
+    background: #0a0e1a;
+    color: #e8eaf0;
+    font-size: 0.95em;
+}
+.color-input-group input:focus {
+    outline: none;
+    border-color: #6b9bd1;
+}
+/* Unit Converter */
+.converter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.converter-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: end;
+}
+.converter-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.converter-input label {
+    color: #8a95a8;
+    font-size: 0.85em;
+}
+.converter-input input, .converter-input select {
+    padding: 10px;
+    border: 1px solid #2a3f5f;
+    border-radius: 6px;
+    background: #0a0e1a;
+    color: #e8eaf0;
+    font-size: 0.95em;
+}
+.converter-arrow {
+    color: #6b9bd1;
+    font-size: 1.5em;
+    padding-bottom: 10px;
+}
+/* Trivia Quiz */
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+.quiz-option {
+    background: #1a2235;
+    border: 2px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    font-size: 1em;
+    color: #e8eaf0;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.quiz-option:hover {
+    border-color: #6b9bd1;
+    background: #243047;
+}
+.quiz-option.correct {
+    background: #2d5a3d;
+    border-color: #5ec78a;
+    color: #5ec78a;
+}
+.quiz-option.wrong {
+    background: #5a2d2d;
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+.quiz-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 15px;
+}
+#homePage {
+    display: block;
+}
+.cipher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+}
+.cipher-box {
+    background: #141b2d;
+    border-radius: 12px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #1e2a42;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.cipher-box:hover {
+    background: #1a2337;
+    border-color: #6b9bd1;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(107, 155, 209, 0.15);
+}
+.cipher-box h2 {
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: #6b9bd1;
+    font-weight: 600;
+}
+.cipher-box p {
+    font-size: 0.9em;
+    color: #8a95a8;
+    line-height: 1.5;
+}
+.cipher-page {
+    display: none;
+}
+.cipher-page.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.mode-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 25px;
+}
+.mode-btn {
+    background: #141b2d;
+    border: 1px solid #1e2a42;
+    padding: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.mode-btn:hover {
+    border-color: #6b9bd1;
+    transform: translateY(-2px);
+}
+.mode-btn.active {
+    background: linear-gradient(135deg, #2d4a6e 0%, #1e3a5f 100%);
+    border-color: #6b9bd1;
+    box-shadow: 0 4px 15px rgba(107, 155, 209, 0.2);
+}
+.mode-btn h3 {
+    font-size: 1.1em;
+    color: #e8eaf0;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+.mode-btn p {
+    color: #8a95a8;
+    font-size: 0.85em;
+}
+.encoder-box {
+    background: #141b2d;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #1e2a42;
+    display: none;
+}
+.encoder-box.show {
+    display: block;
+    animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.encoder-box h3 {
+    color: #6b9bd1;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+.input-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+textarea, input[type="text"] {
+    width: 100%;
+    min-height: 120px;
+    padding: 15px;
+    padding-right: 50px;
+    font-size: 1em;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    background: #0f1420;
+    color: #e8eaf0;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+input[type="text"] {
+    min-height: auto;
+}
+textarea:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: #6b9bd1;
+    box-shadow: 0 0 0 3px rgba(107, 155, 209, 0.1);
+}
+/* PERBAIKAN: Error style konsisten untuk QR dan Barcode */
+textarea.error, input[type="text"].error {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2) !important;
+    animation: shake 0.5s ease;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+.clear-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #2a3f5f;
+    color: #e74c3c;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.clear-btn:hover {
+    background: #e74c3c;
+    color: white;
+    opacity: 1;
+    transform: scale(1.1);
+}
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.btn-convert, .btn-save {
+    background: linear-gradient(135deg, #4a7ba7 0%, #6b9bd1 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.btn-convert:hover, .btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(107, 155, 209, 0.3);
+}
+.btn-convert:active, .btn-save:active {
+    transform: translateY(0);
+}
+.btn-clear-all {
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.btn-clear-all:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+.btn-download {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+}
+.result {
+    margin-top: 20px;
+    padding: 20px;
+    background: #0f1420;
+    border-radius: 8px;
+    border-left: 3px solid #6b9bd1;
+    display: none;
+}
+.result.show {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.result h4 {
+    color: #6b9bd1;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+.result-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.copy-btn {
+    background: #1a2235;
+    color: #6b9bd1;
+    border: 1px solid #2a3f5f;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.copy-btn:hover {
+    background: #243047;
+    border-color: #6b9bd1;
+}
+.copy-btn.copied {
+    background: #2d5a3d;
+    border-color: #5ec78a;
+    color: #5ec78a;
+}
+.download-small-btn {
+    background: #1a3d2e;
+    color: #5ec78a;
+    border: 1px solid #2d5a3d;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.download-small-btn:hover {
+    background: #2d5a3d;
+    border-color: #5ec78a;
+}
+.result-text {
+    font-size: 1em;
+    word-break: break-all;
+    color: #e8eaf0;
+    background: #0a0e1a;
+    padding: 15px;
+    border-radius: 6px;
+    line-height: 1.6;
+}
+#qrOutput, #barcodeOutputContainer {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+.qr-upload {
+    border: 2px dashed #2a3f5f;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.qr-upload:hover {
+    border-color: #6b9bd1;
+    background: #0f1420;
+}
+.qr-upload input {
+    display: none;
+}
+/* Vigenere Table */
+.vigenere-table {
+    overflow-x: auto;
+    margin: 20px 0;
+    background: #0f1420;
+    padding: 15px;
+    border-radius: 8px;
+}
+.vigenere-table table {
+    border-collapse: collapse;
+    font-size: 0.75em;
+    margin: 0 auto;
+}
+.vigenere-table td, .vigenere-table th {
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    border: 1px solid #2a3f5f;
+    color: #e8eaf0;
+    transition: all 0.2s ease;
+}
+.vigenere-table th {
+    background: #2d4a6e;
+    color: #6b9bd1;
+    font-weight: 600;
+}
+.vigenere-table td {
+    background: #141b2d;
+}
+.vigenere-table td.highlight-row, .vigenere-table th.highlight-row {
+    background: #3d5a8e !important;
+}
+.vigenere-table td.highlight-col, .vigenere-table th.highlight-col {
+    background: #3d5a8e !important;
+}
+.vigenere-table td.highlight-cell {
+    background: #5ec78a !important;
+    color: #0a0e27 !important;
+    font-weight: bold;
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(94, 199, 138, 0.5);
+}
+.vigenere-inputs {
+    display: grid;
+    gap: 10px;
+}
+.table-input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.table-input-group input {
+    padding: 12px;
+    font-size: 1em;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    background: #0a0e1a;
+    color: #e8eaf0;
+}
+.table-input-group input:focus {
+    outline: none;
+    border-color: #6b9bd1;
+}
+.highlight-info {
+    background: #0a0e1a;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.highlight-info span {
+    color: #6b9bd1;
+    font-weight: 600;
+}
+.highlight-info .result-letter {
+    color: #5ec78a;
+    font-size: 1.5em;
+    margin-left: 10px;
+}
+/* Barcode styles */
+.barcode-type-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.barcode-type-btn {
+    background: #1a2235;
+    border: 1px solid #2a3f5f;
+    color: #e8eaf0;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.barcode-type-btn.active {
+    background: #2d4a6e;
+    border-color: #6b9bd1;
+    color: #6b9bd1;
+}
+.barcode-type-btn:hover {
+    border-color: #6b9bd1;
+}
+.barcode-error {
+    color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    display: none;
+}
+.barcode-error.show {
+    display: block;
+}
+/* Barcode Scanner */
+.barcode-scanner-area {
+    border: 2px dashed #2a3f5f;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* PERBAIKAN: Mencegah text selection */
+    user-select: none;
+    -webkit-user-select: none;
+}
+.barcode-scanner-area:hover {
+    border-color: #6b9bd1;
+    background: #0f1420;
+}
+#barcodeVideo {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    display: none;
+}
+.barcode-scan-result {
+    background: #0a0e1a;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-family: monospace;
+    color: #5ec78a;
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .watermark-content {
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    .watermark-item {
+        font-size: 0.85em;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <!-- PERBAIKAN: Header kembali ke layout awal -->
+    <div id="homePage">
+        <div class="header">
+            <div class="header-left">
+                <h1>🔐 Secret Cipher</h1>
+                <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            </div>
+        </div>
+        <div class="cipher-grid">
+            <div class="cipher-box" onclick="goToPage('binary')"><h2>Binary Code</h2><p>Convert text to binary and vice versa</p></div>
+            <div class="cipher-box" onclick="goToPage('caesar')"><h2>Caesar Cipher</h2><p>Encrypt with letter shifting</p></div>
+            <div class="cipher-box" onclick="goToPage('morse')"><h2>Morse Code</h2><p>Convert text to morse code</p></div>
+            <div class="cipher-box" onclick="goToPage('qr')"><h2>QR Code</h2><p>Generate and scan QR codes</p></div>
+            <div class="cipher-box" onclick="goToPage('barcode')"><h2>Barcode</h2><p>Generate and scan barcodes</p></div>
+            <div class="cipher-box" onclick="goToPage('t9')"><h2>T9 Keypad</h2><p>Encrypt with old phone keypad</p></div>
+            <div class="cipher-box" onclick="goToPage('qwerty')"><h2>QWERTY Cipher</h2><p>Encrypt with keyboard layout</p></div>
+            <div class="cipher-box" onclick="goToPage('vigenere')"><h2>Vigenere Cipher</h2><p>Encrypt with secret key + Tabula Recta</p></div>
+            <div class="cipher-box" onclick="goToPage('reverse')"><h2>Reverse Text</h2><p>Reverse text backwards</p></div>
+        </div>
+    </div>
+
+    <!-- Binary Page -->
+    <div id="binaryPage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Binary Code</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('binary', 'textToBinary')"><h3>Text to Binary</h3><p>Convert text to binary</p></div>
+            <div class="mode-btn" onclick="selectMode('binary', 'binaryToText')"><h3>Binary to Text</h3><p>Convert binary to text</p></div>
+        </div>
+        <div id="textToBinaryBox" class="encoder-box show">
+            <h3>Text to Binary</h3>
+            <div class="input-wrapper">
+                <textarea id="textToBinaryInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('textToBinaryInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="convertTextToBinary()">Convert</button>
+                <button class="btn-clear-all" onclick="clearAll('textToBinary')">Remove All</button>
+            </div>
+            <div id="textToBinaryResult" class="result">
+                <div class="result-header">
+                    <h4>Binary Result:</h4>
+                    <button class="copy-btn" onclick="copyText('textToBinaryOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="textToBinaryOutput"></div>
+            </div>
+        </div>
+        <div id="binaryToTextBox" class="encoder-box">
+            <h3>Binary to Text</h3>
+            <div class="input-wrapper">
+                <textarea id="binaryToTextInput" placeholder="Enter binary (e.g.: 01001000 01101001)"></textarea>
+                <button class="clear-btn" onclick="clearInput('binaryToTextInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="convertBinaryToText()">Convert</button>
+                <button class="btn-clear-all" onclick="clearAll('binaryToText')">Remove All</button>
+            </div>
+            <div id="binaryToTextResult" class="result">
+                <div class="result-header">
+                    <h4>Text Result:</h4>
+                    <button class="copy-btn" onclick="copyText('binaryToTextOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="binaryToTextOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Caesar Page -->
+    <div id="caesarPage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Caesar Cipher</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('caesar', 'encrypt')"><h3>Encrypt</h3><p>Encrypt text</p></div>
+            <div class="mode-btn" onclick="selectMode('caesar', 'decrypt')"><h3>Decrypt</h3><p>Decrypt text</p></div>
+        </div>
+        <div id="encryptBox" class="encoder-box show">
+            <h3>Encrypt (Shift 3)</h3>
+            <div class="input-wrapper">
+                <textarea id="caesarEncryptInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('caesarEncryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="encryptCaesar()">Encrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('caesarEncrypt')">Remove All</button>
+            </div>
+            <div id="caesarEncryptResult" class="result">
+                <div class="result-header">
+                    <h4>Encrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('caesarEncryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="caesarEncryptOutput"></div>
+            </div>
+        </div>
+        <div id="decryptBox" class="encoder-box">
+            <h3>Decrypt (Shift 3)</h3>
+            <div class="input-wrapper">
+                <textarea id="caesarDecryptInput" placeholder="Enter encrypted text..."></textarea>
+                <button class="clear-btn" onclick="clearInput('caesarDecryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="decryptCaesar()">Decrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('caesarDecrypt')">Remove All</button>
+            </div>
+            <div id="caesarDecryptResult" class="result">
+                <div class="result-header">
+                    <h4>Decrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('caesarDecryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="caesarDecryptOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Morse Page -->
+    <div id="morsePage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Morse Code</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('morse', 'textToMorse')"><h3>Text to Morse</h3><p>Convert text to morse</p></div>
+            <div class="mode-btn" onclick="selectMode('morse', 'morseToText')"><h3>Morse to Text</h3><p>Convert morse to text</p></div>
+        </div>
+        <div id="textToMorseBox" class="encoder-box show">
+            <h3>Text to Morse</h3>
+            <div class="input-wrapper">
+                <textarea id="textToMorseInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('textToMorseInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="convertTextToMorse()">Convert</button>
+                <button class="btn-clear-all" onclick="clearAll('textToMorse')">Remove All</button>
+            </div>
+            <div id="textToMorseResult" class="result">
+                <div class="result-header">
+                    <h4>Morse Result:</h4>
+                    <button class="copy-btn" onclick="copyText('textToMorseOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="textToMorseOutput"></div>
+            </div>
+        </div>
+        <div id="morseToTextBox" class="encoder-box">
+            <h3>Morse to Text</h3>
+            <div class="input-wrapper">
+                <textarea id="morseToTextInput" placeholder="Enter morse code (e.g.: .... ..)"></textarea>
+                <button class="clear-btn" onclick="clearInput('morseToTextInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="convertMorseToText()">Convert</button>
+                <button class="btn-clear-all" onclick="clearAll('morseToText')">Remove All</button>
+            </div>
+            <div id="morseToTextResult" class="result">
+                <div class="result-header">
+                    <h4>Text Result:</h4>
+                    <button class="copy-btn" onclick="copyText('morseToTextOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="morseToTextOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Page -->
+    <div id="qrPage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>QR Code</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('qr', 'textToQR')"><h3>Text to QR</h3><p>Generate QR code</p></div>
+            <div class="mode-btn" onclick="selectMode('qr', 'qrToText')"><h3>QR to Text</h3><p>Scan QR code</p></div>
+        </div>
+        <div id="textToQRBox" class="encoder-box show">
+            <h3>Generate QR Code</h3>
+            <div class="input-wrapper">
+                <textarea id="textToQRInput" placeholder="Write text to convert to QR code..."></textarea>
+                <button class="clear-btn" onclick="clearInput('textToQRInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="generateQR()">Generate QR</button>
+                <button class="btn-clear-all" onclick="clearAllQR()">Remove All</button>
+            </div>
+            <div id="textToQRResult" class="result">
+                <div class="result-header">
+                    <h4>QR Code:</h4>
+                    <div class="result-buttons">
+                        <button class="download-small-btn" onclick="downloadQR()">Download</button>
+                    </div>
+                </div>
+                <div id="qrOutput"></div>
+            </div>
+        </div>
+        <div id="qrToTextBox" class="encoder-box">
+            <h3>Scan QR Code</h3>
+            <div class="qr-upload" onclick="document.getElementById('qrFileInput').click()">
+                <p style="color: #6b9bd1; margin-bottom: 10px;">📷 Click to upload QR image</p>
+                <input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)">
+            </div>
+            <canvas id="qrCanvas" style="display:none;"></canvas>
+            <div id="qrToTextResult" class="result">
+                <div class="result-header">
+                    <h4>Scan Result:</h4>
+                    <button class="copy-btn" onclick="copyText('qrToTextOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="qrToTextOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barcode Page - PERBAIKAN: Menggunakan TEC-IT API -->
+    <div id="barcodePage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Barcode</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('barcode', 'textToBarcode')">
+                <h3>Generate Barcode</h3>
+                <p>Create barcode from text</p>
+            </div>
+            <div class="mode-btn" onclick="selectMode('barcode', 'barcodeToText')">
+                <h3>Scan Barcode</h3>
+                <p>Scan barcode to text</p>
+            </div>
+        </div>
+        <div id="textToBarcodeBox" class="encoder-box show">
+            <h3>Generate Barcode</h3>
+            <div class="barcode-type-selector">
+                <button class="barcode-type-btn active" onclick="selectBarcodeType('CODE128', this)">CODE128</button>
+                <button class="barcode-type-btn" onclick="selectBarcodeType('CODE39', this)">CODE39</button>
+                <button class="barcode-type-btn" onclick="selectBarcodeType('EAN13', this)">EAN-13</button>
+                <button class="barcode-type-btn" onclick="selectBarcodeType('UPC', this)">UPC</button>
+            </div>
+            <p style="color: #8a95a8; margin-bottom: 15px; font-size: 0.9em;" id="barcodeHint">
+                💡 CODE128: Accepts ANY text, numbers, or symbols! (Recommended)
+            </p>
+            <div class="input-wrapper">
+                <input type="text" id="barcodeInput" placeholder="Enter any text or numbers..." style="min-height: auto;">
+                <button class="clear-btn" onclick="clearInput('barcodeInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="generateBarcode()">Generate Barcode</button>
+                <button class="btn-clear-all" onclick="clearAllBarcode()">Remove All</button>
+            </div>
+            <div id="barcodeError" class="barcode-error"></div>
+            <div id="barcodeResult" class="result">
+                <div class="result-header">
+                    <h4>Barcode:</h4>
+                    <div class="result-buttons">
+                        <button class="download-small-btn" onclick="downloadBarcode()">Download</button>
+                    </div>
+                </div>
+                <div id="barcodeOutputContainer">
+                    <!-- Barcode akan ditampilkan di sini -->
+                </div>
+            </div>
+        </div>
+        <div id="barcodeToTextBox" class="encoder-box">
+            <h3>Scan Barcode</h3>
+            <div class="barcode-scanner-area" id="barcodeScannerArea" onclick="startBarcodeScan()">
+                <p style="color: #6b9bd1; margin-bottom: 10px;">📷 Click to start camera for barcode scanning</p>
+                <p style="color: #8a95a8; font-size: 0.9em;">Allow camera access when prompted</p>
+            </div>
+            <video id="barcodeVideo" playsinline></video>
+            <canvas id="barcodeCanvas" style="display:none;"></canvas>
+            <div class="barcode-scan-result" id="barcodeScanResult"></div>
+            <div class="btn-group" style="margin-top: 15px;">
+                <button class="btn-convert" onclick="stopBarcodeScan()">Stop Camera</button>
+                <button class="btn-clear-all" onclick="clearBarcodeScan()">Clear Result</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- T9 Page -->
+    <div id="t9Page" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>T9 Keypad</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('t9', 'textToT9')"><h3>Text to T9</h3><p>Convert text to keypad</p></div>
+            <div class="mode-btn" onclick="selectMode('t9', 't9ToText')"><h3>T9 to Text</h3><p>Convert keypad to text</p></div>
+        </div>
+        <div id="textToT9Box" class="encoder-box show">
+            <h3>Text to T9 Keypad</h3>
+            <div class="input-wrapper">
+                <textarea id="textToT9Input" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('textToT9Input')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="convertTextToT9()">Convert</button>
+                <button class="btn-clear-all" onclick="clearAll('textToT9')">Remove All</button>
+            </div>
+            <div id="textToT9Result" class="result">
+                <div class="result-header">
+                    <h4>T9 Result:</h4>
+                    <button class="copy-btn" onclick="copyText('textToT9Output', this)">Copy</button>
+                </div>
+                <div class="result-text" id="textToT9Output"></div>
+            </div>
+        </div>
+        <div id="t9ToTextBox" class="encoder-box">
+            <h3>T9 to Text</h3>
+            <div class="input-wrapper">
+                <textarea id="t9ToTextInput" placeholder="Enter T9 code (e.g.: 44 33 555 555 666)"></textarea>
+                <button class="clear-btn" onclick="clearInput('t9ToTextInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="convertT9ToText()">Convert</button>
+                <button class="btn-clear-all" onclick="clearAll('t9ToText')">Remove All</button>
+            </div>
+            <div id="t9ToTextResult" class="result">
+                <div class="result-header">
+                    <h4>Text Result:</h4>
+                    <button class="copy-btn" onclick="copyText('t9ToTextOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="t9ToTextOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QWERTY Page -->
+    <div id="qwertyPage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>QWERTY Cipher</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('qwerty', 'encrypt')"><h3>Encrypt</h3><p>Encrypt with QWERTY</p></div>
+            <div class="mode-btn" onclick="selectMode('qwerty', 'decrypt')"><h3>Decrypt</h3><p>Decrypt QWERTY</p></div>
+        </div>
+        <div id="qwertyEncryptBox" class="encoder-box show">
+            <h3>QWERTY Encrypt</h3>
+            <div class="input-wrapper">
+                <textarea id="qwertyEncryptInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('qwertyEncryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="encryptQWERTY()">Encrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('qwertyEncrypt')">Remove All</button>
+            </div>
+            <div id="qwertyEncryptResult" class="result">
+                <div class="result-header">
+                    <h4>Encrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('qwertyEncryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="qwertyEncryptOutput"></div>
+            </div>
+        </div>
+        <div id="qwertyDecryptBox" class="encoder-box">
+            <h3>QWERTY Decrypt</h3>
+            <div class="input-wrapper">
+                <textarea id="qwertyDecryptInput" placeholder="Enter encrypted text..."></textarea>
+                <button class="clear-btn" onclick="clearInput('qwertyDecryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="decryptQWERTY()">Decrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('qwertyDecrypt')">Remove All</button>
+            </div>
+            <div id="qwertyDecryptResult" class="result">
+                <div class="result-header">
+                    <h4>Decrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('qwertyDecryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="qwertyDecryptOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vigenere Page -->
+    <div id="vigenerePage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Vigenere Cipher</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('vigenere', 'encrypt')"><h3>Encrypt</h3><p>Encrypt with key</p></div>
+            <div class="mode-btn" onclick="selectMode('vigenere', 'decrypt')"><h3>Decrypt</h3><p>Decrypt with key</p></div>
+            <div class="mode-btn" onclick="selectMode('vigenere', 'table')"><h3>Tabula Recta</h3><p>View Vigenere table</p></div>
+        </div>
+        <div id="vigenereEncryptBox" class="encoder-box show">
+            <h3>Vigenere Encrypt</h3>
+            <div class="vigenere-inputs">
+                <div class="input-wrapper">
+                    <input type="text" id="vigenereEncryptKey" placeholder="Enter key (e.g.: SECRET)">
+                    <button class="clear-btn" onclick="clearInput('vigenereEncryptKey')" title="Clear">×</button>
+                </div>
+                <div class="input-wrapper">
+                    <textarea id="vigenereEncryptInput" placeholder="Write your text here..."></textarea>
+                    <button class="clear-btn" onclick="clearInput('vigenereEncryptInput')" title="Clear">×</button>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="encryptVigenere()">Encrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('vigenereEncrypt')">Remove All</button>
+            </div>
+            <div id="vigenereEncryptResult" class="result">
+                <div class="result-header">
+                    <h4>Encrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('vigenereEncryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="vigenereEncryptOutput"></div>
+            </div>
+        </div>
+        <div id="vigenereDecryptBox" class="encoder-box">
+            <h3>Vigenere Decrypt</h3>
+            <div class="vigenere-inputs">
+                <div class="input-wrapper">
+                    <input type="text" id="vigenereDecryptKey" placeholder="Enter key (e.g.: SECRET)">
+                    <button class="clear-btn" onclick="clearInput('vigenereDecryptKey')" title="Clear">×</button>
+                </div>
+                <div class="input-wrapper">
+                    <textarea id="vigenereDecryptInput" placeholder="Enter encrypted text..."></textarea>
+                    <button class="clear-btn" onclick="clearInput('vigenereDecryptInput')" title="Clear">×</button>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="decryptVigenere()">Decrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('vigenereDecrypt')">Remove All</button>
+            </div>
+            <div id="vigenereDecryptResult" class="result">
+                <div class="result-header">
+                    <h4>Decrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('vigenereDecryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="vigenereDecryptOutput"></div>
+            </div>
+        </div>
+        <div id="vigenereTableBox" class="encoder-box">
+            <h3>Tabula Recta (Vigenere Square)</h3>
+            <p style="color: #8a95a8; margin-bottom: 15px;">Type plaintext and key to see highlighted encryption path</p>
+            <div class="table-input-group">
+                <input type="text" id="tableKeyInput" placeholder="Key letter (e.g.: K)" maxlength="1" oninput="updateTableHighlight()">
+                <input type="text" id="tablePlainInput" placeholder="Plain letter (e.g.: H)" maxlength="1" oninput="updateTableHighlight()">
+            </div>
+            <div class="highlight-info" id="highlightInfo" style="display:none;">
+                Row (Key): <span id="infoKey">-</span> | Column (Plain): <span id="infoPlain">-</span> | Result: <span class="result-letter" id="infoResult">-</span>
+            </div>
+            <div class="vigenere-table" id="vigenereTableContainer"></div>
+        </div>
+    </div>
+
+    <!-- Reverse Page -->
+    <div id="reversePage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Reverse Text</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="encoder-box show">
+            <h3>Reverse Text</h3>
+            <div class="input-wrapper">
+                <textarea id="reverseInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('reverseInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="reverseText()">Reverse</button>
+                <button class="btn-clear-all" onclick="clearAll('reverse')">Remove All</button>
+            </div>
+            <div id="reverseResult" class="result">
+                <div class="result-header">
+                    <h4>Reversed Result:</h4>
+                    <button class="copy-btn" onclick="copyText('reverseOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="reverseOutput"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Watermark Footer - PERBAIKAN: SEJAJAR SEMPURNA -->
+<div class="watermark">
+    <div class="watermark-content">
+        <div class="watermark-item">
+            <span>Made by:</span>
+            <a href="#">Ajaxx</a>
+        </div>
+        <div class="watermark-item">
+            <span>Follow my IG:</span>
+            <a href="https://instagram.com/edd_00z" target="_blank">@edd_00z</a>
+        </div>
+        <div class="visitor-count">
+            <span>👥 Visitors: <span id="visitorCount">0</span></span>
+        </div>
+    </div>
+</div>
+
+<!-- Tools Modal -->
+<div class="tools-modal" id="toolsModal">
+    <div class="tools-content">
+        <div class="tools-header">
+            <h2>🛠️ Tools</h2>
+            <button class="close-btn" onclick="closeTools()">×</button>
+        </div>
+        
+        <div class="tool-section-title">📊 Utilities</div>
+        
+        <div class="tool-item" onclick="toggleTool('calculator')">
+            <h3>🔢 Calculator</h3>
+            <p>Simple calculator for quick math</p>
+        </div>
+        <div id="calculatorTool" class="tool-content-box">
+            <div class="calc-display" id="calcDisplay">0</div>
+            <div class="calc-buttons">
+                <button class="calc-btn" onclick="calcClear()">C</button>
+                <button class="calc-btn" onclick="calcDelete()">←</button>
+                <button class="calc-btn operator" onclick="calcInput('/')">/</button>
+                <button class="calc-btn operator" onclick="calcInput('*')">×</button>
+                <button class="calc-btn" onclick="calcInput('7')">7</button>
+                <button class="calc-btn" onclick="calcInput('8')">8</button>
+                <button class="calc-btn" onclick="calcInput('9')">9</button>
+                <button class="calc-btn operator" onclick="calcInput('-')">-</button>
+                <button class="calc-btn" onclick="calcInput('4')">4</button>
+                <button class="calc-btn" onclick="calcInput('5')">5</button>
+                <button class="calc-btn" onclick="calcInput('6')">6</button>
+                <button class="calc-btn operator" onclick="calcInput('+')">+</button>
+                <button class="calc-btn" onclick="calcInput('1')">1</button>
+                <button class="calc-btn" onclick="calcInput('2')">2</button>
+                <button class="calc-btn" onclick="calcInput('3')">3</button>
+                <button class="calc-btn" onclick="calcInput('0')">0</button>
+                <button class="calc-btn" onclick="calcInput('.')">.</button>
+                <button class="calc-btn equals" onclick="calcCalculate()">=</button>
+            </div>
+        </div>
+
+        <div class="tool-item" onclick="toggleTool('password')">
+            <h3>🔑 Password Generator</h3>
+            <p>Generate secure random passwords</p>
+        </div>
+        <div id="passwordTool" class="tool-content-box">
+            <div class="password-length">
+                <span>Length:</span>
+                <input type="range" id="passLength" min="6" max="32" value="16" oninput="updateLengthDisplay()">
+                <span id="lengthDisplay">16</span>
+            </div>
+            <div class="password-options">
+                <label><input type="checkbox" id="passUpper" checked> A-Z</label>
+                <label><input type="checkbox" id="passLower" checked> a-z</label>
+                <label><input type="checkbox" id="passNumbers" checked> 0-9</label>
+                <label><input type="checkbox" id="passSymbols"> !@#$</label>
+            </div>
+            <div class="password-result" id="passwordResult">Click Generate!</div>
+            <button class="tool-btn" onclick="generatePassword()">Generate</button>
+            <button class="tool-btn" onclick="copyPassword()">Copy</button>
+        </div>
+
+        <div class="tool-item" onclick="toggleTool('textCounter')">
+            <h3>📝 Text Counter</h3>
+            <p>Count characters, words, and lines</p>
+        </div>
+        <div id="textCounterTool" class="tool-content-box">
+            <textarea class="counter-textarea" id="counterInput" placeholder="Type or paste text here..." oninput="updateCounter()"></textarea>
+            <div class="counter-stats">
+                <div class="counter-stat">
+                    <h4>Chars</h4>
+                    <span id="charCount">0</span>
+                </div>
+                <div class="counter-stat">
+                    <h4>Words</h4>
+                    <span id="wordCount">0</span>
+                </div>
+                <div class="counter-stat">
+                    <h4>Lines</h4>
+                    <span id="lineCount">0</span>
+                </div>
+                <div class="counter-stat">
+                    <h4>No Space</h4>
+                    <span id="noSpaceCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-item" onclick="toggleTool('colorPicker')">
+            <h3>🎨 Color Picker</h3>
+            <p>Convert colors between HEX and RGB</p>
+        </div>
+        <div id="colorPickerTool" class="tool-content-box">
+            <div class="color-picker-container">
+                <div class="color-preview" id="colorPreview" style="background: #6b9bd1;"></div>
+                <div class="color-inputs">
+                    <div class="color-input-group">
+                        <label>HEX</label>
+                        <input type="text" id="hexInput" value="#6b9bd1" oninput="hexToRgb()">
+                    </div>
+                    <div class="color-input-group">
+                        <label>Color Picker</label>
+                        <input type="color" id="colorInput" value="#6b9bd1" oninput="colorPickerChange()" style="height: 40px; cursor: pointer;">
+                    </div>
+                    <div class="color-input-group">
+                        <label>R (0-255)</label>
+                        <input type="number" id="rInput" value="107" min="0" max="255" oninput="rgbToHex()">
+                    </div>
+                    <div class="color-input-group">
+                        <label>G (0-255)</label>
+                        <input type="number" id="gInput" value="155" min="0" max="255" oninput="rgbToHex()">
+                    </div>
+                    <div class="color-input-group">
+                        <label>B (0-255)</label>
+                        <input type="number" id="bInput" value="209" min="0" max="255" oninput="rgbToHex()">
+                    </div>
+                    <div class="color-input-group">
+                        <label>RGB</label>
+                        <input type="text" id="rgbOutput" value="rgb(107, 155, 209)" readonly>
+                    </div>
+                </div>
+                <button class="tool-btn" onclick="copyColor('hex')" style="margin-top: 10px;">Copy HEX</button>
+                <button class="tool-btn" onclick="copyColor('rgb')">Copy RGB</button>
+            </div>
+        </div>
+
+        <div class="tool-item" onclick="toggleTool('unitConverter')">
+            <h3>📏 Unit Converter</h3>
+            <p>Convert length, weight, and temperature</p>
+        </div>
+        <div id="unitConverterTool" class="tool-content-box">
+            <div class="converter-container">
+                <div class="color-input-group" style="margin-bottom: 15px;">
+                    <label>Type</label>
+                    <select id="unitType" onchange="updateUnitOptions()" style="padding: 10px; border: 1px solid #2a3f5f; border-radius: 6px; background: #0a0e1a; color: #e8eaf0;">
+                        <option value="length">Length</option>
+                        <option value="weight">Weight</option>
+                        <option value="temperature">Temperature</option>
+                    </select>
+                </div>
+                <div class="converter-row">
+                    <div class="converter-input">
+                        <label>From</label>
+                        <input type="number" id="unitFromValue" value="1" oninput="convertUnits()">
+                        <select id="unitFrom" onchange="convertUnits()" style="margin-top: 5px; padding: 8px; border: 1px solid #2a3f5f; border-radius: 6px; background: #0a0e1a; color: #e8eaf0;">
+                            <option value="m">Meters</option>
+                            <option value="km">Kilometers</option>
+                            <option value="cm">Centimeters</option>
+                            <option value="ft">Feet</option>
+                            <option value="in">Inches</option>
+                        </select>
+                    </div>
+                    <div class="converter-arrow">→</div>
+                    <div class="converter-input">
+                        <label>To</label>
+                        <input type="text" id="unitToValue" readonly style="background: #141b2d;">
+                        <select id="unitTo" onchange="convertUnits()" style="margin-top: 5px; padding: 8px; border: 1px solid #2a3f5f; border-radius: 6px; background: #0a0e1a; color: #e8eaf0;">
+                            <option value="m">Meters</option>
+                            <option value="km">Kilometers</option>
+                            <option value="cm">Centimeters</option>
+                            <option value="ft">Feet</option>
+                            <option value="in">Inches</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-section-title">🎮 Games</div>
+        
+        <!-- Trivia Quiz -->
+        <div class="tool-item" onclick="toggleTool('triviaGame')">
+            <h3>🧠 Trivia Quiz</h3>
+            <p>Test your knowledge with fun questions</p>
+        </div>
+        <div id="triviaGameTool" class="tool-content-box">
+            <div class="game-container">
+                <div class="game-display" id="triviaQuestion">Loading question...</div>
+                <div class="quiz-options" id="triviaOptions"></div>
+                <div class="quiz-stats">
+                    <div>
+                        <p style="color: #8a95a8;">Score</p>
+                        <span id="triviaScore" style="color: #6b9bd1; font-weight: bold;">0</span>
+                    </div>
+                    <div>
+                        <p style="color: #8a95a8;">Question</p>
+                        <span id="triviaProgress" style="color: #f39c12; font-weight: bold;">0/10</span>
+                    </div>
+                    <div>
+                        <p style="color: #8a95a8;">Best</p>
+                        <span id="triviaBest" style="color: #5ec78a; font-weight: bold;">0</span>
+                    </div>
+                </div>
+                <button class="tool-btn" onclick="nextTriviaQuestion()">Next Question</button>
+                <button class="tool-btn" onclick="resetTriviaGame()">Reset Game</button>
+            </div>
+        </div>
+
+        <!-- Memory Card Game -->
+        <div class="tool-item" onclick="toggleTool('memoryGame')">
+            <h3>🎴 Memory Cards</h3>
+            <p>Test your memory with matching cards</p>
+        </div>
+        <div id="memoryGameTool" class="tool-content-box">
+            <div class="game-container">
+                <div class="game-display" id="memoryDisplay">Match the pairs! Click on cards to reveal them.</div>
+                <div class="memory-board" id="memoryBoard"></div>
+                <div class="memory-stats">
+                    <div>
+                        <p style="color: #8a95a8;">Moves</p>
+                        <span id="movesCount" style="color: #6b9bd1; font-weight: bold;">0</span>
+                    </div>
+                    <div>
+                        <p style="color: #8a95a8;">Time</p>
+                        <span id="timeCount" style="color: #6b9bd1; font-weight: bold;">0s</span>
+                    </div>
+                    <div>
+                        <p style="color: #8a95a8;">Pairs</p>
+                        <span id="pairsCount" style="color: #5ec78a; font-weight: bold;">0/8</span>
+                    </div>
+                </div>
+                <button class="tool-btn" onclick="startMemoryGame()">New Game</button>
+                <button class="tool-btn" onclick="resetMemoryGame()">Reset</button>
+            </div>
+        </div>
+
+        <!-- Number Guessing Game -->
+        <div class="tool-item" onclick="toggleTool('guessGame')">
+            <h3>🎯 Number Guessing</h3>
+            <p>Guess the secret number (1-100)</p>
+        </div>
+        <div id="guessGameTool" class="tool-content-box">
+            <div class="game-container">
+                <div class="game-display" id="guessDisplay">I'm thinking of a number between 1-100. Can you guess it?</div>
+                <input type="number" class="game-input" id="guessInput" placeholder="Enter your guess..." min="1" max="100">
+                <p style="color: #8a95a8; margin-bottom: 15px;">Attempts: <span id="guessAttempts" style="color: #5ec78a; font-weight: bold;">0</span></p>
+                <button class="tool-btn" onclick="makeGuess()">Guess!</button>
+                <button class="tool-btn" onclick="resetGuessGame()">New Game</button>
+            </div>
+        </div>
+
+        <!-- Whack-a-Mole Game -->
+        <div class="tool-item" onclick="toggleTool('moleGame')">
+            <h3>🕳️ Whack-a-Mole</h3>
+            <p>Click the moles as they appear!</p>
+        </div>
+        <div id="moleGameTool" class="tool-content-box">
+            <div class="game-container">
+                <div class="game-display" id="moleDisplay">Click the moles! Score as many as you can in 30 seconds!</div>
+                <div class="mole-timer">
+                    <div class="mole-timer-bar" id="moleTimerBar"></div>
+                </div>
+                <div class="mole-grid" id="moleGrid">
+                    <div class="mole-hole" onclick="whackMole(0)"></div>
+                    <div class="mole-hole" onclick="whackMole(1)"></div>
+                    <div class="mole-hole" onclick="whackMole(2)"></div>
+                    <div class="mole-hole" onclick="whackMole(3)"></div>
+                    <div class="mole-hole" onclick="whackMole(4)"></div>
+                    <div class="mole-hole" onclick="whackMole(5)"></div>
+                    <div class="mole-hole" onclick="whackMole(6)"></div>
+                    <div class="mole-hole" onclick="whackMole(7)"></div>
+                    <div class="mole-hole" onclick="whackMole(8)"></div>
+                </div>
+                <div class="memory-stats">
+                    <div>
+                        <p style="color: #8a95a8;">Score</p>
+                        <span id="moleScore" style="color: #6b9bd1; font-weight: bold;">0</span>
+                    </div>
+                    <div>
+                        <p style="color: #8a95a8;">Time Left</p>
+                        <span id="moleTime" style="color: #f39c12; font-weight: bold;">30s</span>
+                    </div>
+                    <div>
+                        <p style="color: #8a95a8;">Best</p>
+                        <span id="moleBest" style="color: #5ec78a; font-weight: bold;">0</span>
+                    </div>
+                </div>
+                <button class="tool-btn" onclick="startMoleGame()">Start Game</button>
+                <button class="tool-btn" onclick="stopMoleGame()">Stop</button>
+            </div>
+        </div>
+
+        <!-- Reaction Time Game -->
+        <div class="tool-item" onclick="toggleTool('reactionGame')">
+            <h3>⚡ Reaction Time</h3>
+            <p>Test your reaction speed</p>
+        </div>
+        <div id="reactionGameTool" class="tool-content-box">
+            <div class="game-container">
+                <div class="reaction-box waiting" id="reactionBox" onclick="handleReactionClick()">
+                    Wait for green...
+                </div>
+                <div class="game-display" id="reactionDisplay">Click "Start" then wait for the box to turn green!</div>
+                <p style="color: #8a95a8; margin-bottom: 15px;">Best Time: <span id="bestReaction" style="color: #5ec78a; font-weight: bold;">-- ms</span></p>
+                <button class="tool-btn" onclick="startReaction()">Start</button>
+                <button class="tool-btn" onclick="resetReaction()">Reset Best</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// PERBAIKAN 1 & 2: Watermark Footer SEJAJAR & Header kembali ke layout awal
+// PERBAIKAN 3: QR dan Barcode pakai error merah, tidak pakai alert
+// PERBAIKAN 4: Semua tombol dicegah text selection
+
+// Visitor Counter
+function updateVisitorCount() {
+    localStorage.setItem('visitorCount', '0');
+    document.getElementById('visitorCount').textContent = '0';
+}
+
+// Tools Modal
+function openTools() {
+    document.getElementById('toolsModal').classList.add('show');
+}
+
+function closeTools() {
+    document.getElementById('toolsModal').classList.remove('show');
+}
+
+function toggleTool(toolId) {
+    const tool = document.getElementById(toolId + 'Tool');
+    tool.classList.toggle('show');
+}
+
+// Calculator
+let calcExpression = '';
+function calcInput(val) {
+    if (calcExpression === '0') calcExpression = '';
+    calcExpression += val;
+    document.getElementById('calcDisplay').textContent = calcExpression;
+}
+function calcClear() {
+    calcExpression = '0';
+    document.getElementById('calcDisplay').textContent = calcExpression;
+}
+function calcDelete() {
+    calcExpression = calcExpression.slice(0, -1) || '0';
+    document.getElementById('calcDisplay').textContent = calcExpression;
+}
+function calcCalculate() {
+    try {
+        const result = eval(calcExpression.replace('×', '*'));
+        calcExpression = result.toString();
+        document.getElementById('calcDisplay').textContent = calcExpression;
+    } catch (e) {
+        document.getElementById('calcDisplay').textContent = 'Error';
+        calcExpression = '0';
+    }
+}
+
+// Password Generator
+function updateLengthDisplay() {
+    document.getElementById('lengthDisplay').textContent = document.getElementById('passLength').value;
+}
+function generatePassword() {
+    const length = parseInt(document.getElementById('passLength').value);
+    const useUpper = document.getElementById('passUpper').checked;
+    const useLower = document.getElementById('passLower').checked;
+    const useNumbers = document.getElementById('passNumbers').checked;
+    const useSymbols = document.getElementById('passSymbols').checked;
+    
+    let chars = '';
+    if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if (useNumbers) chars += '0123456789';
+    if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    
+    if (!chars) {
+        document.getElementById('passwordResult').textContent = 'Select at least one option!';
+        return;
+    }
+    
+    let password = '';
+    for (let i = 0; i < length; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    document.getElementById('passwordResult').textContent = password;
+}
+function copyPassword() {
+    const password = document.getElementById('passwordResult').textContent;
+    if (password && password !== 'Click Generate!' && password !== 'Select at least one option!') {
+        navigator.clipboard.writeText(password);
+        alert('Password copied!');
+    }
+}
+
+// Text Counter
+function updateCounter() {
+    const text = document.getElementById('counterInput').value;
+    document.getElementById('charCount').textContent = text.length;
+    document.getElementById('noSpaceCount').textContent = text.replace(/\s/g, '').length;
+    document.getElementById('wordCount').textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
+    document.getElementById('lineCount').textContent = text ? text.split(/\n/).length : 0;
+}
+
+// Color Picker
+function hexToRgb() {
+    let hex = document.getElementById('hexInput').value.trim();
+    if (!hex.startsWith('#')) hex = '#' + hex;
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (result) {
+        const r = parseInt(result[1], 16);
+        const g = parseInt(result[2], 16);
+        const b = parseInt(result[3], 16);
+        document.getElementById('rInput').value = r;
+        document.getElementById('gInput').value = g;
+        document.getElementById('bInput').value = b;
+        document.getElementById('rgbOutput').value = `rgb(${r}, ${g}, ${b})`;
+        document.getElementById('colorPreview').style.background = hex;
+        document.getElementById('colorInput').value = hex;
+    }
+}
+function rgbToHex() {
+    const r = parseInt(document.getElementById('rInput').value) || 0;
+    const g = parseInt(document.getElementById('gInput').value) || 0;
+    const b = parseInt(document.getElementById('bInput').value) || 0;
+    const hex = '#' + [r, g, b].map(x => {
+        const hex = Math.min(255, Math.max(0, x)).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    }).join('');
+    document.getElementById('hexInput').value = hex;
+    document.getElementById('rgbOutput').value = `rgb(${r}, ${g}, ${b})`;
+    document.getElementById('colorPreview').style.background = hex;
+    document.getElementById('colorInput').value = hex;
+}
+function colorPickerChange() {
+    const hex = document.getElementById('colorInput').value;
+    document.getElementById('hexInput').value = hex;
+    hexToRgb();
+}
+function copyColor(type) {
+    let text;
+    if (type === 'hex') {
+        text = document.getElementById('hexInput').value;
+    } else {
+        text = document.getElementById('rgbOutput').value;
+    }
+    navigator.clipboard.writeText(text);
+    alert('Copied: ' + text);
+}
+
+// Unit Converter
+const unitConversions = {
+    length: { m: 1, km: 0.001, cm: 100, ft: 3.28084, in: 39.3701 },
+    weight: { kg: 1, g: 1000, lb: 2.20462, oz: 35.274 },
+    temperature: { c: 'celsius', f: 'fahrenheit', k: 'kelvin' }
+};
+function updateUnitOptions() {
+    const type = document.getElementById('unitType').value;
+    const fromSelect = document.getElementById('unitFrom');
+    const toSelect = document.getElementById('unitTo');
+    let options = '';
+    if (type === 'length') {
+        options = `
+            <option value="m">Meters</option>
+            <option value="km">Kilometers</option>
+            <option value="cm">Centimeters</option>
+            <option value="ft">Feet</option>
+            <option value="in">Inches</option>
+        `;
+    } else if (type === 'weight') {
+        options = `
+            <option value="kg">Kilograms</option>
+            <option value="g">Grams</option>
+            <option value="lb">Pounds</option>
+            <option value="oz">Ounces</option>
+        `;
+    } else if (type === 'temperature') {
+        options = `
+            <option value="c">Celsius</option>
+            <option value="f">Fahrenheit</option>
+            <option value="k">Kelvin</option>
+        `;
+    }
+    fromSelect.innerHTML = options;
+    toSelect.innerHTML = options;
+    convertUnits();
+}
+function convertUnits() {
+    const type = document.getElementById('unitType').value;
+    const fromValue = parseFloat(document.getElementById('unitFromValue').value) || 0;
+    const fromUnit = document.getElementById('unitFrom').value;
+    const toUnit = document.getElementById('unitTo').value;
+    let result;
+    
+    if (type === 'temperature') {
+        result = convertTemperature(fromValue, fromUnit, toUnit);
+    } else {
+        const conversions = unitConversions[type];
+        const baseValue = fromValue / conversions[fromUnit];
+        result = baseValue * conversions[toUnit];
+    }
+    document.getElementById('unitToValue').value = result.toFixed(4);
+}
+function convertTemperature(value, from, to) {
+    let celsius;
+    if (from === 'c') celsius = value;
+    else if (from === 'f') celsius = (value - 32) * 5/9;
+    else if (from === 'k') celsius = value - 273.15;
+    
+    if (to === 'c') return celsius;
+    else if (to === 'f') return celsius * 9/5 + 32;
+    else if (to === 'k') return celsius + 273.15;
+}
+
+// Trivia Quiz Game
+let triviaScore = 0;
+let triviaCurrentQuestion = 0;
+let triviaQuestions = [];
+let triviaBestScore = localStorage.getItem('triviaBestScore') || 0;
+
+const triviaData = [
+    {
+        question: "What is the capital of France?",
+        options: ["London", "Berlin", "Paris", "Madrid"],
+        correct: 2
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Venus", "Mars", "Jupiter", "Saturn"],
+        correct: 1
+    },
+    {
+        question: "What is the largest mammal in the world?",
+        options: ["Elephant", "Blue Whale", "Giraffe", "Polar Bear"],
+        correct: 1
+    },
+    {
+        question: "How many continents are there?",
+        options: ["5", "6", "7", "8"],
+        correct: 2
+    },
+    {
+        question: "What is the chemical symbol for Gold?",
+        options: ["Go", "Gd", "Au", "Ag"],
+        correct: 2
+    }
+];
+
+function initTriviaGame() {
+    triviaQuestions = [...triviaData];
+    shuffleArray(triviaQuestions);
+    triviaCurrentQuestion = 0;
+    triviaScore = 0;
+    document.getElementById('triviaScore').textContent = triviaScore;
+    document.getElementById('triviaProgress').textContent = '0/5';
+    document.getElementById('triviaBest').textContent = triviaBestScore;
+    loadTriviaQuestion();
+}
+
+function loadTriviaQuestion() {
+    if (triviaCurrentQuestion >= triviaQuestions.length) {
+        endTriviaGame();
+        return;
+    }
+    
+    const question = triviaQuestions[triviaCurrentQuestion];
+    document.getElementById('triviaQuestion').textContent = question.question;
+    
+    const optionsDiv = document.getElementById('triviaOptions');
+    optionsDiv.innerHTML = '';
+    
+    question.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'quiz-option';
+        button.textContent = `${index + 1}. ${option}`;
+        button.onclick = () => checkTriviaAnswer(index);
+        optionsDiv.appendChild(button);
+    });
+    
+    document.getElementById('triviaProgress').textContent = `${triviaCurrentQuestion + 1}/5`;
+}
+
+function checkTriviaAnswer(selectedIndex) {
+    const question = triviaQuestions[triviaCurrentQuestion];
+    const options = document.querySelectorAll('.quiz-option');
+    
+    options.forEach((option, index) => {
+        option.disabled = true;
+        if (index === question.correct) {
+            option.classList.add('correct');
+        } else if (index === selectedIndex) {
+            option.classList.add('wrong');
+        }
+    });
+    
+    if (selectedIndex === question.correct) {
+        triviaScore += 10;
+        document.getElementById('triviaScore').textContent = triviaScore;
+    }
+}
+
+function nextTriviaQuestion() {
+    triviaCurrentQuestion++;
+    if (triviaCurrentQuestion < triviaQuestions.length) {
+        loadTriviaQuestion();
+    } else {
+        endTriviaGame();
+    }
+}
+
+function endTriviaGame() {
+    if (triviaScore > triviaBestScore) {
+        triviaBestScore = triviaScore;
+        localStorage.setItem('triviaBestScore', triviaBestScore);
+        document.getElementById('triviaBest').textContent = triviaBestScore;
+    }
+    
+    document.getElementById('triviaQuestion').textContent = `Game Over! Final Score: ${triviaScore}`;
+    document.getElementById('triviaOptions').innerHTML = '';
+    document.getElementById('triviaProgress').textContent = '5/5';
+}
+
+function resetTriviaGame() {
+    initTriviaGame();
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// Memory Card Game
+let memoryCards = [];
+let flippedCards = [];
+let moves = 0;
+let matchedPairs = 0;
+let memoryTimer = null;
+let seconds = 0;
+const memorySymbols = ['🍎', '🍌', '🍒', '🍇', '🍊', '🍓', '🥭', '🍍'];
+
+function startMemoryGame() {
+    resetMemoryGame();
+    let cardValues = [...memorySymbols, ...memorySymbols];
+    cardValues.sort(() => Math.random() - 0.5);
+    
+    const board = document.getElementById('memoryBoard');
+    board.innerHTML = '';
+    
+    cardValues.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.innerHTML = `
+            <div class="card-back">?</div>
+            <div class="card-front">${symbol}</div>
+        `;
+        card.dataset.symbol = symbol;
+        card.dataset.index = index;
+        card.onclick = () => flipMemoryCard(card);
+        board.appendChild(card);
+        memoryCards.push(card);
+    });
+    
+    memoryTimer = setInterval(() => {
+        seconds++;
+        document.getElementById('timeCount').textContent = seconds + 's';
+    }, 1000);
+}
+
+function flipMemoryCard(card) {
+    if (flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
+        return;
+    }
+    
+    card.classList.add('flipped');
+    flippedCards.push(card);
+    
+    if (flippedCards.length === 2) {
+        moves++;
+        document.getElementById('movesCount').textContent = moves;
+        
+        const [card1, card2] = flippedCards;
+        if (card1.dataset.symbol === card2.dataset.symbol) {
+            setTimeout(() => {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                document.getElementById('pairsCount').textContent = matchedPairs + '/8';
+                flippedCards = [];
+                
+                if (matchedPairs === 8) {
+                    clearInterval(memoryTimer);
+                    document.getElementById('memoryDisplay').textContent = 
+                        `🎉 You won! Time: ${seconds}s, Moves: ${moves}`;
+                }
+            }, 500);
+        } else {
+            setTimeout(() => {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                flippedCards = [];
+            }, 1000);
+        }
+    }
+}
+
+function resetMemoryGame() {
+    clearInterval(memoryTimer);
+    memoryCards = [];
+    flippedCards = [];
+    moves = 0;
+    matchedPairs = 0;
+    seconds = 0;
+    document.getElementById('movesCount').textContent = '0';
+    document.getElementById('timeCount').textContent = '0s';
+    document.getElementById('pairsCount').textContent = '0/8';
+    document.getElementById('memoryDisplay').textContent = 'Match the pairs! Click on cards to reveal them.';
+}
+
+// Number Guessing Game
+let secretNumber = Math.floor(Math.random() * 100) + 1;
+let guessAttempts = 0;
+function makeGuess() {
+    const guess = parseInt(document.getElementById('guessInput').value);
+    const display = document.getElementById('guessDisplay');
+    if (isNaN(guess) || guess < 1 || guess > 100) {
+        display.textContent = 'Please enter a number between 1-100!';
+        display.style.color = '#e74c3c';
+        return;
+    }
+    guessAttempts++;
+    document.getElementById('guessAttempts').textContent = guessAttempts;
+    
+    if (guess === secretNumber) {
+        display.textContent = `🎉 Correct! The number was ${secretNumber}! You got it in ${guessAttempts} attempts!`;
+        display.style.color = '#5ec78a';
+    } else if (guess < secretNumber) {
+        display.textContent = `📈 Too low! Try a higher number.`;
+        display.style.color = '#f39c12';
+    } else {
+        display.textContent = `📉 Too high! Try a lower number.`;
+        display.style.color = '#f39c12';
+    }
+    document.getElementById('guessInput').value = '';
+}
+function resetGuessGame() {
+    secretNumber = Math.floor(Math.random() * 100) + 1;
+    guessAttempts = 0;
+    document.getElementById('guessAttempts').textContent = '0';
+    document.getElementById('guessDisplay').textContent = "I'm thinking of a number between 1-100. Can you guess it?";
+    document.getElementById('guessDisplay').style.color = '#e8eaf0';
+    document.getElementById('guessInput').value = '';
+}
+
+// Whack-a-Mole Game
+let moleScore = 0;
+let moleTimeLeft = 30;
+let moleGameInterval = null;
+let moleTimerInterval = null;
+let moleBestScore = localStorage.getItem('moleBestScore') || 0;
+let activeMoles = [];
+
+function startMoleGame() {
+    if (moleGameInterval) return;
+    
+    moleScore = 0;
+    moleTimeLeft = 30;
+    activeMoles = [];
+    document.getElementById('moleScore').textContent = '0';
+    document.getElementById('moleTime').textContent = '30s';
+    document.getElementById('moleBest').textContent = moleBestScore;
+    document.getElementById('moleDisplay').textContent = 'Game started! Click the moles!';
+    document.getElementById('moleTimerBar').style.width = '100%';
+    
+    const holes = document.querySelectorAll('.mole-hole');
+    holes.forEach(hole => {
+        hole.className = 'mole-hole';
+        hole.innerHTML = '';
+    });
+    
+    moleTimerInterval = setInterval(() => {
+        moleTimeLeft--;
+        document.getElementById('moleTime').textContent = moleTimeLeft + 's';
+        document.getElementById('moleTimerBar').style.width = (moleTimeLeft / 30 * 100) + '%';
+        
+        if (moleTimeLeft <= 0) {
+            stopMoleGame();
+            document.getElementById('moleDisplay').textContent = 
+                `Game Over! Final Score: ${moleScore}. Best: ${moleBestScore}`;
+        }
+    }, 1000);
+    
+    moleGameInterval = setInterval(spawnMole, 800);
+}
+
+function spawnMole() {
+    if (activeMoles.length >= 3) return;
+    
+    const holes = document.querySelectorAll('.mole-hole');
+    const availableHoles = Array.from(holes).filter((_, i) => !activeMoles.includes(i));
+    if (availableHoles.length === 0) return;
+    
+    const randomIndex = Math.floor(Math.random() * availableHoles.length);
+    const holeIndex = Array.from(holes).indexOf(availableHoles[randomIndex]);
+    
+    activeMoles.push(holeIndex);
+    holes[holeIndex].classList.add('active');
+    holes[holeIndex].innerHTML = '🐹';
+    
+    setTimeout(() => {
+        if (holes[holeIndex].classList.contains('active')) {
+            holes[holeIndex].classList.remove('active');
+            holes[holeIndex].innerHTML = '';
+            activeMoles = activeMoles.filter(i => i !== holeIndex);
+        }
+    }, Math.random() * 1000 + 800);
+}
+
+function whackMole(index) {
+    const hole = document.querySelectorAll('.mole-hole')[index];
+    if (hole.classList.contains('active')) {
+        hole.classList.remove('active');
+        hole.classList.add('hit');
+        hole.innerHTML = '💥';
+        moleScore++;
+        document.getElementById('moleScore').textContent = moleScore;
+        
+        if (moleScore > moleBestScore) {
+            moleBestScore = moleScore;
+            localStorage.setItem('moleBestScore', moleBestScore);
+            document.getElementById('moleBest').textContent = moleBestScore;
+        }
+        
+        activeMoles = activeMoles.filter(i => i !== index);
+        
+        setTimeout(() => {
+            hole.classList.remove('hit');
+            hole.innerHTML = '';
+        }, 300);
+    }
+}
+
+function stopMoleGame() {
+    clearInterval(moleGameInterval);
+    clearInterval(moleTimerInterval);
+    moleGameInterval = null;
+    moleTimerInterval = null;
+    
+    const holes = document.querySelectorAll('.mole-hole');
+    holes.forEach(hole => {
+        hole.className = 'mole-hole';
+        hole.innerHTML = '';
+    });
+    activeMoles = [];
+}
+
+// Reaction Time Game
+let reactionTimeout;
+let reactionStartTime;
+let reactionState = 'idle';
+let bestReactionTime = Infinity;
+function startReaction() {
+    const box = document.getElementById('reactionBox');
+    const display = document.getElementById('reactionDisplay');
+    if (reactionState === 'waiting') return;
+    
+    reactionState = 'waiting';
+    box.className = 'reaction-box waiting';
+    box.textContent = 'Wait for green...';
+    display.textContent = 'Wait...';
+    
+    const randomDelay = Math.random() * 3000 + 1000;
+    reactionTimeout = setTimeout(() => {
+        reactionState = 'ready';
+        box.className = 'reaction-box ready';
+        box.textContent = 'CLICK NOW!';
+        display.textContent = 'GO! Click as fast as you can!';
+        reactionStartTime = Date.now();
+    }, randomDelay);
+}
+function handleReactionClick() {
+    const box = document.getElementById('reactionBox');
+    const display = document.getElementById('reactionDisplay');
+    
+    if (reactionState === 'waiting') {
+        clearTimeout(reactionTimeout);
+        reactionState = 'idle';
+        box.className = 'reaction-box result';
+        box.textContent = 'Too early! 😅';
+        display.textContent = 'You clicked too soon! Click Start to try again.';
+    } else if (reactionState === 'ready') {
+        const reactionTime = Date.now() - reactionStartTime;
+        reactionState = 'idle';
+        box.className = 'reaction-box result';
+        box.textContent = `${reactionTime} ms`;
+        display.textContent = `Your reaction time: ${reactionTime}ms`;
+        
+        if (reactionTime < bestReactionTime) {
+            bestReactionTime = reactionTime;
+            document.getElementById('bestReaction').textContent = `${reactionTime} ms`;
+        }
+    }
+}
+function resetReaction() {
+    bestReactionTime = Infinity;
+    document.getElementById('bestReaction').textContent = '-- ms';
+    document.getElementById('reactionBox').className = 'reaction-box waiting';
+    document.getElementById('reactionBox').textContent = 'Wait for green...';
+    document.getElementById('reactionDisplay').textContent = 'Click "Start" then wait for the box to turn green!';
+    reactionState = 'idle';
+}
+
+// Clear functions
+function clearInput(inputId) {
+    const input = document.getElementById(inputId);
+    input.value = '';
+    input.classList.remove('error');
+}
+function clearAll(prefix) {
+    const inputEl = document.getElementById(prefix + 'Input');
+    const keyEl = document.getElementById(prefix + 'Key');
+    const resultEl = document.getElementById(prefix + 'Result');
+    const outputEl = document.getElementById(prefix + 'Output');
+    
+    if (inputEl) { inputEl.value = ''; inputEl.classList.remove('error'); }
+    if (keyEl) { keyEl.value = ''; keyEl.classList.remove('error'); }
+    if (resultEl) resultEl.classList.remove('show');
+    if (outputEl) outputEl.textContent = '';
+}
+function clearAllQR() {
+    document.getElementById('textToQRInput').value = '';
+    document.getElementById('qrOutput').innerHTML = '';
+    document.getElementById('textToQRResult').classList.remove('show');
+}
+function clearAllBarcode() {
+    document.getElementById('barcodeInput').value = '';
+    document.getElementById('barcodeOutputContainer').innerHTML = '';
+    document.getElementById('barcodeResult').classList.remove('show');
+    document.getElementById('barcodeError').classList.remove('show');
+}
+
+// Validation - PERBAIKAN: Pakai error style merah, tidak pakai alert
+function validateInput(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input.value.trim()) {
+        input.classList.add('error');
+        setTimeout(() => input.classList.remove('error'), 2000);
+        return false;
+    }
+    input.classList.remove('error');
+    return true;
+}
+
+// Navigation
+function goToPage(page) {
+    document.getElementById('homePage').style.display = 'none';
+    document.querySelectorAll('.cipher-page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page + 'Page').classList.add('active');
+    if (page === 'vigenere') {
+        generateVigenereTable();
+    } else if (page === 'barcode') {
+        stopBarcodeScan();
+    }
+}
+function goToHome() {
+    document.querySelectorAll('.cipher-page').forEach(p => p.classList.remove('active'));
+    document.getElementById('homePage').style.display = 'block';
+    stopBarcodeScan();
+}
+function selectMode(cipher, mode) {
+    const page = document.getElementById(cipher + 'Page');
+    const btns = page.querySelectorAll('.mode-btn');
+    const boxes = page.querySelectorAll('.encoder-box');
+    
+    btns.forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    boxes.forEach(box => box.classList.remove('show'));
+    
+    let boxId = mode + 'Box';
+    if (cipher === 'barcode') {
+        boxId = mode === 'textToBarcode' ? 'textToBarcodeBox' : 'barcodeToTextBox';
+        if (mode === 'barcodeToText') {
+            setTimeout(() => startBarcodeScan(), 100);
+        } else {
+            stopBarcodeScan();
+        }
+    } else if (cipher === 'qwerty') {
+        boxId = mode === 'encrypt' ? 'qwertyEncryptBox' : 'qwertyDecryptBox';
+    } else if (cipher === 'vigenere') {
+        if (mode === 'encrypt') boxId = 'vigenereEncryptBox';
+        else if (mode === 'decrypt') boxId = 'vigenereDecryptBox';
+        else if (mode === 'table') boxId = 'vigenereTableBox';
+    }
+    document.getElementById(boxId).classList.add('show');
+}
+
+// Copy Text
+function copyText(elementId, btn) {
+    const text = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        console.error('Copy failed:', err);
+    });
+}
+
+// QR Code Functions - PERBAIKAN: Tidak pakai alert, pakai error style merah
+function generateQR() {
+    const text = document.getElementById('textToQRInput').value.trim();
+    if (!text) {
+        document.getElementById('textToQRInput').classList.add('error');
+        setTimeout(() => document.getElementById('textToQRInput').classList.remove('error'), 2000);
+        return;
+    }
+    const qrOutput = document.getElementById('qrOutput');
+    qrOutput.innerHTML = '';
+    new QRCode(qrOutput, {
+        text: text,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+    document.getElementById('textToQRResult').classList.add('show');
+}
+function downloadQR() {
+    const qrCanvas = document.querySelector('#qrOutput canvas');
+    if (qrCanvas) {
+        const link = document.createElement('a');
+        link.download = 'qr-code.png';
+        link.href = qrCanvas.toDataURL('image/png');
+        link.click();
+    }
+}
+function scanQR(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.getElementById('qrCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+            const resultDiv = document.getElementById('qrToTextResult');
+            const outputDiv = document.getElementById('qrToTextOutput');
+            if (code) {
+                outputDiv.textContent = code.data;
+                resultDiv.classList.add('show');
+            } else {
+                outputDiv.textContent = 'No QR code found in image';
+                resultDiv.classList.add('show');
+            }
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// Barcode Functions - PERBAIKAN: Menggunakan TEC-IT API
+let currentBarcodeType = 'CODE128';
+let barcodeStream = null;
+
+function selectBarcodeType(type, btn) {
+    currentBarcodeType = type;
+    document.querySelectorAll('.barcode-type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const hints = {
+        'CODE128': '💡 CODE128: Accepts ANY text, numbers, or symbols! (Recommended)',
+        'CODE39': '💡 CODE39: Letters, numbers, and some symbols (-.$/+%).',
+        'EAN13': '💡 EAN-13: 12-13 digits only (product barcodes).',
+        'UPC': '💡 UPC: 11-12 digits only (US product codes).'
+    };
+    document.getElementById('barcodeHint').textContent = hints[type] || '';
+}
+
+function generateBarcode() {
+    const input = document.getElementById('barcodeInput').value.trim();
+    const errorDiv = document.getElementById('barcodeError');
+    const resultDiv = document.getElementById('barcodeResult');
+    const outputDiv = document.getElementById('barcodeOutputContainer');
+    
+    errorDiv.classList.remove('show');
+    outputDiv.innerHTML = '';
+    
+    if (!input) {
+        document.getElementById('barcodeInput').classList.add('error');
+        setTimeout(() => document.getElementById('barcodeInput').classList.remove('error'), 2000);
+        return;
+    }
+    
+    try {
+        // Validasi untuk format tertentu
+        switch(currentBarcodeType) {
+            case 'EAN13':
+                if (!/^\d{12,13}$/.test(input)) {
+                    errorDiv.textContent = '⚠️ EAN-13 requires exactly 12 or 13 digits';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+                break;
+            case 'UPC':
+                if (!/^\d{11,12}$/.test(input)) {
+                    errorDiv.textContent = '⚠️ UPC requires exactly 11 or 12 digits';
+                    errorDiv.classList.add('show');
+                    return;
+                }
+                break;
+        }
+        
+        // Encode input untuk URL
+        const encodedInput = encodeURIComponent(input);
+        
+        // TEC-IT API URLs untuk berbagai format
+        const apiUrls = {
+            'CODE128': `https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Code128&translate-esc=on`,
+            'CODE39': `https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Code39&translate-esc=on`,
+            'EAN13': `https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Ean13&translate-esc=on`,
+            'UPC': `https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=UPCA&translate-esc=on`
+        };
+        
+        const barcodeUrl = apiUrls[currentBarcodeType] || apiUrls['CODE128'];
+        
+        // Buat elemen img untuk barcode
+        const barcodeImg = document.createElement('img');
+        barcodeImg.src = barcodeUrl;
+        barcodeImg.alt = `Barcode: ${input}`;
+        barcodeImg.style.width = '100%';
+        barcodeImg.style.maxWidth = '400px';
+        barcodeImg.style.height = 'auto';
+        
+        // Tambahkan attribution
+        const attribution = document.createElement('div');
+        attribution.style.cssText = 'padding-top:8px; text-align:center; font-size:12px; font-family: Arial, sans-serif; color: #666;';
+        attribution.innerHTML = `
+            <a href="https://www.tec-it.com" title="Barcode Software by TEC-IT" target="_blank" style="color: #6b9bd1; text-decoration: none;">
+            </a>
+        `;
+        
+        outputDiv.appendChild(barcodeImg);
+        outputDiv.appendChild(attribution);
+        
+        resultDiv.classList.add('show');
+        
+    } catch (error) {
+        console.error('Barcode error:', error);
+        errorDiv.textContent = `⚠️ Error generating barcode. Please try again.`;
+        errorDiv.classList.add('show');
+    }
+}
+
+function downloadBarcode() {
+    const barcodeImg = document.querySelector('#barcodeOutputContainer img');
+    if (barcodeImg && barcodeImg.src) {
+        const link = document.createElement('a');
+        link.download = `barcode-${currentBarcodeType}.png`;
+        
+        // Buat canvas untuk download
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        };
+        
+        img.crossOrigin = 'anonymous';
+        img.src = barcodeImg.src;
+    }
+}
+
+// Barcode Scanner
+function startBarcodeScan() {
+    const scannerArea = document.getElementById('barcodeScannerArea');
+    const video = document.getElementById('barcodeVideo');
+    const resultDiv = document.getElementById('barcodeScanResult');
+    
+    scannerArea.style.display = 'none';
+    video.style.display = 'block';
+    resultDiv.style.display = 'none';
+    
+    navigator.mediaDevices.getUserMedia({ 
+        video: { 
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+        } 
+    }).then(stream => {
+        barcodeStream = stream;
+        video.srcObject = stream;
+        video.play();
+    }).catch(err => {
+        console.error('Camera error:', err);
+        scannerArea.innerHTML = `<p style="color: #e74c3c;">Camera access denied. Please allow camera access.</p>`;
+        scannerArea.style.display = 'flex';
+        video.style.display = 'none';
+    });
+}
+
+function stopBarcodeScan() {
+    if (barcodeStream) {
+        barcodeStream.getTracks().forEach(track => track.stop());
+        barcodeStream = null;
+    }
+    const video = document.getElementById('barcodeVideo');
+    video.style.display = 'none';
+    video.srcObject = null;
+    
+    const scannerArea = document.getElementById('barcodeScannerArea');
+    scannerArea.style.display = 'flex';
+    scannerArea.innerHTML = `
+        <p style="color: #6b9bd1; margin-bottom: 10px;">📷 Click to start camera for barcode scanning</p>
+        <p style="color: #8a95a8; font-size: 0.9em;">Allow camera access when prompted</p>
+    `;
+    scannerArea.onclick = startBarcodeScan;
+}
+
+function clearBarcodeScan() {
+    document.getElementById('barcodeScanResult').style.display = 'none';
+}
+
+// Binary Functions
+function convertTextToBinary() {
+    if (!validateInput('textToBinaryInput')) return;
+    const text = document.getElementById('textToBinaryInput').value;
+    let binary = '';
+    for (let i = 0; i < text.length; i++) {
+        binary += text.charCodeAt(i).toString(2).padStart(8, '0') + ' ';
+    }
+    document.getElementById('textToBinaryOutput').textContent = binary.trim();
+    document.getElementById('textToBinaryResult').classList.add('show');
+}
+function convertBinaryToText() {
+    if (!validateInput('binaryToTextInput')) return;
+    const binary = document.getElementById('binaryToTextInput').value.trim();
+    const binaryArray = binary.split(/\s+/);
+    let text = '';
+    for (let i = 0; i < binaryArray.length; i++) {
+        text += String.fromCharCode(parseInt(binaryArray[i], 2));
+    }
+    document.getElementById('binaryToTextOutput').textContent = text;
+    document.getElementById('binaryToTextResult').classList.add('show');
+}
+
+// Caesar Cipher Functions
+function encryptCaesar() {
+    if (!validateInput('caesarEncryptInput')) return;
+    const text = document.getElementById('caesarEncryptInput').value;
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        let char = text[i];
+        if (char.match(/[a-z]/i)) {
+            const code = text.charCodeAt(i);
+            if (code >= 65 && code <= 90) {
+                char = String.fromCharCode(((code - 65 + 3) % 26) + 65);
+            } else if (code >= 97 && code <= 122) {
+                char = String.fromCharCode(((code - 97 + 3) % 26) + 97);
+            }
+        }
+        result += char;
+    }
+    document.getElementById('caesarEncryptOutput').textContent = result;
+    document.getElementById('caesarEncryptResult').classList.add('show');
+}
+function decryptCaesar() {
+    if (!validateInput('caesarDecryptInput')) return;
+    const text = document.getElementById('caesarDecryptInput').value;
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        let char = text[i];
+        if (char.match(/[a-z]/i)) {
+            const code = text.charCodeAt(i);
+            if (code >= 65 && code <= 90) {
+                char = String.fromCharCode(((code - 65 - 3 + 26) % 26) + 65);
+            } else if (code >= 97 && code <= 122) {
+                char = String.fromCharCode(((code - 97 - 3 + 26) % 26) + 97);
+            }
+        }
+        result += char;
+    }
+    document.getElementById('caesarDecryptOutput').textContent = result;
+    document.getElementById('caesarDecryptResult').classList.add('show');
+}
+
+// Morse Code Functions
+const morseCode = {
+    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+    'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+    'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+    'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+    'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
+    '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+    '8': '---..', '9': '----.', '.': '.-.-.-', ',': '--..--', '?': '..--..',
+    "'": '.----.', '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-',
+    '&': '.-...', ':': '---...', ';': '-.-.-.', '=': '-...-', '+': '.-.-.',
+    '-': '-....-', '_': '..--.-', '"': '.-..-.', '$': '...-..-', '@': '.--.-.',
+    ' ': '/'
+};
+function convertTextToMorse() {
+    if (!validateInput('textToMorseInput')) return;
+    const text = document.getElementById('textToMorseInput').value.toUpperCase();
+    let morse = '';
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        morse += (morseCode[char] || char) + ' ';
+    }
+    document.getElementById('textToMorseOutput').textContent = morse.trim();
+    document.getElementById('textToMorseResult').classList.add('show');
+}
+function convertMorseToText() {
+    if (!validateInput('morseToTextInput')) return;
+    const morse = document.getElementById('morseToTextInput').value.trim();
+    const morseArray = morse.split(' ');
+    let text = '';
+    const reverseMorse = {};
+    for (let key in morseCode) {
+        reverseMorse[morseCode[key]] = key;
+    }
+    for (let i = 0; i < morseArray.length; i++) {
+        const code = morseArray[i];
+        if (code === '/') {
+            text += ' ';
+        } else {
+            text += reverseMorse[code] || code;
+        }
+    }
+    document.getElementById('morseToTextOutput').textContent = text;
+    document.getElementById('morseToTextResult').classList.add('show');
+}
+
+// T9 Keypad Functions
+const t9Mapping = {
+    'a': '2', 'b': '22', 'c': '222',
+    'd': '3', 'e': '33', 'f': '333',
+    'g': '4', 'h': '44', 'i': '444',
+    'j': '5', 'k': '55', 'l': '555',
+    'm': '6', 'n': '66', 'o': '666',
+    'p': '7', 'q': '77', 'r': '777', 's': '7777',
+    't': '8', 'u': '88', 'v': '888',
+    'w': '9', 'x': '99', 'y': '999', 'z': '9999',
+    ' ': '0'
+};
+const reverseT9Mapping = {};
+for (let key in t9Mapping) {
+    reverseT9Mapping[t9Mapping[key]] = key;
+}
+function convertTextToT9() {
+    if (!validateInput('textToT9Input')) return;
+    const text = document.getElementById('textToT9Input').value.toLowerCase();
+    let t9 = '';
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        t9 += (t9Mapping[char] || char) + ' ';
+    }
+    document.getElementById('textToT9Output').textContent = t9.trim();
+    document.getElementById('textToT9Result').classList.add('show');
+}
+function convertT9ToText() {
+    if (!validateInput('t9ToTextInput')) return;
+    const t9 = document.getElementById('t9ToTextInput').value.trim();
+    const t9Array = t9.split(' ');
+    let text = '';
+    for (let i = 0; i < t9Array.length; i++) {
+        const code = t9Array[i];
+        text += reverseT9Mapping[code] || code;
+    }
+    document.getElementById('t9ToTextOutput').textContent = text;
+    document.getElementById('t9ToTextResult').classList.add('show');
+}
+
+// QWERTY Cipher Functions
+const qwertyShift = {
+    'q': 'w', 'w': 'e', 'e': 'r', 'r': 't', 't': 'y', 'y': 'u', 'u': 'i',
+    'i': 'o', 'o': 'p', 'p': 'a', 'a': 's', 's': 'd', 'd': 'f', 'f': 'g',
+    'g': 'h', 'h': 'j', 'j': 'k', 'k': 'l', 'l': 'z', 'z': 'x', 'x': 'c',
+    'c': 'v', 'v': 'b', 'b': 'n', 'n': 'm', 'm': 'q',
+    'Q': 'W', 'W': 'E', 'E': 'R', 'R': 'T', 'T': 'Y', 'Y': 'U', 'U': 'I',
+    'I': 'O', 'O': 'P', 'P': 'A', 'A': 'S', 'S': 'D', 'D': 'F', 'F': 'G',
+    'G': 'H', 'H': 'J', 'J': 'K', 'K': 'L', 'L': 'Z', 'Z': 'X', 'X': 'C',
+    'C': 'V', 'V': 'B', 'B': 'N', 'N': 'M', 'M': 'Q'
+};
+const reverseQWERTY = {};
+for (let key in qwertyShift) {
+    reverseQWERTY[qwertyShift[key]] = key;
+}
+function encryptQWERTY() {
+    if (!validateInput('qwertyEncryptInput')) return;
+    const text = document.getElementById('qwertyEncryptInput').value;
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        result += qwertyShift[char] || char;
+    }
+    document.getElementById('qwertyEncryptOutput').textContent = result;
+    document.getElementById('qwertyEncryptResult').classList.add('show');
+}
+function decryptQWERTY() {
+    if (!validateInput('qwertyDecryptInput')) return;
+    const text = document.getElementById('qwertyDecryptInput').value;
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        result += reverseQWERTY[char] || char;
+    }
+    document.getElementById('qwertyDecryptOutput').textContent = result;
+    document.getElementById('qwertyDecryptResult').classList.add('show');
+}
+
+// Vigenere Cipher Functions
+function encryptVigenere() {
+    const key = document.getElementById('vigenereEncryptKey').value.trim().toUpperCase();
+    const text = document.getElementById('vigenereEncryptInput').value.trim().toUpperCase();
+    if (!key || !text) {
+        alert('Please enter both key and text');
+        return;
+    }
+    let result = '';
+    let keyIndex = 0;
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (char >= 'A' && char <= 'Z') {
+            const keyChar = key[keyIndex % key.length];
+            const shift = keyChar.charCodeAt(0) - 65;
+            const encrypted = String.fromCharCode(((char.charCodeAt(0) - 65 + shift) % 26) + 65);
+            result += encrypted;
+            keyIndex++;
+        } else {
+            result += char;
+        }
+    }
+    document.getElementById('vigenereEncryptOutput').textContent = result;
+    document.getElementById('vigenereEncryptResult').classList.add('show');
+}
+function decryptVigenere() {
+    const key = document.getElementById('vigenereDecryptKey').value.trim().toUpperCase();
+    const text = document.getElementById('vigenereDecryptInput').value.trim().toUpperCase();
+    if (!key || !text) {
+        alert('Please enter both key and text');
+        return;
+    }
+    let result = '';
+    let keyIndex = 0;
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (char >= 'A' && char <= 'Z') {
+            const keyChar = key[keyIndex % key.length];
+            const shift = keyChar.charCodeAt(0) - 65;
+            const decrypted = String.fromCharCode(((char.charCodeAt(0) - 65 - shift + 26) % 26) + 65);
+            result += decrypted;
+            keyIndex++;
+        } else {
+            result += char;
+        }
+    }
+    document.getElementById('vigenereDecryptOutput').textContent = result;
+    document.getElementById('vigenereDecryptResult').classList.add('show');
+}
+function generateVigenereTable() {
+    const tableContainer = document.getElementById('vigenereTableContainer');
+    let tableHTML = '<table><thead><tr><th></th>';
+    for (let i = 0; i < 26; i++) {
+        const letter = String.fromCharCode(65 + i);
+        tableHTML += `<th class="header-cell">${letter}</th>`;
+    }
+    tableHTML += '</tr></thead><tbody>';
+    for (let i = 0; i < 26; i++) {
+        const rowLetter = String.fromCharCode(65 + i);
+        tableHTML += `<tr><th class="header-cell">${rowLetter}</th>`;
+        for (let j = 0; j < 26; j++) {
+            const colLetter = String.fromCharCode(65 + j);
+            const resultLetter = String.fromCharCode(((i + j) % 26) + 65);
+            tableHTML += `<td data-row="${rowLetter}" data-col="${colLetter}">${resultLetter}</td>`;
+        }
+        tableHTML += '</tr>';
+    }
+    tableHTML += '</tbody></table>';
+    tableContainer.innerHTML = tableHTML;
+    updateTableHighlight();
+}
+function updateTableHighlight() {
+    const key = document.getElementById('tableKeyInput').value.toUpperCase().charAt(0) || 'A';
+    const plain = document.getElementById('tablePlainInput').value.toUpperCase().charAt(0) || 'A';
+    const cells = document.querySelectorAll('#vigenereTableContainer td');
+    const rows = document.querySelectorAll('#vigenereTableContainer tr');
+    const cols = document.querySelectorAll('#vigenereTableContainer th');
+    
+    cells.forEach(cell => {
+        cell.classList.remove('highlight-cell', 'highlight-row', 'highlight-col');
+    });
+    rows.forEach(row => row.classList.remove('highlight-row'));
+    cols.forEach(col => col.classList.remove('highlight-col'));
+    
+    const rowIndex = key.charCodeAt(0) - 65;
+    const colIndex = plain.charCodeAt(0) - 65;
+    
+    if (rows[rowIndex + 1]) rows[rowIndex + 1].classList.add('highlight-row');
+    if (cols[colIndex + 1]) cols[colIndex + 1].classList.add('highlight-col');
+    
+    const resultCell = document.querySelector(`#vigenereTableContainer td[data-row="${key}"][data-col="${plain}"]`);
+    if (resultCell) {
+        resultCell.classList.add('highlight-cell');
+        const resultLetter = String.fromCharCode(((rowIndex + colIndex) % 26) + 65);
+        document.getElementById('infoKey').textContent = key;
+        document.getElementById('infoPlain').textContent = plain;
+        document.getElementById('infoResult').textContent = resultLetter;
+        document.getElementById('highlightInfo').style.display = 'block';
+    } else {
+        document.getElementById('highlightInfo').style.display = 'none';
+    }
+}
+
+// Reverse Text Function
+function reverseText() {
+    if (!validateInput('reverseInput')) return;
+    const text = document.getElementById('reverseInput').value;
+    const reversed = text.split('').reverse().join('');
+    document.getElementById('reverseOutput').textContent = reversed;
+    document.getElementById('reverseResult').classList.add('show');
+}
+
+// Initialize
+window.addEventListener('DOMContentLoaded', () => {
+    updateVisitorCount();
+    initTriviaGame();
+    document.getElementById('guessInput')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') makeGuess();
+    });
+});
+
+// Close modal on ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeTools();
+        stopBarcodeScan();
+    }
+});
+// PERBAIKAN TAMBAHAN: Mencegah text selection dengan mouse drag
+document.addEventListener('mousedown', function(e) {
+    // Jika bukan element yang boleh di-select, cegah selection
+    if (!e.target.matches('input') && 
+        !e.target.matches('textarea') && 
+        !e.target.classList.contains('result-text') &&
+        !e.target.classList.contains('password-result')) {
+        
+        // Hilangkan selection yang ada
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        }
+    }
+});
+
+// Mencegah klik kanan (context menu) untuk non-input elements
+document.addEventListener('contextmenu', function(e) {
+    if (!e.target.matches('input') && !e.target.matches('textarea')) {
+        e.preventDefault();
+    }
+});
+
+// PERBAIKAN: Tambahkan juga event untuk mencegah drag selection pada seluruh page
+document.addEventListener('dragstart', function(e) {
+    if (!e.target.matches('input') && !e.target.matches('textarea')) {
+        e.preventDefault();
+    }
+});
+// PERBAIKAN: Mencegah text selection pada seluruh tombol
+document.addEventListener('selectstart', function(e) {
+    if (e.target.tagName === 'BUTTON' || 
+        e.target.classList.contains('tool-item') ||
+        e.target.classList.contains('cipher-box') ||
+        e.target.classList.contains('mode-btn')) {
+        e.preventDefault();
+    }
+});
+</script>
+</body>
+</html>
