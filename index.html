@@ -2356,7 +2356,7 @@ let moves = 0;
 let matchedPairs = 0;
 let memoryTimer = null;
 let seconds = 0;
-const memorySymbols = ['🍎', '🍌', '🍒', '🍇', '🍊', '🍓', '🥭', '🍍', '🍉', '🍈', '🍔', '🫑', '🫜', '🥕', '🌽'];
+const memorySymbols = ['🍎', '🍌', '🍒', '🍇', '🍊', '🍓', '🥭', '🍍', '🍉', '🍈', '🍔', '🫜', '🥕', '🌽'];
 
 function startMemoryGame() {
     resetMemoryGame();
@@ -2404,10 +2404,10 @@ function flipMemoryCard(card) {
                 card1.classList.add('matched');
                 card2.classList.add('matched');
                 matchedPairs++;
-                document.getElementById('pairsCount').textContent = matchedPairs + '/15';
+                document.getElementById('pairsCount').textContent = matchedPairs + '/14';
                 flippedCards = [];
                 
-                if (matchedPairs === 15) {
+                if (matchedPairs === 14) {
                     clearInterval(memoryTimer);
                     document.getElementById('memoryDisplay').textContent = 
                         `🎉 You won! Time: ${seconds}s, Moves: ${moves}`;
@@ -2432,7 +2432,7 @@ function resetMemoryGame() {
     seconds = 0;
     document.getElementById('movesCount').textContent = '0';
     document.getElementById('timeCount').textContent = '0s';
-    document.getElementById('pairsCount').textContent = '0/15';
+    document.getElementById('pairsCount').textContent = '0/14';
     document.getElementById('memoryDisplay').textContent = 'Match the pairs! Click on cards to reveal them.';
 }
 
