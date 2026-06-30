@@ -2292,15 +2292,35 @@ input[type="number"]::-webkit-inner-spin-button {
 // ============================================================
 // VISITOR COUNTER — 👁️ emoji, count once per browser via localStorage
 // ============================================================
-function updateVisitorCount() {
+async function updateVisitorCount() {
+    // Globally shared counter (works across different devices/phones) via a free counting service.
+    // Change COUNTER_KEY to any unique string if you ever want to start a fresh count.
+    const COUNTER_KEY = 'secretcipher-ajaxx-edd00z-v1';
+    const countEl = document.getElementById('visitorCount');
     const hasVisited = localStorage.getItem('sc_hasVisited');
-    let count = parseInt(localStorage.getItem('sc_visitorCount') || '0');
-    if (!hasVisited) {
-        count++;
-        localStorage.setItem('sc_visitorCount', count.toString());
-        localStorage.setItem('sc_hasVisited', '1');
+    const cachedCount = localStorage.getItem('sc_lastKnownCount');
+
+    // Show last known number immediately so it's not blank while the network request runs
+    if (cachedCount) countEl.textContent = cachedCount;
+
+    try {
+        // First-time visitor on this device -> increment the global counter.
+        // Returning visitor -> just fetch the current global value (no double-counting).
+        const endpoint = hasVisited
+            ? `https://countapi.mileshilliard.com/api/v1/get/${COUNTER_KEY}`
+            : `https://countapi.mileshilliard.com/api/v1/hit/${COUNTER_KEY}`;
+        const res = await fetch(endpoint);
+        const data = await res.json();
+        if (data && data.value !== undefined && data.value !== null) {
+            countEl.textContent = data.value;
+            localStorage.setItem('sc_lastKnownCount', data.value);
+        }
+    } catch (err) {
+        // Offline or the counting service is unreachable — silently keep showing the cached number
+        console.warn('Visitor counter: could not reach counting service.', err);
     }
-    document.getElementById('visitorCount').textContent = count;
+
+    if (!hasVisited) localStorage.setItem('sc_hasVisited', '1');
 }
 
 // Tools Modal
