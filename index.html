@@ -12,7 +12,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-/* SOLUSI SIMPLE: Hilangkan SEMUA highlight di seluruh website */
 * {
     -webkit-tap-highlight-color: transparent !important;
     -webkit-touch-callout: none !important;
@@ -21,8 +20,6 @@
     -ms-user-select: none !important;
     user-select: none !important;
 }
-
-/* Kecuali untuk textarea dan input (biar bisa ketik) */
 textarea, 
 input[type="text"], 
 input[type="number"], 
@@ -35,34 +32,27 @@ input[type="email"],
     -ms-user-select: auto !important;
     user-select: auto !important;
 }
-
-/* Hilangkan outline biru saat focus */
 *:focus {
     outline: none !important;
 }
-
-/* Hilangkan highlight saat active/click di mobile */
 @media (max-width: 768px) {
     *:active {
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
     }
 }
-/* === PERBAIKAN: CEGAH TEXT SELECTION === */
 body {
-    user-select: none; /* Tidak bisa select text */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE/Edge */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
-
-/* Input dan textarea masih boleh dipilih */
 input, 
 textarea, 
 [contenteditable="true"],
-.result-text, /* Biarkan hasil cipher bisa dicopy */
-.password-result, /* Biarkan password bisa dicopy */
-.calc-display, /* Biarkan calculator display */
-.counter-textarea, /* Biarkan counter textarea */
+.result-text,
+.password-result,
+.calc-display,
+.counter-textarea,
 #textToBinaryOutput,
 #binaryToTextOutput,
 #caesarEncryptOutput,
@@ -77,14 +67,15 @@ textarea,
 #vigenereDecryptOutput,
 #reverseOutput,
 #qrToTextOutput,
-#barcodeScanResult
+#barcodeScanResult,
+#rfEncryptOutput,
+#rfDecryptOutput
 {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
 }
-/* === END PERBAIKAN === */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
     background: #0a0e27;
@@ -103,16 +94,14 @@ body {
     margin-bottom: 30px;
     width: 100%;
 }
-
 .header-left {
     flex: 1;
     display: flex;
     align-items: center;
     gap: 15px;
 }
-
 .tools-btn {
-    margin-left: auto; /* INI NIH YANG DORONG KE KANAN! */
+    margin-left: auto;
     background: #1a2235;
     color: #6b9bd1;
     border: 1px solid #2a3f5f;
@@ -124,7 +113,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    white-space: nowrap; /* Biar text ga wrap */
+    white-space: nowrap;
 }
 .tools-btn:hover {
     background: #243047;
@@ -151,7 +140,6 @@ h1 {
     font-size: 2em;
     font-weight: 600;
 }
-/* Watermark Footer - PERBAIKAN: SEJAJAR HORIZONTAL */
 .watermark {
     position: fixed;
     bottom: 0;
@@ -196,7 +184,6 @@ h1 {
 .visitor-count span {
     color: #f39c12;
 }
-/* Tools Modal */
 .tools-modal {
     display: none;
     position: fixed;
@@ -268,11 +255,8 @@ h1 {
     margin-bottom: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
 }
 .tool-item:hover {
     border-color: #6b9bd1;
@@ -287,7 +271,6 @@ h1 {
     color: #8a95a8;
     font-size: 0.9em;
 }
-/* Tool Content Box */
 .tool-content-box {
     background: #0f1420;
     border-radius: 10px;
@@ -324,7 +307,6 @@ h1 {
     font-size: 1.1em;
     cursor: pointer;
     transition: all 0.2s ease;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -341,7 +323,6 @@ h1 {
     color: white;
     grid-column: span 2;
 }
-/* Password Generator */
 .password-options {
     display: flex;
     flex-wrap: wrap;
@@ -396,7 +377,6 @@ h1 {
     transition: all 0.3s ease;
     margin-right: 10px;
     margin-bottom: 5px;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -404,7 +384,6 @@ h1 {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(107, 155, 209, 0.3);
 }
-/* Text Counter */
 .counter-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -439,7 +418,6 @@ h1 {
     color: #e8eaf0;
     resize: vertical;
 }
-/* Game Styles */
 .game-container {
     text-align: center;
 }
@@ -467,7 +445,6 @@ h1 {
     outline: none;
     border-color: #6b9bd1;
 }
-/* Memory Card Game */
 .memory-board {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -485,7 +462,6 @@ h1 {
     cursor: pointer;
     transform-style: preserve-3d;
     transition: transform 0.5s;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -516,7 +492,6 @@ h1 {
     gap: 30px;
     margin-top: 15px;
 }
-/* Whack-a-Mole Game */
 .mole-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -534,7 +509,6 @@ h1 {
     cursor: pointer;
     border: 2px solid #2a3f5f;
     transition: all 0.2s;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -562,7 +536,6 @@ h1 {
     width: 100%;
     transition: width 0.1s linear;
 }
-/* Reaction Time */
 .reaction-box {
     width: 100%;
     height: 150px;
@@ -574,7 +547,6 @@ h1 {
     cursor: pointer;
     transition: background 0.3s ease;
     margin-bottom: 15px;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -590,7 +562,6 @@ h1 {
     background: #3498db;
     color: white;
 }
-/* Color Picker */
 .color-picker-container {
     display: flex;
     flex-direction: column;
@@ -624,11 +595,6 @@ h1 {
     color: #e8eaf0;
     font-size: 0.95em;
 }
-.color-input-group input:focus {
-    outline: none;
-    border-color: #6b9bd1;
-}
-/* Unit Converter */
 .converter-container {
     display: flex;
     flex-direction: column;
@@ -662,7 +628,6 @@ h1 {
     font-size: 1.5em;
     padding-bottom: 10px;
 }
-/* Trivia Quiz */
 .quiz-options {
     display: flex;
     flex-direction: column;
@@ -679,7 +644,6 @@ h1 {
     text-align: left;
     font-size: 1em;
     color: #e8eaf0;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -718,7 +682,6 @@ h1 {
     cursor: pointer;
     transition: all 0.3s ease;
     border: 1px solid #1e2a42;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -764,7 +727,6 @@ h1 {
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -833,7 +795,6 @@ textarea:focus, input[type="text"]:focus {
     border-color: #6b9bd1;
     box-shadow: 0 0 0 3px rgba(107, 155, 209, 0.1);
 }
-/* PERBAIKAN: Error style konsisten untuk QR dan Barcode */
 textarea.error, input[type="text"].error {
     border-color: #e74c3c !important;
     box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2) !important;
@@ -861,7 +822,6 @@ textarea.error, input[type="text"].error {
     justify-content: center;
     transition: all 0.3s ease;
     opacity: 0.7;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -887,7 +847,6 @@ textarea.error, input[type="text"].error {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -908,7 +867,6 @@ textarea.error, input[type="text"].error {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -926,7 +884,6 @@ textarea.error, input[type="text"].error {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -973,7 +930,6 @@ textarea.error, input[type="text"].error {
     cursor: pointer;
     font-size: 0.9em;
     transition: all 0.3s ease;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -995,7 +951,6 @@ textarea.error, input[type="text"].error {
     cursor: pointer;
     font-size: 0.9em;
     transition: all 0.3s ease;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -1028,7 +983,6 @@ textarea.error, input[type="text"].error {
     cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: 15px;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -1039,7 +993,6 @@ textarea.error, input[type="text"].error {
 .qr-upload input {
     display: none;
 }
-/* Vigenere Table */
 .vigenere-table {
     overflow-x: auto;
     margin: 20px 0;
@@ -1119,7 +1072,6 @@ textarea.error, input[type="text"].error {
     font-size: 1.5em;
     margin-left: 10px;
 }
-/* Barcode styles */
 .barcode-type-selector {
     display: flex;
     flex-wrap: wrap;
@@ -1134,7 +1086,6 @@ textarea.error, input[type="text"].error {
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -1157,7 +1108,6 @@ textarea.error, input[type="text"].error {
 .barcode-error.show {
     display: block;
 }
-/* Barcode Scanner */
 .barcode-scanner-area {
     border: 2px dashed #2a3f5f;
     border-radius: 8px;
@@ -1171,7 +1121,6 @@ textarea.error, input[type="text"].error {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* PERBAIKAN: Mencegah text selection */
     user-select: none;
     -webkit-user-select: none;
 }
@@ -1194,8 +1143,151 @@ textarea.error, input[type="text"].error {
     color: #5ec78a;
     display: none;
 }
-
-/* Responsive */
+/* Rail fence visual */
+.rail-visual {
+    overflow-x: auto;
+    background: #0a0e1a;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #2a3f5f;
+    margin-top: 15px;
+    display: none;
+}
+.rail-visual-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.rail-row {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    min-width: max-content;
+}
+.rail-label {
+    font-size: 0.78em;
+    font-weight: 600;
+    min-width: 58px;
+    flex-shrink: 0;
+}
+.rail-char {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 0.88em;
+    border: 1px solid transparent;
+}
+.rail-char.active {
+    border-width: 1px;
+    border-style: solid;
+}
+.rail-char.empty {
+    color: #2a3f5f;
+}
+/* Pigpen Cipher */
+.pigpen-canvas-wrap {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+}
+.pigpen-canvas-wrap canvas {
+    display: block;
+}
+.pigpen-key-group-title {
+    color: #8a95a8;
+    font-size: 0.82em;
+    margin: 16px 0 8px 0;
+}
+.pigpen-key-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(46px, 1fr));
+    gap: 8px;
+}
+.pigpen-key-btn {
+    background: #0a0e1a;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 6px 4px 4px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.pigpen-key-btn:hover {
+    border-color: #6b9bd1;
+    transform: translateY(-2px);
+}
+.pigpen-key-btn.readonly {
+    cursor: default;
+}
+.pigpen-key-btn.readonly:hover {
+    transform: none;
+    border-color: #2a3f5f;
+}
+.pigpen-key-btn canvas {
+    display: block;
+}
+.pigpen-key-btn span {
+    font-size: 0.72em;
+    color: #6b9bd1;
+    font-weight: 600;
+}
+.pigpen-buffer-bar {
+    background: #0a0e1a;
+    border: 1px solid #2a3f5f;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    min-height: 24px;
+    color: #5ec78a;
+    font-family: monospace;
+    font-size: 1.1em;
+    word-break: break-all;
+}
+.pigpen-legend-toggle {
+    color: #6b9bd1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.88em;
+    text-decoration: underline;
+    margin-top: 10px;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.pigpen-legend-box {
+    display: none;
+    margin-top: 15px;
+    background: #0f1420;
+    border: 1px solid #2a3f5f;
+    border-radius: 10px;
+    padding: 18px;
+}
+.pigpen-legend-box.show {
+    display: block;
+}
+/* number input style */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 @media (max-width: 768px) {
     .watermark-content {
         gap: 15px;
@@ -1209,7 +1301,6 @@ textarea.error, input[type="text"].error {
 </head>
 <body>
 <div class="container">
-    <!-- PERBAIKAN: Header kembali ke layout awal -->
     <div id="homePage">
         <div class="header">
             <div class="header-left">
@@ -1227,6 +1318,12 @@ textarea.error, input[type="text"].error {
             <div class="cipher-box" onclick="goToPage('qwerty')"><h2>QWERTY Cipher</h2><p>Encrypt with keyboard layout</p></div>
             <div class="cipher-box" onclick="goToPage('vigenere')"><h2>Vigenere Cipher</h2><p>Encrypt with secret key + Tabula Recta</p></div>
             <div class="cipher-box" onclick="goToPage('reverse')"><h2>Reverse Text</h2><p>Reverse text backwards</p></div>
+            <!-- Rail Fence Cipher -->
+            <div class="cipher-box" onclick="goToPage('railfence')"><h2>Rail Fence</h2><p>Zigzag transposition cipher with visual pattern</p></div>
+            <!-- Polybius Square Cipher -->
+            <div class="cipher-box" onclick="goToPage('polybius')"><h2>Polybius Square</h2><p>Classic 5x5 grid cipher using coordinate pairs</p></div>
+            <!-- Pigpen Cipher -->
+            <div class="cipher-box" onclick="goToPage('pigpen')"><h2>Pigpen Cipher</h2><p>Sandi kotak/pramuka — letters become geometric symbols</p></div>
         </div>
     </div>
 
@@ -1418,8 +1515,10 @@ textarea.error, input[type="text"].error {
         </div>
         <div id="qrToTextBox" class="encoder-box">
             <h3>Scan QR Code</h3>
-            <div class="qr-upload" onclick="document.getElementById('qrFileInput').click()">
+            <!-- FIXED: Better upload area with reset & preview -->
+            <div class="qr-upload" id="qrUploadArea" onclick="document.getElementById('qrFileInput').click()">
                 <p style="color: #6b9bd1; margin-bottom: 10px;">📷 Click to upload QR image</p>
+                <p style="color: #8a95a8; font-size: 0.85em;">JPG, PNG, or WEBP accepted</p>
                 <input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)">
             </div>
             <canvas id="qrCanvas" style="display:none;"></canvas>
@@ -1433,7 +1532,7 @@ textarea.error, input[type="text"].error {
         </div>
     </div>
 
-    <!-- Barcode Page - PERBAIKAN: Menggunakan TEC-IT API -->
+    <!-- Barcode Page -->
     <div id="barcodePage" class="cipher-page">
         <div class="header">
             <div class="header-left">
@@ -1479,9 +1578,7 @@ textarea.error, input[type="text"].error {
                         <button class="download-small-btn" onclick="downloadBarcode()">Download</button>
                     </div>
                 </div>
-                <div id="barcodeOutputContainer">
-                    <!-- Barcode akan ditampilkan di sini -->
-                </div>
+                <div id="barcodeOutputContainer"></div>
             </div>
         </div>
         <div id="barcodeToTextBox" class="encoder-box">
@@ -1706,10 +1803,226 @@ textarea.error, input[type="text"].error {
             </div>
         </div>
     </div>
+
+    <!-- ✨ NEW: Rail Fence Cipher Page -->
+    <div id="railfencePage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Rail Fence</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('railfence', 'rfEncrypt')"><h3>Encrypt</h3><p>Zigzag encrypt</p></div>
+            <div class="mode-btn" onclick="selectMode('railfence', 'rfDecrypt')"><h3>Decrypt</h3><p>Zigzag decrypt</p></div>
+        </div>
+
+        <!-- Encrypt Box -->
+        <div id="rfEncryptBox" class="encoder-box show">
+            <h3>Rail Fence Encrypt</h3>
+            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Writes text in a zigzag pattern across N rails, then reads each rail left-to-right.</p>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
+                <label style="color:#8a95a8; font-size:0.9em; flex-shrink:0;">Number of Rails:</label>
+                <input type="number" id="rfEncryptRails" value="3" min="2" max="10"
+                       style="width:70px; min-height:auto; padding:9px 10px; border:1px solid #2a3f5f; border-radius:6px; background:#0a0e1a; color:#e8eaf0; font-size:1em; text-align:center;">
+                <span style="color:#5ec78a; font-size:0.82em;">(2–10)</span>
+            </div>
+            <div class="input-wrapper">
+                <textarea id="rfEncryptInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('rfEncryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="encryptRailFence()">Encrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('rfEncrypt')">Remove All</button>
+            </div>
+            <!-- Visual Pattern -->
+            <div class="rail-visual" id="rfEncryptVisual">
+                <p style="color:#8a95a8; font-size:0.82em; margin-bottom:10px;">📊 Zigzag Rail Pattern:</p>
+                <div class="rail-visual-inner" id="rfEncryptVisualInner"></div>
+            </div>
+            <div id="rfEncryptResult" class="result">
+                <div class="result-header">
+                    <h4>Encrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('rfEncryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="rfEncryptOutput"></div>
+            </div>
+        </div>
+
+        <!-- Decrypt Box -->
+        <div id="rfDecryptBox" class="encoder-box">
+            <h3>Rail Fence Decrypt</h3>
+            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Use the same number of rails as encryption to recover the original text.</p>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
+                <label style="color:#8a95a8; font-size:0.9em; flex-shrink:0;">Number of Rails:</label>
+                <input type="number" id="rfDecryptRails" value="3" min="2" max="10"
+                       style="width:70px; min-height:auto; padding:9px 10px; border:1px solid #2a3f5f; border-radius:6px; background:#0a0e1a; color:#e8eaf0; font-size:1em; text-align:center;">
+                <span style="color:#5ec78a; font-size:0.82em;">(must match encrypt)</span>
+            </div>
+            <div class="input-wrapper">
+                <textarea id="rfDecryptInput" placeholder="Enter encrypted text..."></textarea>
+                <button class="clear-btn" onclick="clearInput('rfDecryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="decryptRailFence()">Decrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('rfDecrypt')">Remove All</button>
+            </div>
+            <!-- Visual Pattern -->
+            <div class="rail-visual" id="rfDecryptVisual">
+                <p style="color:#8a95a8; font-size:0.82em; margin-bottom:10px;">📊 Zigzag Rail Pattern (decrypted):</p>
+                <div class="rail-visual-inner" id="rfDecryptVisualInner"></div>
+            </div>
+            <div id="rfDecryptResult" class="result">
+                <div class="result-header">
+                    <h4>Decrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('rfDecryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="rfDecryptOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Polybius Square Cipher Page -->
+    <div id="polybiusPage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Polybius Square</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('polybius', 'pbEncrypt')"><h3>Encrypt</h3><p>Letters to coordinates</p></div>
+            <div class="mode-btn" onclick="selectMode('polybius', 'pbDecrypt')"><h3>Decrypt</h3><p>Coordinates to letters</p></div>
+            <div class="mode-btn" onclick="selectMode('polybius', 'pbGrid')"><h3>Grid</h3><p>View 5x5 square</p></div>
+        </div>
+
+        <div id="pbEncryptBox" class="encoder-box show">
+            <h3>Polybius Encrypt</h3>
+            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Each letter is replaced by its row and column number in a 5x5 grid (I and J share a cell). Output is pairs of digits separated by spaces.</p>
+            <div class="input-wrapper">
+                <textarea id="pbEncryptInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('pbEncryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="encryptPolybius()">Encrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('pbEncrypt')">Remove All</button>
+            </div>
+            <div id="pbEncryptResult" class="result">
+                <div class="result-header">
+                    <h4>Encrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('pbEncryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="pbEncryptOutput"></div>
+            </div>
+        </div>
+
+        <div id="pbDecryptBox" class="encoder-box">
+            <h3>Polybius Decrypt</h3>
+            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Enter pairs of digits separated by spaces (e.g.: 23 15 31 31 34).</p>
+            <div class="input-wrapper">
+                <textarea id="pbDecryptInput" placeholder="Enter coordinates (e.g.: 23 15 31 31 34)"></textarea>
+                <button class="clear-btn" onclick="clearInput('pbDecryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="decryptPolybius()">Decrypt</button>
+                <button class="btn-clear-all" onclick="clearAll('pbDecrypt')">Remove All</button>
+            </div>
+            <div id="pbDecryptResult" class="result">
+                <div class="result-header">
+                    <h4>Decrypted Result:</h4>
+                    <button class="copy-btn" onclick="copyText('pbDecryptOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="pbDecryptOutput"></div>
+            </div>
+        </div>
+
+        <div id="pbGridBox" class="encoder-box">
+            <h3>Polybius Square (5×5)</h3>
+            <p style="color:#8a95a8; margin-bottom: 15px;">Type a letter to see its row/column position highlighted</p>
+            <div class="table-input-group" style="grid-template-columns: 1fr;">
+                <input type="text" id="pbGridLetterInput" placeholder="Letter (e.g.: H)" maxlength="1" oninput="updatePolybiusHighlight()">
+            </div>
+            <div class="highlight-info" id="pbHighlightInfo" style="display:none;">
+                Letter: <span id="pbInfoLetter">-</span> | Coordinates: <span class="result-letter" id="pbInfoResult">-</span>
+            </div>
+            <div class="vigenere-table" id="polybiusGridContainer"></div>
+        </div>
+    </div>
+
+    <!-- Pigpen Cipher Page -->
+    <div id="pigpenPage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <h1>Pigpen Cipher</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('pigpen', 'pgEncrypt')"><h3>Encrypt</h3><p>Text to symbols</p></div>
+            <div class="mode-btn" onclick="selectMode('pigpen', 'pgDecrypt')"><h3>Decrypt</h3><p>Click symbols to decode</p></div>
+        </div>
+
+        <!-- Encrypt Box -->
+        <div id="pgEncryptBox" class="encoder-box show">
+            <h3>Pigpen Encrypt</h3>
+            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Also known as Sandi Kotak (Pramuka). Every letter becomes a geometric symbol based on its position in two grids and an X — only someone with the key can read it back.</p>
+            <div class="input-wrapper">
+                <textarea id="pgEncryptInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('pgEncryptInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="encryptPigpen()">Encrypt</button>
+                <button class="btn-clear-all" onclick="clearAllPigpenEncrypt()">Remove All</button>
+            </div>
+            <div id="pgEncryptResult" class="result">
+                <div class="result-header">
+                    <h4>Encrypted Symbols:</h4>
+                    <div class="result-buttons">
+                        <button class="download-small-btn" onclick="downloadPigpen()">Download</button>
+                    </div>
+                </div>
+                <div class="pigpen-canvas-wrap">
+                    <canvas id="pgEncryptCanvas"></canvas>
+                </div>
+            </div>
+            <button class="pigpen-legend-toggle" onclick="togglePigpenLegend('pgLegendEncrypt')">🔑 Show Key / Legend</button>
+            <div class="pigpen-legend-box" id="pgLegendEncrypt"></div>
+        </div>
+
+        <!-- Decrypt Box -->
+        <div id="pgDecryptBox" class="encoder-box">
+            <h3>Pigpen Decrypt</h3>
+            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Tap the symbols below in order, matching the encrypted message you received, to reveal the plain text.</p>
+            <h4 style="color:#6b9bd1; font-size:1em; margin-bottom:8px;">Decoded Text:</h4>
+            <div class="pigpen-buffer-bar" id="pgBufferText">—</div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="pigpenAddSpace()">Add Space</button>
+                <button class="btn-convert" onclick="pigpenBackspace()">← Backspace</button>
+                <button class="btn-clear-all" onclick="pigpenClearBuffer()">Clear</button>
+            </div>
+
+            <div class="pigpen-key-group-title">Plain Grid — A to I</div>
+            <div class="pigpen-key-grid" id="pgPaletteGrid1"></div>
+
+            <div class="pigpen-key-group-title">Dotted Grid — J to R</div>
+            <div class="pigpen-key-grid" id="pgPaletteGrid2"></div>
+
+            <div class="pigpen-key-group-title">Plain X — S to V</div>
+            <div class="pigpen-key-grid x-grid" id="pgPaletteGrid3"></div>
+
+            <div class="pigpen-key-group-title">Dotted X — W to Z</div>
+            <div class="pigpen-key-grid x-grid" id="pgPaletteGrid4"></div>
+        </div>
+    </div>
+
 </div>
 
-<!-- Watermark Footer - PERBAIKAN: SEJAJAR SEMPURNA -->
-<div class="watermark">
+
+<!-- Watermark Footer — 👁️ emoji + unique visitor fix -->
+<div class="watermark" id="watermarkFooter">
     <div class="watermark-content">
         <div class="watermark-item">
             <span>Made by:</span>
@@ -1720,7 +2033,7 @@ textarea.error, input[type="text"].error {
             <a href="https://instagram.com/edd_00z" target="_blank">@edd_00z</a>
         </div>
         <div class="visitor-count">
-            <span>👥 Visitors: <span id="visitorCount">0</span></span>
+            <span>👁️ Visitors: <span id="visitorCount">0</span></span>
         </div>
     </div>
 </div>
@@ -1791,22 +2104,10 @@ textarea.error, input[type="text"].error {
         <div id="textCounterTool" class="tool-content-box">
             <textarea class="counter-textarea" id="counterInput" placeholder="Type or paste text here..." oninput="updateCounter()"></textarea>
             <div class="counter-stats">
-                <div class="counter-stat">
-                    <h4>Chars</h4>
-                    <span id="charCount">0</span>
-                </div>
-                <div class="counter-stat">
-                    <h4>Words</h4>
-                    <span id="wordCount">0</span>
-                </div>
-                <div class="counter-stat">
-                    <h4>Lines</h4>
-                    <span id="lineCount">0</span>
-                </div>
-                <div class="counter-stat">
-                    <h4>No Space</h4>
-                    <span id="noSpaceCount">0</span>
-                </div>
+                <div class="counter-stat"><h4>Chars</h4><span id="charCount">0</span></div>
+                <div class="counter-stat"><h4>Words</h4><span id="wordCount">0</span></div>
+                <div class="counter-stat"><h4>Lines</h4><span id="lineCount">0</span></div>
+                <div class="counter-stat"><h4>No Space</h4><span id="noSpaceCount">0</span></div>
             </div>
         </div>
 
@@ -1892,7 +2193,6 @@ textarea.error, input[type="text"].error {
 
         <div class="tool-section-title">🎮 Games</div>
         
-        <!-- Trivia Quiz -->
         <div class="tool-item" onclick="toggleTool('triviaGame')">
             <h3>🧠 Trivia Quiz ❓</h3>
             <p>Test your knowledge with fun questions</p>
@@ -1902,25 +2202,15 @@ textarea.error, input[type="text"].error {
                 <div class="game-display" id="triviaQuestion">Loading question...</div>
                 <div class="quiz-options" id="triviaOptions"></div>
                 <div class="quiz-stats">
-                    <div>
-                        <p style="color: #8a95a8;">Score</p>
-                        <span id="triviaScore" style="color: #6b9bd1; font-weight: bold;">0</span>
-                    </div>
-                    <div>
-                        <p style="color: #8a95a8;">Question</p>
-                        <span id="triviaProgress" style="color: #f39c12; font-weight: bold;">0/10</span>
-                    </div>
-                    <div>
-                        <p style="color: #8a95a8;">Best</p>
-                        <span id="triviaBest" style="color: #5ec78a; font-weight: bold;">0</span>
-                    </div>
+                    <div><p style="color: #8a95a8;">Score</p><span id="triviaScore" style="color: #6b9bd1; font-weight: bold;">0</span></div>
+                    <div><p style="color: #8a95a8;">Question</p><span id="triviaProgress" style="color: #f39c12; font-weight: bold;">0/10</span></div>
+                    <div><p style="color: #8a95a8;">Best</p><span id="triviaBest" style="color: #5ec78a; font-weight: bold;">0</span></div>
                 </div>
                 <button class="tool-btn" onclick="nextTriviaQuestion()">Next Question</button>
                 <button class="tool-btn" onclick="resetTriviaGame()">Reset Game</button>
             </div>
         </div>
 
-        <!-- Memory Card Game -->
         <div class="tool-item" onclick="toggleTool('memoryGame')">
             <h3>🗃️ Memory Cards 🃏</h3>
             <p>Test your memory with matching cards</p>
@@ -1930,25 +2220,15 @@ textarea.error, input[type="text"].error {
                 <div class="game-display" id="memoryDisplay">Match the pairs! Click on cards to reveal them.</div>
                 <div class="memory-board" id="memoryBoard"></div>
                 <div class="memory-stats">
-                    <div>
-                        <p style="color: #8a95a8;">Moves</p>
-                        <span id="movesCount" style="color: #6b9bd1; font-weight: bold;">0</span>
-                    </div>
-                    <div>
-                        <p style="color: #8a95a8;">Time</p>
-                        <span id="timeCount" style="color: #6b9bd1; font-weight: bold;">0s</span>
-                    </div>
-                    <div>
-                        <p style="color: #8a95a8;">Pairs</p>
-                        <span id="pairsCount" style="color: #5ec78a; font-weight: bold;">0/8</span>
-                    </div>
+                    <div><p style="color: #8a95a8;">Moves</p><span id="movesCount" style="color: #6b9bd1; font-weight: bold;">0</span></div>
+                    <div><p style="color: #8a95a8;">Time</p><span id="timeCount" style="color: #6b9bd1; font-weight: bold;">0s</span></div>
+                    <div><p style="color: #8a95a8;">Pairs</p><span id="pairsCount" style="color: #5ec78a; font-weight: bold;">0/8</span></div>
                 </div>
                 <button class="tool-btn" onclick="startMemoryGame()">New Game</button>
                 <button class="tool-btn" onclick="resetMemoryGame()">Reset</button>
             </div>
         </div>
 
-        <!-- Number Guessing Game -->
         <div class="tool-item" onclick="toggleTool('guessGame')">
             <h3>🎯 Number Guessing 🧐</h3>
             <p>Guess the secret number (1-100)</p>
@@ -1963,7 +2243,6 @@ textarea.error, input[type="text"].error {
             </div>
         </div>
 
-        <!-- Whack-a-Mole Game -->
         <div class="tool-item" onclick="toggleTool('moleGame')">
             <h3>🕳️ Whack-a-Mole 🐭</h3>
             <p>Click the moles as they appear!</p>
@@ -1971,9 +2250,7 @@ textarea.error, input[type="text"].error {
         <div id="moleGameTool" class="tool-content-box">
             <div class="game-container">
                 <div class="game-display" id="moleDisplay">Click the moles! Score as many as you can in 30 seconds!</div>
-                <div class="mole-timer">
-                    <div class="mole-timer-bar" id="moleTimerBar"></div>
-                </div>
+                <div class="mole-timer"><div class="mole-timer-bar" id="moleTimerBar"></div></div>
                 <div class="mole-grid" id="moleGrid">
                     <div class="mole-hole" onclick="whackMole(0)"></div>
                     <div class="mole-hole" onclick="whackMole(1)"></div>
@@ -1986,34 +2263,22 @@ textarea.error, input[type="text"].error {
                     <div class="mole-hole" onclick="whackMole(8)"></div>
                 </div>
                 <div class="memory-stats">
-                    <div>
-                        <p style="color: #8a95a8;">Score</p>
-                        <span id="moleScore" style="color: #6b9bd1; font-weight: bold;">0</span>
-                    </div>
-                    <div>
-                        <p style="color: #8a95a8;">Time Left</p>
-                        <span id="moleTime" style="color: #f39c12; font-weight: bold;">30s</span>
-                    </div>
-                    <div>
-                        <p style="color: #8a95a8;">Best</p>
-                        <span id="moleBest" style="color: #5ec78a; font-weight: bold;">0</span>
-                    </div>
+                    <div><p style="color: #8a95a8;">Score</p><span id="moleScore" style="color: #6b9bd1; font-weight: bold;">0</span></div>
+                    <div><p style="color: #8a95a8;">Time Left</p><span id="moleTime" style="color: #f39c12; font-weight: bold;">30s</span></div>
+                    <div><p style="color: #8a95a8;">Best</p><span id="moleBest" style="color: #5ec78a; font-weight: bold;">0</span></div>
                 </div>
                 <button class="tool-btn" onclick="startMoleGame()">Start Game</button>
                 <button class="tool-btn" onclick="stopMoleGame()">Stop</button>
             </div>
         </div>
 
-        <!-- Reaction Time Game -->
         <div class="tool-item" onclick="toggleTool('reactionGame')">
             <h3>⚡ Reaction Time 💨</h3>
             <p>Test your reaction speed</p>
         </div>
         <div id="reactionGameTool" class="tool-content-box">
             <div class="game-container">
-                <div class="reaction-box waiting" id="reactionBox" onclick="handleReactionClick()">
-                    Wait for green...
-                </div>
+                <div class="reaction-box waiting" id="reactionBox" onclick="handleReactionClick()">Wait for green...</div>
                 <div class="game-display" id="reactionDisplay">Click "Start" then wait for the box to turn green!</div>
                 <p style="color: #8a95a8; margin-bottom: 15px;">Best Time: <span id="bestReaction" style="color: #5ec78a; font-weight: bold;">-- ms</span></p>
                 <button class="tool-btn" onclick="startReaction()">Start</button>
@@ -2024,29 +2289,24 @@ textarea.error, input[type="text"].error {
 </div>
 
 <script>
-// PERBAIKAN 1 & 2: Watermark Footer SEJAJAR & Header kembali ke layout awal
-// PERBAIKAN 3: QR dan Barcode pakai error merah, tidak pakai alert
-// PERBAIKAN 4: Semua tombol dicegah text selection
-
-// Visitor Counter
+// ============================================================
+// VISITOR COUNTER — 👁️ emoji, count once per browser via localStorage
+// ============================================================
 function updateVisitorCount() {
-    localStorage.setItem('visitorCount', '0');
-    document.getElementById('visitorCount').textContent = '0';
+    const hasVisited = localStorage.getItem('sc_hasVisited');
+    let count = parseInt(localStorage.getItem('sc_visitorCount') || '0');
+    if (!hasVisited) {
+        count++;
+        localStorage.setItem('sc_visitorCount', count.toString());
+        localStorage.setItem('sc_hasVisited', '1');
+    }
+    document.getElementById('visitorCount').textContent = count;
 }
 
 // Tools Modal
-function openTools() {
-    document.getElementById('toolsModal').classList.add('show');
-}
-
-function closeTools() {
-    document.getElementById('toolsModal').classList.remove('show');
-}
-
-function toggleTool(toolId) {
-    const tool = document.getElementById(toolId + 'Tool');
-    tool.classList.toggle('show');
-}
+function openTools() { document.getElementById('toolsModal').classList.add('show'); }
+function closeTools() { document.getElementById('toolsModal').classList.remove('show'); }
+function toggleTool(toolId) { document.getElementById(toolId + 'Tool').classList.toggle('show'); }
 
 // Calculator
 let calcExpression = '';
@@ -2055,51 +2315,32 @@ function calcInput(val) {
     calcExpression += val;
     document.getElementById('calcDisplay').textContent = calcExpression;
 }
-function calcClear() {
-    calcExpression = '0';
-    document.getElementById('calcDisplay').textContent = calcExpression;
-}
-function calcDelete() {
-    calcExpression = calcExpression.slice(0, -1) || '0';
-    document.getElementById('calcDisplay').textContent = calcExpression;
-}
+function calcClear() { calcExpression = '0'; document.getElementById('calcDisplay').textContent = calcExpression; }
+function calcDelete() { calcExpression = calcExpression.slice(0, -1) || '0'; document.getElementById('calcDisplay').textContent = calcExpression; }
 function calcCalculate() {
     try {
         const result = eval(calcExpression.replace('×', '*'));
         calcExpression = result.toString();
         document.getElementById('calcDisplay').textContent = calcExpression;
-    } catch (e) {
-        document.getElementById('calcDisplay').textContent = 'Error';
-        calcExpression = '0';
-    }
+    } catch(e) { document.getElementById('calcDisplay').textContent = 'Error'; calcExpression = '0'; }
 }
 
 // Password Generator
-function updateLengthDisplay() {
-    document.getElementById('lengthDisplay').textContent = document.getElementById('passLength').value;
-}
+function updateLengthDisplay() { document.getElementById('lengthDisplay').textContent = document.getElementById('passLength').value; }
 function generatePassword() {
     const length = parseInt(document.getElementById('passLength').value);
     const useUpper = document.getElementById('passUpper').checked;
     const useLower = document.getElementById('passLower').checked;
     const useNumbers = document.getElementById('passNumbers').checked;
     const useSymbols = document.getElementById('passSymbols').checked;
-    
     let chars = '';
     if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
     if (useNumbers) chars += '0123456789';
     if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    
-    if (!chars) {
-        document.getElementById('passwordResult').textContent = 'Select at least one option!';
-        return;
-    }
-    
+    if (!chars) { document.getElementById('passwordResult').textContent = 'Select at least one option!'; return; }
     let password = '';
-    for (let i = 0; i < length; i++) {
-        password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    for (let i = 0; i < length; i++) password += chars.charAt(Math.floor(Math.random() * chars.length));
     document.getElementById('passwordResult').textContent = password;
 }
 function copyPassword() {
@@ -2125,9 +2366,7 @@ function hexToRgb() {
     if (!hex.startsWith('#')) hex = '#' + hex;
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (result) {
-        const r = parseInt(result[1], 16);
-        const g = parseInt(result[2], 16);
-        const b = parseInt(result[3], 16);
+        const r = parseInt(result[1], 16), g = parseInt(result[2], 16), b = parseInt(result[3], 16);
         document.getElementById('rInput').value = r;
         document.getElementById('gInput').value = g;
         document.getElementById('bInput').value = b;
@@ -2137,1174 +2376,971 @@ function hexToRgb() {
     }
 }
 function rgbToHex() {
-    const r = parseInt(document.getElementById('rInput').value) || 0;
-    const g = parseInt(document.getElementById('gInput').value) || 0;
-    const b = parseInt(document.getElementById('bInput').value) || 0;
-    const hex = '#' + [r, g, b].map(x => {
-        const hex = Math.min(255, Math.max(0, x)).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-    }).join('');
+    const r = parseInt(document.getElementById('rInput').value)||0;
+    const g = parseInt(document.getElementById('gInput').value)||0;
+    const b = parseInt(document.getElementById('bInput').value)||0;
+    const hex = '#' + [r,g,b].map(x => { const h = Math.min(255,Math.max(0,x)).toString(16); return h.length===1?'0'+h:h; }).join('');
     document.getElementById('hexInput').value = hex;
     document.getElementById('rgbOutput').value = `rgb(${r}, ${g}, ${b})`;
     document.getElementById('colorPreview').style.background = hex;
     document.getElementById('colorInput').value = hex;
 }
-function colorPickerChange() {
-    const hex = document.getElementById('colorInput').value;
-    document.getElementById('hexInput').value = hex;
-    hexToRgb();
-}
+function colorPickerChange() { const hex = document.getElementById('colorInput').value; document.getElementById('hexInput').value = hex; hexToRgb(); }
 function copyColor(type) {
-    let text;
-    if (type === 'hex') {
-        text = document.getElementById('hexInput').value;
-    } else {
-        text = document.getElementById('rgbOutput').value;
-    }
+    const text = type==='hex' ? document.getElementById('hexInput').value : document.getElementById('rgbOutput').value;
     navigator.clipboard.writeText(text);
     alert('Copied: ' + text);
 }
 
 // Unit Converter
 const unitConversions = {
-    length: { m: 1, km: 0.001, cm: 100, ft: 3.28084, in: 39.3701 },
-    weight: { kg: 1, g: 1000, lb: 2.20462, oz: 35.274 },
-    temperature: { c: 'celsius', f: 'fahrenheit', k: 'kelvin' }
+    length: { m:1, km:0.001, cm:100, ft:3.28084, in:39.3701 },
+    weight: { kg:1, g:1000, lb:2.20462, oz:35.274 }
 };
 function updateUnitOptions() {
     const type = document.getElementById('unitType').value;
-    const fromSelect = document.getElementById('unitFrom');
-    const toSelect = document.getElementById('unitTo');
+    const fromSelect = document.getElementById('unitFrom'), toSelect = document.getElementById('unitTo');
     let options = '';
-    if (type === 'length') {
-        options = `
-            <option value="m">Meters</option>
-            <option value="km">Kilometers</option>
-            <option value="cm">Centimeters</option>
-            <option value="ft">Feet</option>
-            <option value="in">Inches</option>
-        `;
-    } else if (type === 'weight') {
-        options = `
-            <option value="kg">Kilograms</option>
-            <option value="g">Grams</option>
-            <option value="lb">Pounds</option>
-            <option value="oz">Ounces</option>
-        `;
-    } else if (type === 'temperature') {
-        options = `
-            <option value="c">Celsius</option>
-            <option value="f">Fahrenheit</option>
-            <option value="k">Kelvin</option>
-        `;
-    }
-    fromSelect.innerHTML = options;
-    toSelect.innerHTML = options;
+    if (type==='length') options = `<option value="m">Meters</option><option value="km">Kilometers</option><option value="cm">Centimeters</option><option value="ft">Feet</option><option value="in">Inches</option>`;
+    else if (type==='weight') options = `<option value="kg">Kilograms</option><option value="g">Grams</option><option value="lb">Pounds</option><option value="oz">Ounces</option>`;
+    else if (type==='temperature') options = `<option value="c">Celsius</option><option value="f">Fahrenheit</option><option value="k">Kelvin</option>`;
+    fromSelect.innerHTML = toSelect.innerHTML = options;
     convertUnits();
 }
 function convertUnits() {
     const type = document.getElementById('unitType').value;
-    const fromValue = parseFloat(document.getElementById('unitFromValue').value) || 0;
-    const fromUnit = document.getElementById('unitFrom').value;
-    const toUnit = document.getElementById('unitTo').value;
+    const fromValue = parseFloat(document.getElementById('unitFromValue').value)||0;
+    const fromUnit = document.getElementById('unitFrom').value, toUnit = document.getElementById('unitTo').value;
     let result;
-    
-    if (type === 'temperature') {
-        result = convertTemperature(fromValue, fromUnit, toUnit);
-    } else {
-        const conversions = unitConversions[type];
-        const baseValue = fromValue / conversions[fromUnit];
-        result = baseValue * conversions[toUnit];
-    }
+    if (type==='temperature') result = convertTemperature(fromValue, fromUnit, toUnit);
+    else { const conv = unitConversions[type]; result = (fromValue / conv[fromUnit]) * conv[toUnit]; }
     document.getElementById('unitToValue').value = result.toFixed(4);
 }
 function convertTemperature(value, from, to) {
-    let celsius;
-    if (from === 'c') celsius = value;
-    else if (from === 'f') celsius = (value - 32) * 5/9;
-    else if (from === 'k') celsius = value - 273.15;
-    
-    if (to === 'c') return celsius;
-    else if (to === 'f') return celsius * 9/5 + 32;
-    else if (to === 'k') return celsius + 273.15;
+    let c;
+    if (from==='c') c=value; else if (from==='f') c=(value-32)*5/9; else c=value-273.15;
+    if (to==='c') return c; else if (to==='f') return c*9/5+32; else return c+273.15;
 }
 
-// Trivia Quiz Game
-let triviaScore = 0;
-let triviaCurrentQuestion = 0;
-let triviaQuestions = [];
-let triviaBestScore = localStorage.getItem('triviaBestScore') || 0;
-
+// Trivia Quiz
+let triviaScore=0, triviaCurrentQuestion=0, triviaQuestions=[];
+let triviaBestScore = parseInt(localStorage.getItem('triviaBestScore')||'0');
 const triviaData = [
-    {
-        question: "What is the capital of France?",
-        options: ["London", "Berlin", "Paris", "Madrid"],
-        correct: 2
-    },
-    {
-        question: "Which planet is known as the Red Planet?",
-        options: ["Venus", "Mars", "Jupiter", "Saturn"],
-        correct: 1
-    },
-    {
-        question: "What is the largest mammal in the world?",
-        options: ["Elephant", "Blue Whale", "Giraffe", "Polar Bear"],
-        correct: 1
-    },
-    {
-        question: "How many continents are there?",
-        options: ["5", "6", "7", "8"],
-        correct: 2
-    },
-    {
-        question: "What is the chemical symbol for Gold?",
-        options: ["Go", "Gd", "Au", "Ag"],
-        correct: 2
-    }
+    { question:"What is the capital of France?", options:["London","Berlin","Paris","Madrid"], correct:2 },
+    { question:"Which planet is known as the Red Planet?", options:["Venus","Mars","Jupiter","Saturn"], correct:1 },
+    { question:"What is the largest mammal in the world?", options:["Elephant","Blue Whale","Giraffe","Polar Bear"], correct:1 },
+    { question:"How many continents are there?", options:["5","6","7","8"], correct:2 },
+    { question:"What is the chemical symbol for Gold?", options:["Go","Gd","Au","Ag"], correct:2 }
 ];
-
 function initTriviaGame() {
-    triviaQuestions = [...triviaData];
-    shuffleArray(triviaQuestions);
-    triviaCurrentQuestion = 0;
-    triviaScore = 0;
-    document.getElementById('triviaScore').textContent = triviaScore;
-    document.getElementById('triviaProgress').textContent = '0/5';
-    document.getElementById('triviaBest').textContent = triviaBestScore;
+    triviaQuestions = [...triviaData]; shuffleArray(triviaQuestions);
+    triviaCurrentQuestion=0; triviaScore=0;
+    document.getElementById('triviaScore').textContent=triviaScore;
+    document.getElementById('triviaProgress').textContent='0/5';
+    document.getElementById('triviaBest').textContent=triviaBestScore;
     loadTriviaQuestion();
 }
-
 function loadTriviaQuestion() {
-    if (triviaCurrentQuestion >= triviaQuestions.length) {
-        endTriviaGame();
-        return;
-    }
-    
-    const question = triviaQuestions[triviaCurrentQuestion];
-    document.getElementById('triviaQuestion').textContent = question.question;
-    
-    const optionsDiv = document.getElementById('triviaOptions');
-    optionsDiv.innerHTML = '';
-    
-    question.options.forEach((option, index) => {
-        const button = document.createElement('button');
-        button.className = 'quiz-option';
-        button.textContent = `${index + 1}. ${option}`;
-        button.onclick = () => checkTriviaAnswer(index);
-        optionsDiv.appendChild(button);
+    if (triviaCurrentQuestion >= triviaQuestions.length) { endTriviaGame(); return; }
+    const q = triviaQuestions[triviaCurrentQuestion];
+    document.getElementById('triviaQuestion').textContent = q.question;
+    const optDiv = document.getElementById('triviaOptions'); optDiv.innerHTML='';
+    q.options.forEach((opt, i) => {
+        const btn = document.createElement('button'); btn.className='quiz-option';
+        btn.textContent=`${i+1}. ${opt}`; btn.onclick=()=>checkTriviaAnswer(i); optDiv.appendChild(btn);
     });
-    
-    document.getElementById('triviaProgress').textContent = `${triviaCurrentQuestion + 1}/5`;
+    document.getElementById('triviaProgress').textContent=`${triviaCurrentQuestion+1}/5`;
 }
-
-function checkTriviaAnswer(selectedIndex) {
-    const question = triviaQuestions[triviaCurrentQuestion];
-    const options = document.querySelectorAll('.quiz-option');
-    
-    options.forEach((option, index) => {
-        option.disabled = true;
-        if (index === question.correct) {
-            option.classList.add('correct');
-        } else if (index === selectedIndex) {
-            option.classList.add('wrong');
-        }
+function checkTriviaAnswer(sel) {
+    const q = triviaQuestions[triviaCurrentQuestion];
+    document.querySelectorAll('.quiz-option').forEach((o,i) => {
+        o.disabled=true;
+        if (i===q.correct) o.classList.add('correct');
+        else if (i===sel) o.classList.add('wrong');
     });
-    
-    if (selectedIndex === question.correct) {
-        triviaScore += 10;
-        document.getElementById('triviaScore').textContent = triviaScore;
-    }
+    if (sel===q.correct) { triviaScore+=10; document.getElementById('triviaScore').textContent=triviaScore; }
 }
-
-function nextTriviaQuestion() {
-    triviaCurrentQuestion++;
-    if (triviaCurrentQuestion < triviaQuestions.length) {
-        loadTriviaQuestion();
-    } else {
-        endTriviaGame();
-    }
-}
-
+function nextTriviaQuestion() { triviaCurrentQuestion++; triviaCurrentQuestion<triviaQuestions.length ? loadTriviaQuestion() : endTriviaGame(); }
 function endTriviaGame() {
-    if (triviaScore > triviaBestScore) {
-        triviaBestScore = triviaScore;
-        localStorage.setItem('triviaBestScore', triviaBestScore);
-        document.getElementById('triviaBest').textContent = triviaBestScore;
-    }
-    
-    document.getElementById('triviaQuestion').textContent = `Game Over! Final Score: ${triviaScore}`;
-    document.getElementById('triviaOptions').innerHTML = '';
-    document.getElementById('triviaProgress').textContent = '5/5';
+    if (triviaScore>triviaBestScore) { triviaBestScore=triviaScore; localStorage.setItem('triviaBestScore',triviaBestScore); document.getElementById('triviaBest').textContent=triviaBestScore; }
+    document.getElementById('triviaQuestion').textContent=`Game Over! Final Score: ${triviaScore}`;
+    document.getElementById('triviaOptions').innerHTML=''; document.getElementById('triviaProgress').textContent='5/5';
 }
-
-function resetTriviaGame() {
-    initTriviaGame();
-}
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
+function resetTriviaGame() { initTriviaGame(); }
+function shuffleArray(arr) { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
 
 // Memory Card Game
-let memoryCards = [];
-let flippedCards = [];
-let moves = 0;
-let matchedPairs = 0;
-let memoryTimer = null;
-let seconds = 0;
-const memorySymbols = ['🍎', '🍌', '🍒', '🍇', '🍊', '🍓', '🥭', '🍍', '🍉', '🍈', '🍔', '🫜', '🥕', '🌽'];
-
+let memoryCards=[],flippedCards=[],moves=0,matchedPairs=0,memoryTimer=null,seconds=0;
+const memorySymbols=['🍎','🍌','🍒','🍇','🍊','🍓','🥭','🍍','🍉','🍈','🍔','🫜','🥕','🌽'];
 function startMemoryGame() {
     resetMemoryGame();
-    let cardValues = [...memorySymbols, ...memorySymbols];
-    cardValues.sort(() => Math.random() - 0.5);
-    
-    const board = document.getElementById('memoryBoard');
-    board.innerHTML = '';
-    
-    cardValues.forEach((symbol, index) => {
-        const card = document.createElement('div');
-        card.className = 'memory-card';
-        card.innerHTML = `
-            <div class="card-back">?</div>
-            <div class="card-front">${symbol}</div>
-        `;
-        card.dataset.symbol = symbol;
-        card.dataset.index = index;
-        card.onclick = () => flipMemoryCard(card);
-        board.appendChild(card);
-        memoryCards.push(card);
+    let cardValues=[...memorySymbols,...memorySymbols]; cardValues.sort(()=>Math.random()-0.5);
+    const board=document.getElementById('memoryBoard'); board.innerHTML='';
+    cardValues.forEach((sym,idx) => {
+        const card=document.createElement('div'); card.className='memory-card';
+        card.innerHTML=`<div class="card-back">?</div><div class="card-front">${sym}</div>`;
+        card.dataset.symbol=sym; card.dataset.index=idx;
+        card.onclick=()=>flipMemoryCard(card); board.appendChild(card); memoryCards.push(card);
     });
-    
-    memoryTimer = setInterval(() => {
-        seconds++;
-        document.getElementById('timeCount').textContent = seconds + 's';
-    }, 1000);
+    memoryTimer=setInterval(()=>{ seconds++; document.getElementById('timeCount').textContent=seconds+'s'; },1000);
 }
-
 function flipMemoryCard(card) {
-    if (flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
-        return;
-    }
-    
-    card.classList.add('flipped');
-    flippedCards.push(card);
-    
-    if (flippedCards.length === 2) {
-        moves++;
-        document.getElementById('movesCount').textContent = moves;
-        
-        const [card1, card2] = flippedCards;
-        if (card1.dataset.symbol === card2.dataset.symbol) {
-            setTimeout(() => {
-                card1.classList.add('matched');
-                card2.classList.add('matched');
-                matchedPairs++;
-                document.getElementById('pairsCount').textContent = matchedPairs + '/14';
-                flippedCards = [];
-                
-                if (matchedPairs === 14) {
-                    clearInterval(memoryTimer);
-                    document.getElementById('memoryDisplay').textContent = 
-                        `🎉 You won! Time: ${seconds}s, Moves: ${moves}`;
-                }
-            }, 500);
-        } else {
-            setTimeout(() => {
-                card1.classList.remove('flipped');
-                card2.classList.remove('flipped');
-                flippedCards = [];
-            }, 1000);
-        }
+    if (flippedCards.length>=2||card.classList.contains('flipped')||card.classList.contains('matched')) return;
+    card.classList.add('flipped'); flippedCards.push(card);
+    if (flippedCards.length===2) {
+        moves++; document.getElementById('movesCount').textContent=moves;
+        const [c1,c2]=flippedCards;
+        if (c1.dataset.symbol===c2.dataset.symbol) {
+            setTimeout(()=>{ c1.classList.add('matched'); c2.classList.add('matched'); matchedPairs++; document.getElementById('pairsCount').textContent=matchedPairs+'/14'; flippedCards=[];
+                if(matchedPairs===14){clearInterval(memoryTimer);document.getElementById('memoryDisplay').textContent=`🎉 You won! Time: ${seconds}s, Moves: ${moves}`;} },500);
+        } else { setTimeout(()=>{ c1.classList.remove('flipped'); c2.classList.remove('flipped'); flippedCards=[]; },1000); }
     }
 }
+function resetMemoryGame() { clearInterval(memoryTimer); memoryCards=[]; flippedCards=[]; moves=0; matchedPairs=0; seconds=0; document.getElementById('movesCount').textContent='0'; document.getElementById('timeCount').textContent='0s'; document.getElementById('pairsCount').textContent='0/14'; document.getElementById('memoryDisplay').textContent='Match the pairs! Click on cards to reveal them.'; }
 
-function resetMemoryGame() {
-    clearInterval(memoryTimer);
-    memoryCards = [];
-    flippedCards = [];
-    moves = 0;
-    matchedPairs = 0;
-    seconds = 0;
-    document.getElementById('movesCount').textContent = '0';
-    document.getElementById('timeCount').textContent = '0s';
-    document.getElementById('pairsCount').textContent = '0/14';
-    document.getElementById('memoryDisplay').textContent = 'Match the pairs! Click on cards to reveal them.';
-}
-
-// Number Guessing Game
-let secretNumber = Math.floor(Math.random() * 100) + 1;
-let guessAttempts = 0;
+// Number Guessing
+let secretNumber=Math.floor(Math.random()*100)+1, guessAttempts=0;
 function makeGuess() {
-    const guess = parseInt(document.getElementById('guessInput').value);
-    const display = document.getElementById('guessDisplay');
-    if (isNaN(guess) || guess < 1 || guess > 100) {
-        display.textContent = 'Please enter a number between 1-100!';
-        display.style.color = '#e74c3c';
-        return;
-    }
-    guessAttempts++;
-    document.getElementById('guessAttempts').textContent = guessAttempts;
-    
-    if (guess === secretNumber) {
-        display.textContent = `🎉 Correct! The number was ${secretNumber}! You got it in ${guessAttempts} attempts!`;
-        display.style.color = '#5ec78a';
-    } else if (guess < secretNumber) {
-        display.textContent = `📈 Too low! Try a higher number.`;
-        display.style.color = '#f39c12';
-    } else {
-        display.textContent = `📉 Too high! Try a lower number.`;
-        display.style.color = '#f39c12';
-    }
-    document.getElementById('guessInput').value = '';
+    const guess=parseInt(document.getElementById('guessInput').value), display=document.getElementById('guessDisplay');
+    if (isNaN(guess)||guess<1||guess>100) { display.textContent='Please enter a number between 1-100!'; display.style.color='#e74c3c'; return; }
+    guessAttempts++; document.getElementById('guessAttempts').textContent=guessAttempts;
+    if (guess===secretNumber) { display.textContent=`🎉 Correct! The number was ${secretNumber}! You got it in ${guessAttempts} attempts!`; display.style.color='#5ec78a'; }
+    else if (guess<secretNumber) { display.textContent='📈 Too low! Try a higher number.'; display.style.color='#f39c12'; }
+    else { display.textContent='📉 Too high! Try a lower number.'; display.style.color='#f39c12'; }
+    document.getElementById('guessInput').value='';
 }
-function resetGuessGame() {
-    secretNumber = Math.floor(Math.random() * 100) + 1;
-    guessAttempts = 0;
-    document.getElementById('guessAttempts').textContent = '0';
-    document.getElementById('guessDisplay').textContent = "I'm thinking of a number between 1-100. Can you guess it?";
-    document.getElementById('guessDisplay').style.color = '#e8eaf0';
-    document.getElementById('guessInput').value = '';
-}
+function resetGuessGame() { secretNumber=Math.floor(Math.random()*100)+1; guessAttempts=0; document.getElementById('guessAttempts').textContent='0'; document.getElementById('guessDisplay').textContent="I'm thinking of a number between 1-100. Can you guess it?"; document.getElementById('guessDisplay').style.color='#e8eaf0'; document.getElementById('guessInput').value=''; }
 
-// Whack-a-Mole Game
-let moleScore = 0;
-let moleTimeLeft = 30;
-let moleGameInterval = null;
-let moleTimerInterval = null;
-let moleBestScore = localStorage.getItem('moleBestScore') || 0;
-let activeMoles = [];
-
+// Whack-a-Mole
+let moleScore=0,moleTimeLeft=30,moleGameInterval=null,moleTimerInterval=null,activeMoles=[];
+let moleBestScore=parseInt(localStorage.getItem('moleBestScore')||'0');
 function startMoleGame() {
     if (moleGameInterval) return;
-    
-    moleScore = 0;
-    moleTimeLeft = 30;
-    activeMoles = [];
-    document.getElementById('moleScore').textContent = '0';
-    document.getElementById('moleTime').textContent = '30s';
-    document.getElementById('moleBest').textContent = moleBestScore;
-    document.getElementById('moleDisplay').textContent = 'Game started! Click the moles!';
-    document.getElementById('moleTimerBar').style.width = '100%';
-    
-    const holes = document.querySelectorAll('.mole-hole');
-    holes.forEach(hole => {
-        hole.className = 'mole-hole';
-        hole.innerHTML = '';
-    });
-    
-    moleTimerInterval = setInterval(() => {
-        moleTimeLeft--;
-        document.getElementById('moleTime').textContent = moleTimeLeft + 's';
-        document.getElementById('moleTimerBar').style.width = (moleTimeLeft / 30 * 100) + '%';
-        
-        if (moleTimeLeft <= 0) {
-            stopMoleGame();
-            document.getElementById('moleDisplay').textContent = 
-                `Game Over! Final Score: ${moleScore}. Best: ${moleBestScore}`;
-        }
-    }, 1000);
-    
-    moleGameInterval = setInterval(spawnMole, 800);
+    moleScore=0; moleTimeLeft=30; activeMoles=[];
+    document.getElementById('moleScore').textContent='0'; document.getElementById('moleTime').textContent='30s'; document.getElementById('moleBest').textContent=moleBestScore;
+    document.getElementById('moleDisplay').textContent='Game started! Click the moles!'; document.getElementById('moleTimerBar').style.width='100%';
+    document.querySelectorAll('.mole-hole').forEach(h=>{h.className='mole-hole';h.innerHTML='';});
+    moleTimerInterval=setInterval(()=>{
+        moleTimeLeft--; document.getElementById('moleTime').textContent=moleTimeLeft+'s'; document.getElementById('moleTimerBar').style.width=(moleTimeLeft/30*100)+'%';
+        if(moleTimeLeft<=0){stopMoleGame();document.getElementById('moleDisplay').textContent=`Game Over! Final Score: ${moleScore}. Best: ${moleBestScore}`;}
+    },1000);
+    moleGameInterval=setInterval(spawnMole,800);
 }
-
 function spawnMole() {
-    if (activeMoles.length >= 3) return;
-    
-    const holes = document.querySelectorAll('.mole-hole');
-    const availableHoles = Array.from(holes).filter((_, i) => !activeMoles.includes(i));
-    if (availableHoles.length === 0) return;
-    
-    const randomIndex = Math.floor(Math.random() * availableHoles.length);
-    const holeIndex = Array.from(holes).indexOf(availableHoles[randomIndex]);
-    
-    activeMoles.push(holeIndex);
-    holes[holeIndex].classList.add('active');
-    holes[holeIndex].innerHTML = '🐹';
-    
-    setTimeout(() => {
-        if (holes[holeIndex].classList.contains('active')) {
-            holes[holeIndex].classList.remove('active');
-            holes[holeIndex].innerHTML = '';
-            activeMoles = activeMoles.filter(i => i !== holeIndex);
-        }
-    }, Math.random() * 1000 + 800);
+    if (activeMoles.length>=3) return;
+    const holes=document.querySelectorAll('.mole-hole');
+    const avail=Array.from(holes).filter((_,i)=>!activeMoles.includes(i));
+    if (!avail.length) return;
+    const randIdx=Math.floor(Math.random()*avail.length);
+    const hIdx=Array.from(holes).indexOf(avail[randIdx]);
+    activeMoles.push(hIdx); holes[hIdx].classList.add('active'); holes[hIdx].innerHTML='🐹';
+    setTimeout(()=>{ if(holes[hIdx].classList.contains('active')){holes[hIdx].classList.remove('active');holes[hIdx].innerHTML='';activeMoles=activeMoles.filter(i=>i!==hIdx);} },Math.random()*1000+800);
 }
-
 function whackMole(index) {
-    const hole = document.querySelectorAll('.mole-hole')[index];
+    const hole=document.querySelectorAll('.mole-hole')[index];
     if (hole.classList.contains('active')) {
-        hole.classList.remove('active');
-        hole.classList.add('hit');
-        hole.innerHTML = '💥';
-        moleScore++;
-        document.getElementById('moleScore').textContent = moleScore;
-        
-        if (moleScore > moleBestScore) {
-            moleBestScore = moleScore;
-            localStorage.setItem('moleBestScore', moleBestScore);
-            document.getElementById('moleBest').textContent = moleBestScore;
-        }
-        
-        activeMoles = activeMoles.filter(i => i !== index);
-        
-        setTimeout(() => {
-            hole.classList.remove('hit');
-            hole.innerHTML = '';
-        }, 300);
+        hole.classList.remove('active'); hole.classList.add('hit'); hole.innerHTML='💥'; moleScore++;
+        document.getElementById('moleScore').textContent=moleScore;
+        if(moleScore>moleBestScore){moleBestScore=moleScore;localStorage.setItem('moleBestScore',moleBestScore);document.getElementById('moleBest').textContent=moleBestScore;}
+        activeMoles=activeMoles.filter(i=>i!==index);
+        setTimeout(()=>{hole.classList.remove('hit');hole.innerHTML='';},300);
     }
 }
-
 function stopMoleGame() {
-    clearInterval(moleGameInterval);
-    clearInterval(moleTimerInterval);
-    moleGameInterval = null;
-    moleTimerInterval = null;
-    
-    const holes = document.querySelectorAll('.mole-hole');
-    holes.forEach(hole => {
-        hole.className = 'mole-hole';
-        hole.innerHTML = '';
-    });
-    activeMoles = [];
+    clearInterval(moleGameInterval); clearInterval(moleTimerInterval); moleGameInterval=null; moleTimerInterval=null;
+    document.querySelectorAll('.mole-hole').forEach(h=>{h.className='mole-hole';h.innerHTML='';});
+    activeMoles=[];
 }
 
-// Reaction Time Game
-let reactionTimeout;
-let reactionStartTime;
-let reactionState = 'idle';
-let bestReactionTime = Infinity;
+// Reaction Time
+let reactionTimeout, reactionStartTime, reactionState='idle', bestReactionTime=Infinity;
 function startReaction() {
-    const box = document.getElementById('reactionBox');
-    const display = document.getElementById('reactionDisplay');
-    if (reactionState === 'waiting') return;
-    
-    reactionState = 'waiting';
-    box.className = 'reaction-box waiting';
-    box.textContent = 'Wait for green...';
-    display.textContent = 'Wait...';
-    
-    const randomDelay = Math.random() * 3000 + 1000;
-    reactionTimeout = setTimeout(() => {
-        reactionState = 'ready';
-        box.className = 'reaction-box ready';
-        box.textContent = 'CLICK NOW!';
-        display.textContent = 'GO! Click as fast as you can!';
-        reactionStartTime = Date.now();
-    }, randomDelay);
+    if (reactionState==='waiting') return;
+    reactionState='waiting';
+    const box=document.getElementById('reactionBox'); box.className='reaction-box waiting'; box.textContent='Wait for green...';
+    document.getElementById('reactionDisplay').textContent='Wait...';
+    reactionTimeout=setTimeout(()=>{ reactionState='ready'; box.className='reaction-box ready'; box.textContent='CLICK NOW!'; document.getElementById('reactionDisplay').textContent='GO! Click as fast as you can!'; reactionStartTime=Date.now(); },Math.random()*3000+1000);
 }
 function handleReactionClick() {
-    const box = document.getElementById('reactionBox');
-    const display = document.getElementById('reactionDisplay');
-    
-    if (reactionState === 'waiting') {
-        clearTimeout(reactionTimeout);
-        reactionState = 'idle';
-        box.className = 'reaction-box result';
-        box.textContent = 'Too early! 😅';
-        display.textContent = 'You clicked too soon! Click Start to try again.';
-    } else if (reactionState === 'ready') {
-        const reactionTime = Date.now() - reactionStartTime;
-        reactionState = 'idle';
-        box.className = 'reaction-box result';
-        box.textContent = `${reactionTime} ms`;
-        display.textContent = `Your reaction time: ${reactionTime}ms`;
-        
-        if (reactionTime < bestReactionTime) {
-            bestReactionTime = reactionTime;
-            document.getElementById('bestReaction').textContent = `${reactionTime} ms`;
-        }
+    const box=document.getElementById('reactionBox'), display=document.getElementById('reactionDisplay');
+    if (reactionState==='waiting') { clearTimeout(reactionTimeout); reactionState='idle'; box.className='reaction-box result'; box.textContent='Too early! 😅'; display.textContent='You clicked too soon! Click Start to try again.'; }
+    else if (reactionState==='ready') {
+        const t=Date.now()-reactionStartTime; reactionState='idle'; box.className='reaction-box result'; box.textContent=`${t} ms`; display.textContent=`Your reaction time: ${t}ms`;
+        if(t<bestReactionTime){bestReactionTime=t;document.getElementById('bestReaction').textContent=`${t} ms`;}
     }
 }
-function resetReaction() {
-    bestReactionTime = Infinity;
-    document.getElementById('bestReaction').textContent = '-- ms';
-    document.getElementById('reactionBox').className = 'reaction-box waiting';
-    document.getElementById('reactionBox').textContent = 'Wait for green...';
-    document.getElementById('reactionDisplay').textContent = 'Click "Start" then wait for the box to turn green!';
-    reactionState = 'idle';
-}
+function resetReaction() { bestReactionTime=Infinity; document.getElementById('bestReaction').textContent='-- ms'; document.getElementById('reactionBox').className='reaction-box waiting'; document.getElementById('reactionBox').textContent='Wait for green...'; document.getElementById('reactionDisplay').textContent='Click "Start" then wait for the box to turn green!'; reactionState='idle'; }
 
-// Clear functions
+// ============================================================
+// SHARED CLEAR UTILITIES
+// ============================================================
 function clearInput(inputId) {
-    const input = document.getElementById(inputId);
-    input.value = '';
-    input.classList.remove('error');
+    const el=document.getElementById(inputId);
+    if (el) { el.value=''; el.classList.remove('error'); }
 }
 function clearAll(prefix) {
-    const inputEl = document.getElementById(prefix + 'Input');
-    const keyEl = document.getElementById(prefix + 'Key');
-    const resultEl = document.getElementById(prefix + 'Result');
-    const outputEl = document.getElementById(prefix + 'Output');
-    
-    if (inputEl) { inputEl.value = ''; inputEl.classList.remove('error'); }
-    if (keyEl) { keyEl.value = ''; keyEl.classList.remove('error'); }
+    const inputEl=document.getElementById(prefix+'Input');
+    const keyEl=document.getElementById(prefix+'Key');
+    const resultEl=document.getElementById(prefix+'Result');
+    const outputEl=document.getElementById(prefix+'Output');
+    const visualEl=document.getElementById(prefix+'Visual');
+    if (inputEl) { inputEl.value=''; inputEl.classList.remove('error'); }
+    if (keyEl) { keyEl.value=''; keyEl.classList.remove('error'); }
     if (resultEl) resultEl.classList.remove('show');
-    if (outputEl) outputEl.textContent = '';
+    if (outputEl) outputEl.textContent='';
+    // Hide visual div (used by Rail Fence)
+    if (visualEl) { visualEl.style.display='none'; const inner=visualEl.querySelector('.rail-visual-inner'); if(inner) inner.innerHTML=''; }
 }
 function clearAllQR() {
-    document.getElementById('textToQRInput').value = '';
-    document.getElementById('qrOutput').innerHTML = '';
+    document.getElementById('textToQRInput').value='';
+    document.getElementById('qrOutput').innerHTML='';
     document.getElementById('textToQRResult').classList.remove('show');
 }
 function clearAllBarcode() {
-    document.getElementById('barcodeInput').value = '';
-    document.getElementById('barcodeOutputContainer').innerHTML = '';
+    document.getElementById('barcodeInput').value='';
+    document.getElementById('barcodeOutputContainer').innerHTML='';
     document.getElementById('barcodeResult').classList.remove('show');
     document.getElementById('barcodeError').classList.remove('show');
 }
-
-// Validation - PERBAIKAN: Pakai error style merah, tidak pakai alert
 function validateInput(inputId) {
-    const input = document.getElementById(inputId);
-    if (!input.value.trim()) {
-        input.classList.add('error');
-        setTimeout(() => input.classList.remove('error'), 2000);
+    const input=document.getElementById(inputId);
+    if (!input || !input.value.trim()) {
+        if (input) { input.classList.add('error'); setTimeout(()=>input.classList.remove('error'),2000); }
         return false;
     }
     input.classList.remove('error');
     return true;
 }
 
-// Navigation
+// ============================================================
+// NAVIGATION
+// ============================================================
 function goToPage(page) {
-    document.getElementById('homePage').style.display = 'none';
-    document.querySelectorAll('.cipher-page').forEach(p => p.classList.remove('active'));
-    document.getElementById(page + 'Page').classList.add('active');
-    if (page === 'vigenere') {
-        generateVigenereTable();
-    } else if (page === 'barcode') {
-        stopBarcodeScan();
-    }
+    document.getElementById('homePage').style.display='none';
+    document.querySelectorAll('.cipher-page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(page+'Page').classList.add('active');
+    document.getElementById('watermarkFooter').style.display='none';
+    if (page==='vigenere') generateVigenereTable();
+    else if (page==='polybius') generatePolybiusGrid();
+    else if (page==='barcode') stopBarcodeScan();
 }
 function goToHome() {
-    document.querySelectorAll('.cipher-page').forEach(p => p.classList.remove('active'));
-    document.getElementById('homePage').style.display = 'block';
+    document.querySelectorAll('.cipher-page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('homePage').style.display='block';
+    document.getElementById('watermarkFooter').style.display='block';
     stopBarcodeScan();
 }
 function selectMode(cipher, mode) {
-    const page = document.getElementById(cipher + 'Page');
-    const btns = page.querySelectorAll('.mode-btn');
-    const boxes = page.querySelectorAll('.encoder-box');
-    
-    btns.forEach(btn => btn.classList.remove('active'));
+    const page=document.getElementById(cipher+'Page');
+    page.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
     event.currentTarget.classList.add('active');
-    boxes.forEach(box => box.classList.remove('show'));
-    
-    let boxId = mode + 'Box';
-    if (cipher === 'barcode') {
-        boxId = mode === 'textToBarcode' ? 'textToBarcodeBox' : 'barcodeToTextBox';
-        if (mode === 'barcodeToText') {
-            setTimeout(() => startBarcodeScan(), 100);
-        } else {
-            stopBarcodeScan();
-        }
-    } else if (cipher === 'qwerty') {
-        boxId = mode === 'encrypt' ? 'qwertyEncryptBox' : 'qwertyDecryptBox';
-    } else if (cipher === 'vigenere') {
-        if (mode === 'encrypt') boxId = 'vigenereEncryptBox';
-        else if (mode === 'decrypt') boxId = 'vigenereDecryptBox';
-        else if (mode === 'table') boxId = 'vigenereTableBox';
+    page.querySelectorAll('.encoder-box').forEach(b=>b.classList.remove('show'));
+    let boxId = mode+'Box';
+    if (cipher==='barcode') {
+        boxId = mode==='textToBarcode' ? 'textToBarcodeBox' : 'barcodeToTextBox';
+        if (mode==='barcodeToText') setTimeout(()=>startBarcodeScan(),100);
+        else stopBarcodeScan();
+    } else if (cipher==='qwerty') {
+        boxId = mode==='encrypt' ? 'qwertyEncryptBox' : 'qwertyDecryptBox';
+    } else if (cipher==='vigenere') {
+        if (mode==='encrypt') boxId='vigenereEncryptBox';
+        else if (mode==='decrypt') boxId='vigenereDecryptBox';
+        else if (mode==='table') boxId='vigenereTableBox';
     }
     document.getElementById(boxId).classList.add('show');
 }
-
-// Copy Text
 function copyText(elementId, btn) {
-    const text = document.getElementById(elementId).textContent;
-    navigator.clipboard.writeText(text).then(() => {
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-            btn.textContent = 'Copy';
-            btn.classList.remove('copied');
-        }, 2000);
-    }).catch(err => {
-        console.error('Copy failed:', err);
-    });
+    const text=document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(text).then(()=>{ btn.textContent='Copied!'; btn.classList.add('copied'); setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000); }).catch(()=>{});
 }
 
-// QR Code Functions - PERBAIKAN: Tidak pakai alert, pakai error style merah
+// ============================================================
+// QR CODE — FIXED: preview + ❗QR not detected message
+// ============================================================
 function generateQR() {
-    const text = document.getElementById('textToQRInput').value.trim();
-    if (!text) {
-        document.getElementById('textToQRInput').classList.add('error');
-        setTimeout(() => document.getElementById('textToQRInput').classList.remove('error'), 2000);
-        return;
-    }
-    const qrOutput = document.getElementById('qrOutput');
-    qrOutput.innerHTML = '';
-    new QRCode(qrOutput, {
-        text: text,
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
+    const text=document.getElementById('textToQRInput').value.trim();
+    if (!text) { const el=document.getElementById('textToQRInput'); el.classList.add('error'); setTimeout(()=>el.classList.remove('error'),2000); return; }
+    const qrOutput=document.getElementById('qrOutput'); qrOutput.innerHTML='';
+    new QRCode(qrOutput, { text, width:200, height:200, colorDark:"#000000", colorLight:"#ffffff", correctLevel:QRCode.CorrectLevel.H });
     document.getElementById('textToQRResult').classList.add('show');
 }
 function downloadQR() {
-    const qrCanvas = document.querySelector('#qrOutput canvas');
-    if (qrCanvas) {
-        const link = document.createElement('a');
-        link.download = 'qr-code.png';
-        link.href = qrCanvas.toDataURL('image/png');
-        link.click();
-    }
+    const qrCanvas=document.querySelector('#qrOutput canvas');
+    if (qrCanvas) { const link=document.createElement('a'); link.download='qr-code.png'; link.href=qrCanvas.toDataURL('image/png'); link.click(); }
 }
+
+// FIXED scanQR: preview + proper error message + file input reset
 function scanQR(event) {
-    const file = event.target.files[0];
+    const file=event.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            const canvas = document.getElementById('qrCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, imageData.width, imageData.height);
-            const resultDiv = document.getElementById('qrToTextResult');
-            const outputDiv = document.getElementById('qrToTextOutput');
+    const uploadArea=document.getElementById('qrUploadArea');
+    const resultDiv=document.getElementById('qrToTextResult');
+    const outputDiv=document.getElementById('qrToTextOutput');
+
+    // Show loading state
+    uploadArea.innerHTML=`<p style="color:#f39c12; font-size:1.1em;">⏳ Scanning...</p><input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)" style="display:none;">`;
+
+    const reader=new FileReader();
+    reader.onload=function(e) {
+        const img=new Image();
+        img.onload=function() {
+            // Show preview
+            uploadArea.innerHTML=`
+                <img src="${e.target.result}" style="max-width:180px;max-height:180px;border-radius:8px;margin-bottom:10px;border:2px solid #2a3f5f;">
+                <p style="color:#8a95a8;font-size:0.82em;margin-top:6px;">🔄 Click to try a different image</p>
+                <input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)" style="display:none;">`;
+
+            const canvas=document.getElementById('qrCanvas');
+            const ctx=canvas.getContext('2d');
+            canvas.width=img.width; canvas.height=img.height;
+            ctx.drawImage(img,0,0);
+            const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+
+            // Try normal + inverted scan for better detection
+            let code = null;
+            try {
+                code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts:"dontInvert" });
+                if (!code) code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts:"onlyInvert" });
+            } catch(err) { code = null; }
+
             if (code) {
-                outputDiv.textContent = code.data;
-                resultDiv.classList.add('show');
+                outputDiv.textContent=code.data;
             } else {
-                outputDiv.textContent = 'No QR code found in image';
-                resultDiv.classList.add('show');
+                outputDiv.textContent='❗QR not detected. Make sure the image is clear and try again.';
             }
+            resultDiv.classList.add('show');
         };
-        img.src = e.target.result;
+        img.onerror=function() {
+            uploadArea.innerHTML=`<p style="color:#e74c3c;">❌ Failed to load image.</p><input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)" style="display:none;">`;
+        };
+        img.src=e.target.result;
     };
     reader.readAsDataURL(file);
 }
 
-// Barcode Functions - PERBAIKAN: Menggunakan TEC-IT API
-let currentBarcodeType = 'CODE128';
-let barcodeStream = null;
-
+// ============================================================
+// BARCODE
+// ============================================================
+let currentBarcodeType='CODE128', barcodeStream=null;
 function selectBarcodeType(type, btn) {
-    currentBarcodeType = type;
-    document.querySelectorAll('.barcode-type-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    const hints = {
-        'CODE128': '💡 CODE128: Accepts ANY text, numbers, or symbols! (Recommended)',
-        'CODE39': '💡 CODE39: Letters, numbers, and some symbols (-.$/+%).',
-        'EAN13': '💡 EAN-13: 12-13 digits only (product barcodes).',
-        'UPC': '💡 UPC: 11-12 digits only (US product codes).'
-    };
-    document.getElementById('barcodeHint').textContent = hints[type] || '';
+    currentBarcodeType=type;
+    document.querySelectorAll('.barcode-type-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+    const hints={'CODE128':'💡 CODE128: Accepts ANY text, numbers, or symbols! (Recommended)','CODE39':'💡 CODE39: Letters, numbers, and some symbols (-.$/+%).','EAN13':'💡 EAN-13: 12-13 digits only (product barcodes).','UPC':'💡 UPC: 11-12 digits only (US product codes).'};
+    document.getElementById('barcodeHint').textContent=hints[type]||'';
 }
-
 function generateBarcode() {
-    const input = document.getElementById('barcodeInput').value.trim();
-    const errorDiv = document.getElementById('barcodeError');
-    const resultDiv = document.getElementById('barcodeResult');
-    const outputDiv = document.getElementById('barcodeOutputContainer');
-    
-    errorDiv.classList.remove('show');
-    outputDiv.innerHTML = '';
-    
-    if (!input) {
-        document.getElementById('barcodeInput').classList.add('error');
-        setTimeout(() => document.getElementById('barcodeInput').classList.remove('error'), 2000);
-        return;
-    }
-    
+    const input=document.getElementById('barcodeInput').value.trim();
+    const errorDiv=document.getElementById('barcodeError'), resultDiv=document.getElementById('barcodeResult'), outputDiv=document.getElementById('barcodeOutputContainer');
+    errorDiv.classList.remove('show'); outputDiv.innerHTML='';
+    if (!input) { document.getElementById('barcodeInput').classList.add('error'); setTimeout(()=>document.getElementById('barcodeInput').classList.remove('error'),2000); return; }
     try {
-        // Validasi untuk format tertentu
-        switch(currentBarcodeType) {
-            case 'EAN13':
-                if (!/^\d{12,13}$/.test(input)) {
-                    errorDiv.textContent = '⚠️ EAN-13 requires exactly 12 or 13 digits';
-                    errorDiv.classList.add('show');
-                    return;
-                }
-                break;
-            case 'UPC':
-                if (!/^\d{11,12}$/.test(input)) {
-                    errorDiv.textContent = '⚠️ UPC requires exactly 11 or 12 digits';
-                    errorDiv.classList.add('show');
-                    return;
-                }
-                break;
-        }
-        
-        // Encode input untuk URL
-        const encodedInput = encodeURIComponent(input);
-        
-        // TEC-IT API URLs untuk berbagai format
-        const apiUrls = {
-            'CODE128': `https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Code128&translate-esc=on`,
-            'CODE39': `https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Code39&translate-esc=on`,
-            'EAN13': `https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Ean13&translate-esc=on`,
-            'UPC': `https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=UPCA&translate-esc=on`
-        };
-        
-        const barcodeUrl = apiUrls[currentBarcodeType] || apiUrls['CODE128'];
-        
-        // Buat elemen img untuk barcode
-        const barcodeImg = document.createElement('img');
-        barcodeImg.src = barcodeUrl;
-        barcodeImg.alt = `Barcode: ${input}`;
-        barcodeImg.style.width = '100%';
-        barcodeImg.style.maxWidth = '400px';
-        barcodeImg.style.height = 'auto';
-        
-        // Tambahkan attribution
-        const attribution = document.createElement('div');
-        attribution.style.cssText = 'padding-top:8px; text-align:center; font-size:12px; font-family: Arial, sans-serif; color: #666;';
-        attribution.innerHTML = `
-            <a href="https://www.tec-it.com" title="Barcode Software by TEC-IT" target="_blank" style="color: #6b9bd1; text-decoration: none;">
-            </a>
-        `;
-        
-        outputDiv.appendChild(barcodeImg);
-        outputDiv.appendChild(attribution);
-        
-        resultDiv.classList.add('show');
-        
-    } catch (error) {
-        console.error('Barcode error:', error);
-        errorDiv.textContent = `⚠️ Error generating barcode. Please try again.`;
-        errorDiv.classList.add('show');
-    }
+        if (currentBarcodeType==='EAN13' && !/^\d{12,13}$/.test(input)) { errorDiv.textContent='⚠️ EAN-13 requires exactly 12 or 13 digits'; errorDiv.classList.add('show'); return; }
+        if (currentBarcodeType==='UPC' && !/^\d{11,12}$/.test(input)) { errorDiv.textContent='⚠️ UPC requires exactly 11 or 12 digits'; errorDiv.classList.add('show'); return; }
+        const encodedInput=encodeURIComponent(input);
+        const apiUrls={'CODE128':`https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Code128&translate-esc=on`,'CODE39':`https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Code39&translate-esc=on`,'EAN13':`https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Ean13&translate-esc=on`,'UPC':`https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=UPCA&translate-esc=on`};
+        const barcodeImg=document.createElement('img'); barcodeImg.src=apiUrls[currentBarcodeType]||apiUrls['CODE128']; barcodeImg.alt=`Barcode: ${input}`; barcodeImg.style.cssText='width:100%;max-width:400px;height:auto;';
+        outputDiv.appendChild(barcodeImg); resultDiv.classList.add('show');
+    } catch(error) { errorDiv.textContent='⚠️ Error generating barcode. Please try again.'; errorDiv.classList.add('show'); }
 }
-
 function downloadBarcode() {
-    const barcodeImg = document.querySelector('#barcodeOutputContainer img');
-    if (barcodeImg && barcodeImg.src) {
-        const link = document.createElement('a');
-        link.download = `barcode-${currentBarcodeType}.png`;
-        
-        // Buat canvas untuk download
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-        
-        img.onload = function() {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        };
-        
-        img.crossOrigin = 'anonymous';
-        img.src = barcodeImg.src;
+    const barcodeImg=document.querySelector('#barcodeOutputContainer img');
+    if (barcodeImg&&barcodeImg.src) {
+        const canvas=document.createElement('canvas'), ctx=canvas.getContext('2d'), img=new Image();
+        img.onload=function(){ canvas.width=img.width; canvas.height=img.height; ctx.drawImage(img,0,0); const link=document.createElement('a'); link.download=`barcode-${currentBarcodeType}.png`; link.href=canvas.toDataURL('image/png'); link.click(); };
+        img.crossOrigin='anonymous'; img.src=barcodeImg.src;
     }
 }
-
-// Barcode Scanner
 function startBarcodeScan() {
-    const scannerArea = document.getElementById('barcodeScannerArea');
-    const video = document.getElementById('barcodeVideo');
-    const resultDiv = document.getElementById('barcodeScanResult');
-    
-    scannerArea.style.display = 'none';
-    video.style.display = 'block';
-    resultDiv.style.display = 'none';
-    
-    navigator.mediaDevices.getUserMedia({ 
-        video: { 
-            facingMode: 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-        } 
-    }).then(stream => {
-        barcodeStream = stream;
-        video.srcObject = stream;
-        video.play();
-    }).catch(err => {
-        console.error('Camera error:', err);
-        scannerArea.innerHTML = `<p style="color: #e74c3c;">Camera access denied. Please allow camera access.</p>`;
-        scannerArea.style.display = 'flex';
-        video.style.display = 'none';
-    });
+    const area=document.getElementById('barcodeScannerArea'), video=document.getElementById('barcodeVideo');
+    area.style.display='none'; video.style.display='block'; document.getElementById('barcodeScanResult').style.display='none';
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}})
+        .then(stream=>{barcodeStream=stream;video.srcObject=stream;video.play();})
+        .catch(err=>{area.innerHTML=`<p style="color:#e74c3c;">Camera access denied. Please allow camera access.</p>`;area.style.display='flex';video.style.display='none';});
 }
-
 function stopBarcodeScan() {
-    if (barcodeStream) {
-        barcodeStream.getTracks().forEach(track => track.stop());
-        barcodeStream = null;
-    }
-    const video = document.getElementById('barcodeVideo');
-    video.style.display = 'none';
-    video.srcObject = null;
-    
-    const scannerArea = document.getElementById('barcodeScannerArea');
-    scannerArea.style.display = 'flex';
-    scannerArea.innerHTML = `
-        <p style="color: #6b9bd1; margin-bottom: 10px;">📷 Click to start camera for barcode scanning</p>
-        <p style="color: #8a95a8; font-size: 0.9em;">Allow camera access when prompted</p>
-    `;
-    scannerArea.onclick = startBarcodeScan;
+    if (barcodeStream){barcodeStream.getTracks().forEach(t=>t.stop());barcodeStream=null;}
+    const video=document.getElementById('barcodeVideo'); video.style.display='none'; video.srcObject=null;
+    const area=document.getElementById('barcodeScannerArea'); area.style.display='flex';
+    area.innerHTML=`<p style="color:#6b9bd1;margin-bottom:10px;">📷 Click to start camera for barcode scanning</p><p style="color:#8a95a8;font-size:0.9em;">Allow camera access when prompted</p>`;
+    area.onclick=startBarcodeScan;
 }
+function clearBarcodeScan() { document.getElementById('barcodeScanResult').style.display='none'; }
 
-function clearBarcodeScan() {
-    document.getElementById('barcodeScanResult').style.display = 'none';
-}
-
-// Binary Functions
+// ============================================================
+// BINARY
+// ============================================================
 function convertTextToBinary() {
     if (!validateInput('textToBinaryInput')) return;
-    const text = document.getElementById('textToBinaryInput').value;
-    let binary = '';
-    for (let i = 0; i < text.length; i++) {
-        binary += text.charCodeAt(i).toString(2).padStart(8, '0') + ' ';
-    }
-    document.getElementById('textToBinaryOutput').textContent = binary.trim();
+    const text=document.getElementById('textToBinaryInput').value;
+    let binary='';
+    for (let i=0;i<text.length;i++) binary+=text.charCodeAt(i).toString(2).padStart(8,'0')+' ';
+    document.getElementById('textToBinaryOutput').textContent=binary.trim();
     document.getElementById('textToBinaryResult').classList.add('show');
 }
 function convertBinaryToText() {
     if (!validateInput('binaryToTextInput')) return;
-    const binary = document.getElementById('binaryToTextInput').value.trim();
-    const binaryArray = binary.split(/\s+/);
-    let text = '';
-    for (let i = 0; i < binaryArray.length; i++) {
-        text += String.fromCharCode(parseInt(binaryArray[i], 2));
-    }
-    document.getElementById('binaryToTextOutput').textContent = text;
+    const bArr=document.getElementById('binaryToTextInput').value.trim().split(/\s+/);
+    let text='';
+    for (let b of bArr) text+=String.fromCharCode(parseInt(b,2));
+    document.getElementById('binaryToTextOutput').textContent=text;
     document.getElementById('binaryToTextResult').classList.add('show');
 }
 
-// Caesar Cipher Functions
+// ============================================================
+// CAESAR
+// ============================================================
 function encryptCaesar() {
     if (!validateInput('caesarEncryptInput')) return;
-    const text = document.getElementById('caesarEncryptInput').value;
-    let result = '';
-    for (let i = 0; i < text.length; i++) {
-        let char = text[i];
-        if (char.match(/[a-z]/i)) {
-            const code = text.charCodeAt(i);
-            if (code >= 65 && code <= 90) {
-                char = String.fromCharCode(((code - 65 + 3) % 26) + 65);
-            } else if (code >= 97 && code <= 122) {
-                char = String.fromCharCode(((code - 97 + 3) % 26) + 97);
-            }
-        }
-        result += char;
-    }
-    document.getElementById('caesarEncryptOutput').textContent = result;
+    const text=document.getElementById('caesarEncryptInput').value; let result='';
+    for (let i=0;i<text.length;i++) { let c=text[i],code=text.charCodeAt(i);
+        if (code>=65&&code<=90) c=String.fromCharCode(((code-65+3)%26)+65);
+        else if (code>=97&&code<=122) c=String.fromCharCode(((code-97+3)%26)+97);
+        result+=c; }
+    document.getElementById('caesarEncryptOutput').textContent=result;
     document.getElementById('caesarEncryptResult').classList.add('show');
 }
 function decryptCaesar() {
     if (!validateInput('caesarDecryptInput')) return;
-    const text = document.getElementById('caesarDecryptInput').value;
-    let result = '';
-    for (let i = 0; i < text.length; i++) {
-        let char = text[i];
-        if (char.match(/[a-z]/i)) {
-            const code = text.charCodeAt(i);
-            if (code >= 65 && code <= 90) {
-                char = String.fromCharCode(((code - 65 - 3 + 26) % 26) + 65);
-            } else if (code >= 97 && code <= 122) {
-                char = String.fromCharCode(((code - 97 - 3 + 26) % 26) + 97);
-            }
-        }
-        result += char;
-    }
-    document.getElementById('caesarDecryptOutput').textContent = result;
+    const text=document.getElementById('caesarDecryptInput').value; let result='';
+    for (let i=0;i<text.length;i++) { let c=text[i],code=text.charCodeAt(i);
+        if (code>=65&&code<=90) c=String.fromCharCode(((code-65-3+26)%26)+65);
+        else if (code>=97&&code<=122) c=String.fromCharCode(((code-97-3+26)%26)+97);
+        result+=c; }
+    document.getElementById('caesarDecryptOutput').textContent=result;
     document.getElementById('caesarDecryptResult').classList.add('show');
 }
 
-// Morse Code Functions
-const morseCode = {
-    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
-    'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
-    'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
-    'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
-    'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
-    '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
-    '8': '---..', '9': '----.', '.': '.-.-.-', ',': '--..--', '?': '..--..',
-    "'": '.----.', '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-',
-    '&': '.-...', ':': '---...', ';': '-.-.-.', '=': '-...-', '+': '.-.-.',
-    '-': '-....-', '_': '..--.-', '"': '.-..-.', '$': '...-..-', '@': '.--.-.',
-    ' ': '/'
-};
+// ============================================================
+// MORSE
+// ============================================================
+const morseCode={'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.','.':'.-.-.-',',':'--..--','?':'..--..','\'':'.----.','!':'-.-.--','/':'-..-.','(':'-.--.',')':`-.--.-`,'&':'.-...', ':':'---...',';':'-.-.-.','=':'-...-','+':'.-.-.', '-':'-....-','_':'..--.-','"':'.-..-.','$':'...-..-','@':'.--.-.', ' ':'/'}
 function convertTextToMorse() {
     if (!validateInput('textToMorseInput')) return;
-    const text = document.getElementById('textToMorseInput').value.toUpperCase();
-    let morse = '';
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        morse += (morseCode[char] || char) + ' ';
-    }
-    document.getElementById('textToMorseOutput').textContent = morse.trim();
+    const text=document.getElementById('textToMorseInput').value.toUpperCase();
+    let morse='';
+    for (let c of text) morse+=(morseCode[c]||c)+' ';
+    document.getElementById('textToMorseOutput').textContent=morse.trim();
     document.getElementById('textToMorseResult').classList.add('show');
 }
 function convertMorseToText() {
     if (!validateInput('morseToTextInput')) return;
-    const morse = document.getElementById('morseToTextInput').value.trim();
-    const morseArray = morse.split(' ');
-    let text = '';
-    const reverseMorse = {};
-    for (let key in morseCode) {
-        reverseMorse[morseCode[key]] = key;
-    }
-    for (let i = 0; i < morseArray.length; i++) {
-        const code = morseArray[i];
-        if (code === '/') {
-            text += ' ';
-        } else {
-            text += reverseMorse[code] || code;
-        }
-    }
-    document.getElementById('morseToTextOutput').textContent = text;
+    const mArr=document.getElementById('morseToTextInput').value.trim().split(' ');
+    const rev={}; for (let k in morseCode) rev[morseCode[k]]=k;
+    let text='';
+    for (let m of mArr) text+=(m==='/'?' ':(rev[m]||m));
+    document.getElementById('morseToTextOutput').textContent=text;
     document.getElementById('morseToTextResult').classList.add('show');
 }
 
-// T9 Keypad Functions
-const t9Mapping = {
-    'a': '2', 'b': '22', 'c': '222',
-    'd': '3', 'e': '33', 'f': '333',
-    'g': '4', 'h': '44', 'i': '444',
-    'j': '5', 'k': '55', 'l': '555',
-    'm': '6', 'n': '66', 'o': '666',
-    'p': '7', 'q': '77', 'r': '777', 's': '7777',
-    't': '8', 'u': '88', 'v': '888',
-    'w': '9', 'x': '99', 'y': '999', 'z': '9999',
-    ' ': '0'
-};
-const reverseT9Mapping = {};
-for (let key in t9Mapping) {
-    reverseT9Mapping[t9Mapping[key]] = key;
-}
+// ============================================================
+// T9
+// ============================================================
+const t9Mapping={'a':'2','b':'22','c':'222','d':'3','e':'33','f':'333','g':'4','h':'44','i':'444','j':'5','k':'55','l':'555','m':'6','n':'66','o':'666','p':'7','q':'77','r':'777','s':'7777','t':'8','u':'88','v':'888','w':'9','x':'99','y':'999','z':'9999',' ':'0'};
+const revT9={}; for (let k in t9Mapping) revT9[t9Mapping[k]]=k;
 function convertTextToT9() {
     if (!validateInput('textToT9Input')) return;
-    const text = document.getElementById('textToT9Input').value.toLowerCase();
-    let t9 = '';
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        t9 += (t9Mapping[char] || char) + ' ';
-    }
-    document.getElementById('textToT9Output').textContent = t9.trim();
+    const text=document.getElementById('textToT9Input').value.toLowerCase();
+    let t9='';
+    for (let c of text) t9+=(t9Mapping[c]||c)+' ';
+    document.getElementById('textToT9Output').textContent=t9.trim();
     document.getElementById('textToT9Result').classList.add('show');
 }
 function convertT9ToText() {
     if (!validateInput('t9ToTextInput')) return;
-    const t9 = document.getElementById('t9ToTextInput').value.trim();
-    const t9Array = t9.split(' ');
-    let text = '';
-    for (let i = 0; i < t9Array.length; i++) {
-        const code = t9Array[i];
-        text += reverseT9Mapping[code] || code;
-    }
-    document.getElementById('t9ToTextOutput').textContent = text;
+    const arr=document.getElementById('t9ToTextInput').value.trim().split(' ');
+    let text='';
+    for (let code of arr) text+=(revT9[code]||code);
+    document.getElementById('t9ToTextOutput').textContent=text;
     document.getElementById('t9ToTextResult').classList.add('show');
 }
 
-// QWERTY Cipher Functions
-const qwertyShift = {
-    'q': 'w', 'w': 'e', 'e': 'r', 'r': 't', 't': 'y', 'y': 'u', 'u': 'i',
-    'i': 'o', 'o': 'p', 'p': 'a', 'a': 's', 's': 'd', 'd': 'f', 'f': 'g',
-    'g': 'h', 'h': 'j', 'j': 'k', 'k': 'l', 'l': 'z', 'z': 'x', 'x': 'c',
-    'c': 'v', 'v': 'b', 'b': 'n', 'n': 'm', 'm': 'q',
-    'Q': 'W', 'W': 'E', 'E': 'R', 'R': 'T', 'T': 'Y', 'Y': 'U', 'U': 'I',
-    'I': 'O', 'O': 'P', 'P': 'A', 'A': 'S', 'S': 'D', 'D': 'F', 'F': 'G',
-    'G': 'H', 'H': 'J', 'J': 'K', 'K': 'L', 'L': 'Z', 'Z': 'X', 'X': 'C',
-    'C': 'V', 'V': 'B', 'B': 'N', 'N': 'M', 'M': 'Q'
-};
-const reverseQWERTY = {};
-for (let key in qwertyShift) {
-    reverseQWERTY[qwertyShift[key]] = key;
-}
+// ============================================================
+// QWERTY CIPHER
+// ============================================================
+const qwertyShift={'q':'w','w':'e','e':'r','r':'t','t':'y','y':'u','u':'i','i':'o','o':'p','p':'a','a':'s','s':'d','d':'f','f':'g','g':'h','h':'j','j':'k','k':'l','l':'z','z':'x','x':'c','c':'v','v':'b','b':'n','n':'m','m':'q','Q':'W','W':'E','E':'R','R':'T','T':'Y','Y':'U','U':'I','I':'O','O':'P','P':'A','A':'S','S':'D','D':'F','F':'G','G':'H','H':'J','J':'K','K':'L','L':'Z','Z':'X','X':'C','C':'V','V':'B','B':'N','N':'M','M':'Q'};
+const revQWERTY={}; for (let k in qwertyShift) revQWERTY[qwertyShift[k]]=k;
 function encryptQWERTY() {
     if (!validateInput('qwertyEncryptInput')) return;
-    const text = document.getElementById('qwertyEncryptInput').value;
-    let result = '';
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        result += qwertyShift[char] || char;
-    }
-    document.getElementById('qwertyEncryptOutput').textContent = result;
+    const text=document.getElementById('qwertyEncryptInput').value;
+    document.getElementById('qwertyEncryptOutput').textContent=[...text].map(c=>qwertyShift[c]||c).join('');
     document.getElementById('qwertyEncryptResult').classList.add('show');
 }
 function decryptQWERTY() {
     if (!validateInput('qwertyDecryptInput')) return;
-    const text = document.getElementById('qwertyDecryptInput').value;
-    let result = '';
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        result += reverseQWERTY[char] || char;
-    }
-    document.getElementById('qwertyDecryptOutput').textContent = result;
+    const text=document.getElementById('qwertyDecryptInput').value;
+    document.getElementById('qwertyDecryptOutput').textContent=[...text].map(c=>revQWERTY[c]||c).join('');
     document.getElementById('qwertyDecryptResult').classList.add('show');
 }
 
-// Vigenere Cipher Functions
+// ============================================================
+// VIGENERE
+// ============================================================
 function encryptVigenere() {
-    const key = document.getElementById('vigenereEncryptKey').value.trim().toUpperCase();
-    const text = document.getElementById('vigenereEncryptInput').value.trim().toUpperCase();
-    if (!key || !text) {
-        alert('Please enter both key and text');
-        return;
+    const key=document.getElementById('vigenereEncryptKey').value.trim().toUpperCase();
+    const text=document.getElementById('vigenereEncryptInput').value.trim().toUpperCase();
+    if (!key||!text) { alert('Please enter both key and text'); return; }
+    let result='', ki=0;
+    for (let c of text) {
+        if (c>='A'&&c<='Z') { const shift=key[ki%key.length].charCodeAt(0)-65; result+=String.fromCharCode(((c.charCodeAt(0)-65+shift)%26)+65); ki++; }
+        else result+=c;
     }
-    let result = '';
-    let keyIndex = 0;
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        if (char >= 'A' && char <= 'Z') {
-            const keyChar = key[keyIndex % key.length];
-            const shift = keyChar.charCodeAt(0) - 65;
-            const encrypted = String.fromCharCode(((char.charCodeAt(0) - 65 + shift) % 26) + 65);
-            result += encrypted;
-            keyIndex++;
-        } else {
-            result += char;
-        }
-    }
-    document.getElementById('vigenereEncryptOutput').textContent = result;
+    document.getElementById('vigenereEncryptOutput').textContent=result;
     document.getElementById('vigenereEncryptResult').classList.add('show');
 }
 function decryptVigenere() {
-    const key = document.getElementById('vigenereDecryptKey').value.trim().toUpperCase();
-    const text = document.getElementById('vigenereDecryptInput').value.trim().toUpperCase();
-    if (!key || !text) {
-        alert('Please enter both key and text');
-        return;
+    const key=document.getElementById('vigenereDecryptKey').value.trim().toUpperCase();
+    const text=document.getElementById('vigenereDecryptInput').value.trim().toUpperCase();
+    if (!key||!text) { alert('Please enter both key and text'); return; }
+    let result='', ki=0;
+    for (let c of text) {
+        if (c>='A'&&c<='Z') { const shift=key[ki%key.length].charCodeAt(0)-65; result+=String.fromCharCode(((c.charCodeAt(0)-65-shift+26)%26)+65); ki++; }
+        else result+=c;
     }
-    let result = '';
-    let keyIndex = 0;
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        if (char >= 'A' && char <= 'Z') {
-            const keyChar = key[keyIndex % key.length];
-            const shift = keyChar.charCodeAt(0) - 65;
-            const decrypted = String.fromCharCode(((char.charCodeAt(0) - 65 - shift + 26) % 26) + 65);
-            result += decrypted;
-            keyIndex++;
-        } else {
-            result += char;
-        }
-    }
-    document.getElementById('vigenereDecryptOutput').textContent = result;
+    document.getElementById('vigenereDecryptOutput').textContent=result;
     document.getElementById('vigenereDecryptResult').classList.add('show');
 }
 function generateVigenereTable() {
-    const tableContainer = document.getElementById('vigenereTableContainer');
-    let tableHTML = '<table><thead><tr><th></th>';
-    for (let i = 0; i < 26; i++) {
-        const letter = String.fromCharCode(65 + i);
-        tableHTML += `<th class="header-cell">${letter}</th>`;
+    const tc=document.getElementById('vigenereTableContainer');
+    let html='<table><thead><tr><th></th>';
+    for (let i=0;i<26;i++) html+=`<th class="header-cell">${String.fromCharCode(65+i)}</th>`;
+    html+='</tr></thead><tbody>';
+    for (let i=0;i<26;i++) {
+        html+=`<tr><th class="header-cell">${String.fromCharCode(65+i)}</th>`;
+        for (let j=0;j<26;j++) html+=`<td data-row="${String.fromCharCode(65+i)}" data-col="${String.fromCharCode(65+j)}">${String.fromCharCode(((i+j)%26)+65)}</td>`;
+        html+='</tr>';
     }
-    tableHTML += '</tr></thead><tbody>';
-    for (let i = 0; i < 26; i++) {
-        const rowLetter = String.fromCharCode(65 + i);
-        tableHTML += `<tr><th class="header-cell">${rowLetter}</th>`;
-        for (let j = 0; j < 26; j++) {
-            const colLetter = String.fromCharCode(65 + j);
-            const resultLetter = String.fromCharCode(((i + j) % 26) + 65);
-            tableHTML += `<td data-row="${rowLetter}" data-col="${colLetter}">${resultLetter}</td>`;
-        }
-        tableHTML += '</tr>';
-    }
-    tableHTML += '</tbody></table>';
-    tableContainer.innerHTML = tableHTML;
-    updateTableHighlight();
+    html+='</tbody></table>'; tc.innerHTML=html; updateTableHighlight();
 }
 function updateTableHighlight() {
-    const key = document.getElementById('tableKeyInput').value.toUpperCase().charAt(0) || 'A';
-    const plain = document.getElementById('tablePlainInput').value.toUpperCase().charAt(0) || 'A';
-    const cells = document.querySelectorAll('#vigenereTableContainer td');
-    const rows = document.querySelectorAll('#vigenereTableContainer tr');
-    const cols = document.querySelectorAll('#vigenereTableContainer th');
-    
-    cells.forEach(cell => {
-        cell.classList.remove('highlight-cell', 'highlight-row', 'highlight-col');
-    });
-    rows.forEach(row => row.classList.remove('highlight-row'));
-    cols.forEach(col => col.classList.remove('highlight-col'));
-    
-    const rowIndex = key.charCodeAt(0) - 65;
-    const colIndex = plain.charCodeAt(0) - 65;
-    
-    if (rows[rowIndex + 1]) rows[rowIndex + 1].classList.add('highlight-row');
-    if (cols[colIndex + 1]) cols[colIndex + 1].classList.add('highlight-col');
-    
-    const resultCell = document.querySelector(`#vigenereTableContainer td[data-row="${key}"][data-col="${plain}"]`);
-    if (resultCell) {
-        resultCell.classList.add('highlight-cell');
-        const resultLetter = String.fromCharCode(((rowIndex + colIndex) % 26) + 65);
-        document.getElementById('infoKey').textContent = key;
-        document.getElementById('infoPlain').textContent = plain;
-        document.getElementById('infoResult').textContent = resultLetter;
-        document.getElementById('highlightInfo').style.display = 'block';
-    } else {
-        document.getElementById('highlightInfo').style.display = 'none';
-    }
+    const key=document.getElementById('tableKeyInput').value.toUpperCase().charAt(0)||'A';
+    const plain=document.getElementById('tablePlainInput').value.toUpperCase().charAt(0)||'A';
+    document.querySelectorAll('#vigenereTableContainer td').forEach(c=>c.classList.remove('highlight-cell','highlight-row','highlight-col'));
+    document.querySelectorAll('#vigenereTableContainer tr').forEach(r=>r.classList.remove('highlight-row'));
+    document.querySelectorAll('#vigenereTableContainer th').forEach(h=>h.classList.remove('highlight-col'));
+    const ri=key.charCodeAt(0)-65, ci=plain.charCodeAt(0)-65;
+    const rows=document.querySelectorAll('#vigenereTableContainer tr'), cols=document.querySelectorAll('#vigenereTableContainer th');
+    if (rows[ri+1]) rows[ri+1].classList.add('highlight-row');
+    if (cols[ci+1]) cols[ci+1].classList.add('highlight-col');
+    const cell=document.querySelector(`#vigenereTableContainer td[data-row="${key}"][data-col="${plain}"]`);
+    if (cell) {
+        cell.classList.add('highlight-cell');
+        document.getElementById('infoKey').textContent=key; document.getElementById('infoPlain').textContent=plain;
+        document.getElementById('infoResult').textContent=String.fromCharCode(((ri+ci)%26)+65);
+        document.getElementById('highlightInfo').style.display='block';
+    } else document.getElementById('highlightInfo').style.display='none';
 }
 
-// Reverse Text Function
+// ============================================================
+// REVERSE
+// ============================================================
 function reverseText() {
     if (!validateInput('reverseInput')) return;
-    const text = document.getElementById('reverseInput').value;
-    const reversed = text.split('').reverse().join('');
-    document.getElementById('reverseOutput').textContent = reversed;
+    const text=document.getElementById('reverseInput').value;
+    document.getElementById('reverseOutput').textContent=[...text].reverse().join('');
     document.getElementById('reverseResult').classList.add('show');
 }
 
-// Initialize
+// ============================================================
+// POLYBIUS SQUARE CIPHER
+// ============================================================
+// Standard 5x5 grid, I and J share a cell
+const polybiusGrid=['ABCDE','FGHIK','LMNOP','QRSTU','VWXYZ'];
+function polybiusCoords(letter) {
+    letter=letter.toUpperCase();
+    if (letter==='J') letter='I';
+    for (let r=0;r<5;r++) {
+        const c=polybiusGrid[r].indexOf(letter);
+        if (c!==-1) return `${r+1}${c+1}`;
+    }
+    return null;
+}
+function polybiusLetter(row,col) {
+    if (row<1||row>5||col<1||col>5) return null;
+    return polybiusGrid[row-1][col-1];
+}
+function encryptPolybius() {
+    if (!validateInput('pbEncryptInput')) return;
+    const text=document.getElementById('pbEncryptInput').value.toUpperCase();
+    let result=[];
+    for (let c of text) {
+        if (c===' ') { result.push('/'); continue; }
+        const coords=polybiusCoords(c);
+        result.push(coords||c);
+    }
+    document.getElementById('pbEncryptOutput').textContent=result.join(' ');
+    document.getElementById('pbEncryptResult').classList.add('show');
+}
+function decryptPolybius() {
+    if (!validateInput('pbDecryptInput')) return;
+    const tokens=document.getElementById('pbDecryptInput').value.trim().split(/\s+/);
+    let result='';
+    for (let t of tokens) {
+        if (t==='/') { result+=' '; continue; }
+        if (/^\d\d$/.test(t)) {
+            const letter=polybiusLetter(parseInt(t[0]), parseInt(t[1]));
+            result+=letter||t;
+        } else result+=t;
+    }
+    document.getElementById('pbDecryptOutput').textContent=result;
+    document.getElementById('pbDecryptResult').classList.add('show');
+}
+function generatePolybiusGrid() {
+    const tc=document.getElementById('polybiusGridContainer');
+    let html='<table><thead><tr><th></th>';
+    for (let c=1;c<=5;c++) html+=`<th class="header-cell">${c}</th>`;
+    html+='</tr></thead><tbody>';
+    for (let r=1;r<=5;r++) {
+        html+=`<tr><th class="header-cell">${r}</th>`;
+        for (let c=1;c<=5;c++) html+=`<td data-row="${r}" data-col="${c}">${polybiusGrid[r-1][c-1]}</td>`;
+        html+='</tr>';
+    }
+    html+='</tbody></table>'; tc.innerHTML=html; updatePolybiusHighlight();
+}
+function updatePolybiusHighlight() {
+    const letterInput=document.getElementById('pbGridLetterInput').value.toUpperCase().charAt(0)||'';
+    document.querySelectorAll('#polybiusGridContainer td').forEach(c=>c.classList.remove('highlight-cell','highlight-row','highlight-col'));
+    document.querySelectorAll('#polybiusGridContainer tr').forEach(r=>r.classList.remove('highlight-row'));
+    document.querySelectorAll('#polybiusGridContainer th').forEach(h=>h.classList.remove('highlight-col'));
+    if (!letterInput) { document.getElementById('pbHighlightInfo').style.display='none'; return; }
+    let letter=letterInput==='J'?'I':letterInput;
+    const coords=polybiusCoords(letter);
+    if (!coords) { document.getElementById('pbHighlightInfo').style.display='none'; return; }
+    const row=parseInt(coords[0]), col=parseInt(coords[1]);
+    const rows=document.querySelectorAll('#polybiusGridContainer tr'), cols=document.querySelectorAll('#polybiusGridContainer th');
+    if (rows[row]) rows[row].classList.add('highlight-row');
+    if (cols[col]) cols[col].classList.add('highlight-col');
+    const cell=document.querySelector(`#polybiusGridContainer td[data-row="${row}"][data-col="${col}"]`);
+    if (cell) {
+        cell.classList.add('highlight-cell');
+        document.getElementById('pbInfoLetter').textContent=letterInput;
+        document.getElementById('pbInfoResult').textContent=coords;
+        document.getElementById('pbHighlightInfo').style.display='block';
+    }
+}
+
+// ============================================================
+// PIGPEN CIPHER (Sandi Kotak)
+// ============================================================
+// Each letter's shape: 'grid' type uses box sides (top/right/bottom/left),
+// 'x' type uses one quadrant of an X. Dotted variants add a center dot.
+const pigpenShapes = {
+    A:{type:'grid', sides:['right','bottom']},
+    B:{type:'grid', sides:['left','right','bottom']},
+    C:{type:'grid', sides:['left','bottom']},
+    D:{type:'grid', sides:['top','right','bottom']},
+    E:{type:'grid', sides:['top','right','bottom','left']},
+    F:{type:'grid', sides:['top','left','bottom']},
+    G:{type:'grid', sides:['top','right']},
+    H:{type:'grid', sides:['left','right','top']},
+    I:{type:'grid', sides:['top','left']},
+    J:{type:'grid', sides:['right','bottom'], dot:true},
+    K:{type:'grid', sides:['left','right','bottom'], dot:true},
+    L:{type:'grid', sides:['left','bottom'], dot:true},
+    M:{type:'grid', sides:['top','right','bottom'], dot:true},
+    N:{type:'grid', sides:['top','right','bottom','left'], dot:true},
+    O:{type:'grid', sides:['top','left','bottom'], dot:true},
+    P:{type:'grid', sides:['top','right'], dot:true},
+    Q:{type:'grid', sides:['left','right','top'], dot:true},
+    R:{type:'grid', sides:['top','left'], dot:true},
+    S:{type:'x', quad:'top'},
+    T:{type:'x', quad:'right'},
+    U:{type:'x', quad:'bottom'},
+    V:{type:'x', quad:'left'},
+    W:{type:'x', quad:'top', dot:true},
+    X:{type:'x', quad:'right', dot:true},
+    Y:{type:'x', quad:'bottom', dot:true},
+    Z:{type:'x', quad:'left', dot:true}
+};
+const pigpenOrder = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+// Draws a single pigpen glyph into a canvas context at (x,y) with given cell size
+function drawPigpenGlyph(ctx, x, y, size, def, strokeColor, dotColor) {
+    if (!def) return;
+    const pad = size*0.14;
+    const left=x+pad, right=x+size-pad, top=y+pad, bottom=y+size-pad;
+    const midX=x+size/2, midY=y+size/2;
+    ctx.strokeStyle = strokeColor || '#0a0e1a';
+    ctx.lineWidth = Math.max(1.5, size*0.07);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    if (def.type==='grid') {
+        if (def.sides.includes('top'))    { ctx.moveTo(left, top);    ctx.lineTo(right, top); }
+        if (def.sides.includes('right'))  { ctx.moveTo(right, top);   ctx.lineTo(right, bottom); }
+        if (def.sides.includes('bottom')) { ctx.moveTo(left, bottom); ctx.lineTo(right, bottom); }
+        if (def.sides.includes('left'))   { ctx.moveTo(left, top);    ctx.lineTo(left, bottom); }
+    } else if (def.type==='x') {
+        if (def.quad==='top')    { ctx.moveTo(midX,midY); ctx.lineTo(left,top);    ctx.moveTo(midX,midY); ctx.lineTo(right,top); }
+        if (def.quad==='right')  { ctx.moveTo(midX,midY); ctx.lineTo(right,top);   ctx.moveTo(midX,midY); ctx.lineTo(right,bottom); }
+        if (def.quad==='bottom') { ctx.moveTo(midX,midY); ctx.lineTo(left,bottom); ctx.moveTo(midX,midY); ctx.lineTo(right,bottom); }
+        if (def.quad==='left')   { ctx.moveTo(midX,midY); ctx.lineTo(left,top);    ctx.moveTo(midX,midY); ctx.lineTo(left,bottom); }
+    }
+    ctx.stroke();
+    if (def.dot) {
+        ctx.fillStyle = dotColor || strokeColor || '#0a0e1a';
+        ctx.beginPath();
+        ctx.arc(midX, midY, Math.max(1.6, size*0.08), 0, Math.PI*2);
+        ctx.fill();
+    }
+}
+
+// Renders a full string of pigpen glyphs onto a canvas, wrapping into rows
+function renderPigpenText(canvas, text, opts) {
+    opts = opts || {};
+    const ctx = canvas.getContext('2d');
+    const cellSize = opts.cellSize || 36;
+    const gap = opts.gap || 8;
+    const chars = (text || '').toUpperCase().split('');
+    const cols = Math.max(1, Math.min(opts.maxCols || 10, chars.length || 1));
+    const rows = Math.max(1, Math.ceil((chars.length || 1) / cols));
+    const dpr = window.devicePixelRatio || 1;
+    const width = cols*(cellSize+gap)+gap;
+    const height = rows*(cellSize+gap)+gap;
+    canvas.width = width*dpr; canvas.height = height*dpr;
+    canvas.style.width = width+'px'; canvas.style.height = height+'px';
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr,dpr);
+    ctx.clearRect(0,0,width,height);
+    if (opts.bg) { ctx.fillStyle=opts.bg; ctx.fillRect(0,0,width,height); }
+
+    chars.forEach((ch, idx) => {
+        const col = idx % cols, row = Math.floor(idx/cols);
+        const x = gap + col*(cellSize+gap), y = gap + row*(cellSize+gap);
+        if (ch===' ') {
+            ctx.strokeStyle = opts.mutedColor || '#5a6478';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x+cellSize*0.22, y+cellSize-6);
+            ctx.lineTo(x+cellSize*0.78, y+cellSize-6);
+            ctx.stroke();
+            return;
+        }
+        const def = pigpenShapes[ch];
+        if (def) {
+            drawPigpenGlyph(ctx, x, y, cellSize, def, opts.strokeColor, opts.dotColor);
+        } else {
+            ctx.fillStyle = opts.strokeColor || '#0a0e1a';
+            ctx.font = `${Math.floor(cellSize*0.48)}px monospace`;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(ch, x+cellSize/2, y+cellSize/2);
+        }
+    });
+}
+
+function encryptPigpen() {
+    if (!validateInput('pgEncryptInput')) return;
+    const text = document.getElementById('pgEncryptInput').value;
+    const canvas = document.getElementById('pgEncryptCanvas');
+    renderPigpenText(canvas, text, {
+        cellSize: 36, gap: 8, maxCols: 10,
+        strokeColor: '#0a0e1a', dotColor: '#0a0e1a', mutedColor: '#94a3b8', bg: '#ffffff'
+    });
+    document.getElementById('pgEncryptResult').classList.add('show');
+}
+function downloadPigpen() {
+    const canvas = document.getElementById('pgEncryptCanvas');
+    if (!canvas || !canvas.width) return;
+    const link = document.createElement('a');
+    link.download = 'pigpen-cipher.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+function clearAllPigpenEncrypt() {
+    document.getElementById('pgEncryptInput').value = '';
+    document.getElementById('pgEncryptInput').classList.remove('error');
+    document.getElementById('pgEncryptResult').classList.remove('show');
+    const canvas = document.getElementById('pgEncryptCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+// Build a single read-only key card (used in legend + palette)
+function buildPigpenKeyButton(letter, clickable) {
+    const btn = document.createElement('div');
+    btn.className = 'pigpen-key-btn' + (clickable ? '' : ' readonly');
+    const canvas = document.createElement('canvas');
+    const size = 40, dpr = window.devicePixelRatio || 1;
+    canvas.width = size*dpr; canvas.height = size*dpr;
+    canvas.style.width = size+'px'; canvas.style.height = size+'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr,dpr);
+    drawPigpenGlyph(ctx, 0, 0, size, pigpenShapes[letter], '#6b9bd1', '#6b9bd1');
+    const label = document.createElement('span');
+    label.textContent = letter;
+    btn.appendChild(canvas);
+    btn.appendChild(label);
+    if (clickable) btn.onclick = () => pigpenPickLetter(letter);
+    return btn;
+}
+
+function generatePigpenPalette() {
+    const groups = [
+        { id:'pgPaletteGrid1', letters:'ABCDEFGHI'.split('') },
+        { id:'pgPaletteGrid2', letters:'JKLMNOPQR'.split('') },
+        { id:'pgPaletteGrid3', letters:'STUV'.split('') },
+        { id:'pgPaletteGrid4', letters:'WXYZ'.split('') }
+    ];
+    groups.forEach(g => {
+        const container = document.getElementById(g.id);
+        if (!container || container.dataset.built) return;
+        g.letters.forEach(letter => container.appendChild(buildPigpenKeyButton(letter, true)));
+        container.dataset.built = '1';
+    });
+}
+
+function generatePigpenLegend(targetId) {
+    const target = document.getElementById(targetId);
+    if (!target || target.dataset.built) return;
+    target.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.style.display = 'grid';
+    wrap.style.gridTemplateColumns = 'repeat(auto-fill, minmax(48px, 1fr))';
+    wrap.style.gap = '8px';
+    pigpenOrder.forEach(letter => wrap.appendChild(buildPigpenKeyButton(letter, false)));
+    target.appendChild(wrap);
+    target.dataset.built = '1';
+}
+function togglePigpenLegend(targetId) {
+    generatePigpenLegend(targetId);
+    document.getElementById(targetId).classList.toggle('show');
+}
+
+// Decrypt buffer logic — clicking palette symbols builds the plain text live
+let pigpenBuffer = '';
+function pigpenRenderBuffer() {
+    document.getElementById('pgBufferText').textContent = pigpenBuffer || '—';
+}
+function pigpenPickLetter(letter) {
+    pigpenBuffer += letter;
+    pigpenRenderBuffer();
+}
+function pigpenAddSpace() {
+    pigpenBuffer += ' ';
+    pigpenRenderBuffer();
+}
+function pigpenBackspace() {
+    pigpenBuffer = pigpenBuffer.slice(0, -1);
+    pigpenRenderBuffer();
+}
+function pigpenClearBuffer() {
+    pigpenBuffer = '';
+    pigpenRenderBuffer();
+}
+
+// ============================================================
+// ✨ RAIL FENCE CIPHER
+// ============================================================
+const railColors=['#6b9bd1','#5ec78a','#f39c12','#e74c3c','#9b59b6','#1abc9c','#e67e22','#2ecc71','#e91e8c','#00bcd4'];
+
+// Build the zigzag rail pattern array for a given text length and rail count
+function buildRailPattern(len, rails) {
+    const pattern=[];
+    let rail=0, dir=1;
+    for (let i=0;i<len;i++) {
+        pattern.push(rail);
+        if (rail===0) dir=1;
+        else if (rail===rails-1) dir=-1;
+        rail+=dir;
+    }
+    return pattern;
+}
+
+function encryptRailFence() {
+    if (!validateInput('rfEncryptInput')) return;
+    const text=document.getElementById('rfEncryptInput').value;
+    const rails=Math.min(10, Math.max(2, parseInt(document.getElementById('rfEncryptRails').value)||3));
+
+    // Edge case: if rails >= text length, no scrambling
+    const pattern=buildRailPattern(text.length, rails);
+    const fence=Array.from({length:rails}, ()=>[]);
+    for (let i=0;i<text.length;i++) fence[pattern[i]].push(text[i]);
+    const result=fence.map(r=>r.join('')).join('');
+
+    document.getElementById('rfEncryptOutput').textContent=result;
+    document.getElementById('rfEncryptResult').classList.add('show');
+    drawRailVisual('rfEncryptVisual','rfEncryptVisualInner', text, pattern, rails);
+}
+
+function decryptRailFence() {
+    if (!validateInput('rfDecryptInput')) return;
+    const text=document.getElementById('rfDecryptInput').value;
+    const rails=Math.min(10, Math.max(2, parseInt(document.getElementById('rfDecryptRails').value)||3));
+    const len=text.length;
+    const pattern=buildRailPattern(len, rails);
+
+    // Count chars per rail
+    const railLens=Array(rails).fill(0);
+    pattern.forEach(r=>railLens[r]++);
+
+    // Split text into per-rail segments
+    const fence=[]; let idx=0;
+    for (let r=0;r<rails;r++) { fence.push(text.slice(idx,idx+railLens[r]).split('')); idx+=railLens[r]; }
+
+    // Read back in zigzag order
+    const railIdxs=Array(rails).fill(0);
+    let result='';
+    for (let i=0;i<len;i++) { const r=pattern[i]; result+=fence[r][railIdxs[r]++]||''; }
+
+    document.getElementById('rfDecryptOutput').textContent=result;
+    document.getElementById('rfDecryptResult').classList.add('show');
+    drawRailVisual('rfDecryptVisual','rfDecryptVisualInner', result, pattern, rails);
+}
+
+function drawRailVisual(containerId, innerId, text, pattern, rails) {
+    const container=document.getElementById(containerId);
+    const inner=document.getElementById(innerId);
+    if (!container||!inner) return;
+
+    inner.innerHTML='';
+    // Cap display to 40 chars so it doesn't overflow badly on mobile
+    const displayLen=Math.min(text.length, 40);
+    const suffix=text.length>40?' …':'';
+
+    for (let r=0;r<rails;r++) {
+        const row=document.createElement('div'); row.className='rail-row';
+        // Label
+        const label=document.createElement('span'); label.className='rail-label';
+        label.style.color=railColors[r%railColors.length]; label.textContent=`Rail ${r+1}:`;
+        row.appendChild(label);
+        // Characters
+        for (let i=0;i<displayLen;i++) {
+            const span=document.createElement('span');
+            if (pattern[i]===r) {
+                span.className='rail-char active';
+                span.style.background=railColors[r%railColors.length]+'22';
+                span.style.color=railColors[r%railColors.length];
+                span.style.borderColor=railColors[r%railColors.length]+'80';
+                span.textContent=text[i]===' '?'·':text[i];
+            } else {
+                span.className='rail-char empty';
+                span.textContent='·';
+            }
+            row.appendChild(span);
+        }
+        if (suffix) { const s=document.createElement('span'); s.style.color='#8a95a8'; s.style.fontSize='0.8em'; s.textContent=suffix; row.appendChild(s); }
+        inner.appendChild(row);
+    }
+    container.style.display='block';
+}
+
+// ============================================================
+// INIT
+// ============================================================
 window.addEventListener('DOMContentLoaded', () => {
     updateVisitorCount();
     initTriviaGame();
-    document.getElementById('guessInput')?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') makeGuess();
-    });
+    generatePigpenPalette();
+    document.getElementById('guessInput')?.addEventListener('keypress', e=>{ if(e.key==='Enter') makeGuess(); });
 });
-
-// Close modal on ESC
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeTools();
-        stopBarcodeScan();
-    }
-});
-// PERBAIKAN TAMBAHAN: Mencegah text selection dengan mouse drag
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){closeTools();stopBarcodeScan();} });
 document.addEventListener('mousedown', function(e) {
-    // Jika bukan element yang boleh di-select, cegah selection
-    if (!e.target.matches('input') && 
-        !e.target.matches('textarea') && 
-        !e.target.classList.contains('result-text') &&
-        !e.target.classList.contains('password-result')) {
-        
-        // Hilangkan selection yang ada
-        if (window.getSelection) {
-            window.getSelection().removeAllRanges();
-        }
+    if (!e.target.matches('input')&&!e.target.matches('textarea')&&!e.target.classList.contains('result-text')&&!e.target.classList.contains('password-result')) {
+        if (window.getSelection) window.getSelection().removeAllRanges();
     }
 });
-
-// Mencegah klik kanan (context menu) untuk non-input elements
-document.addEventListener('contextmenu', function(e) {
-    if (!e.target.matches('input') && !e.target.matches('textarea')) {
-        e.preventDefault();
-    }
-});
-
-// PERBAIKAN: Tambahkan juga event untuk mencegah drag selection pada seluruh page
-document.addEventListener('dragstart', function(e) {
-    if (!e.target.matches('input') && !e.target.matches('textarea')) {
-        e.preventDefault();
-    }
-});
-// PERBAIKAN: Mencegah text selection pada seluruh tombol
+document.addEventListener('contextmenu', function(e) { if (!e.target.matches('input')&&!e.target.matches('textarea')) e.preventDefault(); });
+document.addEventListener('dragstart', function(e) { if (!e.target.matches('input')&&!e.target.matches('textarea')) e.preventDefault(); });
 document.addEventListener('selectstart', function(e) {
-    if (e.target.tagName === 'BUTTON' || 
-        e.target.classList.contains('tool-item') ||
-        e.target.classList.contains('cipher-box') ||
-        e.target.classList.contains('mode-btn')) {
-        e.preventDefault();
-    }
+    if (e.target.tagName==='BUTTON'||e.target.classList.contains('tool-item')||e.target.classList.contains('cipher-box')||e.target.classList.contains('mode-btn')) e.preventDefault();
 });
 </script>
 </body>
