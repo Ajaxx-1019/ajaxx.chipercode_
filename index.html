@@ -4,9 +4,63 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Secret Cipher Code</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem('sc_theme')==='cool')document.documentElement.setAttribute('data-theme','cool');}catch(e){}</script>
 <style>
+:root {
+    color-scheme: dark;
+    --serif: 'Newsreader', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+    --sans: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    /* warm (default): dark brown-black + clay orange */
+    --bg: #1b1612;
+    --bg-rgb: 27, 22, 18;
+    --ink-rgb: 16, 12, 9;
+    --paper-rgb: 255, 238, 220;
+    --text: #f0e6da;
+    --muted: #a89a8b;
+    --accent: #d97757;
+    --accent-rgb: 217, 119, 87;
+    --on-accent: #1b1612;
+    --good: #a3b88c;
+    --good-rgb: 163, 184, 140;
+    --warn: #e2b56a;
+    --warn-rgb: 226, 181, 106;
+    --bad: #e5484d;
+    --bad-rgb: 229, 72, 77;
+    --glow1-rgb: 217, 119, 87;
+    --glow2-rgb: 150, 96, 56;
+
+    --glass: rgba(var(--paper-rgb), 0.05);
+    --glass-2: rgba(var(--paper-rgb), 0.08);
+    --stroke: rgba(var(--paper-rgb), 0.12);
+    --field: rgba(var(--ink-rgb), 0.55);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    --radius: 16px;
+}
+/* cool: black + cyan + blue */
+:root[data-theme="cool"] {
+    --bg: #0a0f14;
+    --bg-rgb: 10, 15, 20;
+    --ink-rgb: 5, 8, 12;
+    --paper-rgb: 225, 240, 252;
+    --text: #e4edf4;
+    --muted: #8797a6;
+    --accent: #38bdf8;
+    --accent-rgb: 56, 189, 248;
+    --on-accent: #04121c;
+    --good: #6ee7b7;
+    --good-rgb: 110, 231, 183;
+    --warn: #f5c26b;
+    --warn-rgb: 245, 194, 107;
+    --bad: #f87171;
+    --bad-rgb: 248, 113, 113;
+    --glow1-rgb: 56, 189, 248;
+    --glow2-rgb: 59, 110, 255;
+}
 * {
     margin: 0;
     padding: 0;
@@ -20,12 +74,11 @@
     -ms-user-select: none !important;
     user-select: none !important;
 }
-textarea, 
-input[type="text"], 
-input[type="number"], 
+textarea,
+input[type="text"],
+input[type="number"],
 input[type="password"],
 input[type="email"],
-.counter-textarea,
 .game-input {
     -webkit-user-select: auto !important;
     -moz-user-select: auto !important;
@@ -41,18 +94,24 @@ input[type="email"],
     }
 }
 body {
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 20px;
+    padding-bottom: 100px;
+    color: var(--text);
+    overflow-x: hidden;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
 }
-input, 
-textarea, 
+input,
+textarea,
 [contenteditable="true"],
 .result-text,
-.password-result,
 .calc-display,
-.counter-textarea,
 #textToBinaryOutput,
 #binaryToTextOutput,
 #caesarEncryptOutput,
@@ -69,84 +128,208 @@ textarea,
 #qrToTextOutput,
 #barcodeScanResult,
 #rfEncryptOutput,
-#rfDecryptOutput
-{
+#rfDecryptOutput,
+#textToBrailleOutput,
+#brailleToTextOutput {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
 }
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-    background: #0a0e27;
-    min-height: 100vh;
-    padding: 20px;
-    padding-bottom: 100px;
-    color: #e8eaf0;
+
+/* ================= STATIC BACKGROUND (no animation = no lag) ================= */
+.bg-fx {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(70vmax 55vmax at 8% -8%, rgba(var(--glow1-rgb), 0.17), transparent 70%),
+        radial-gradient(60vmax 50vmax at 104% 42%, rgba(var(--glow2-rgb), 0.11), transparent 70%),
+        var(--bg);
 }
+
 .container {
+    position: relative;
+    z-index: 1;
     max-width: 900px;
     margin: 0 auto;
 }
+
+/* ================= SHARED GLASS SURFACES ================= */
+.cipher-box,
+.encoder-box,
+.tools-content,
+.mode-btn,
+.back-btn,
+.tools-btn {
+    background: var(--glass);
+    border: 1px solid var(--stroke);
+    box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.07);
+}
+
+/* ================= ANIMATED ICONS (MOTION GRAPHICS) ================= */
+.ico {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+.ico svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.ico svg * {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+.ico .fill { fill: currentColor; stroke: none; }
+.ico.big { width: 64px; height: 64px; margin-bottom: 10px; }
+.ico.logo { width: 46px; height: 46px; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulseOp { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@keyframes scanY { from { transform: translateY(-15px); } to { transform: translateY(15px); } }
+@keyframes barY { 0%, 100% { transform: scaleY(0.4); } 50% { transform: scaleY(1); } }
+@keyframes slideX { from { transform: translateX(-4px); } to { transform: translateX(4px); } }
+@keyframes floatY { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
+@keyframes growX { from { transform: scaleX(0.35); } to { transform: scaleX(1); } }
+@keyframes flipX { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.1); } }
+@keyframes ringPulse { 0% { transform: scale(0.35); opacity: 1; } 100% { transform: scale(1.15); opacity: 0; } }
+@keyframes riseY { 0%, 100% { transform: translateY(10px); } 50% { transform: translateY(-4px); } }
+@keyframes boltFlick { 0%, 100% { opacity: 1; } 45% { opacity: 0.25; } 55% { opacity: 1; } 70% { opacity: 0.4; } }
+@keyframes knobA { from { transform: translateX(-8px); } to { transform: translateX(12px); } }
+@keyframes cellMove { 0% { transform: translate(0, 0); } 25% { transform: translate(12px, 0); } 50% { transform: translate(12px, 12px); } 75% { transform: translate(24px, 12px); } 100% { transform: translate(24px, 24px); } }
+@keyframes dotBlink { 0%, 100% { opacity: 0.18; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1); } }
+
+.a-spin { animation: spin 14s linear infinite; }
+.a-spin-rev { animation: spin 9s linear infinite reverse; }
+.a-spin-fast { animation: spin 6s linear infinite; }
+.a-pulse { animation: pulseOp 1.9s ease-in-out infinite; }
+.a-scan { animation: scanY 2.4s ease-in-out infinite alternate; }
+.a-bar { animation: barY 1.5s ease-in-out infinite; }
+.a-slideR { animation: slideX 1.8s ease-in-out infinite alternate; }
+.a-slideL { animation: slideX 1.8s ease-in-out infinite alternate-reverse; }
+.a-float { animation: floatY 2.4s ease-in-out infinite alternate; }
+.a-grow { transform-origin: 0% 50% !important; animation: growX 2s ease-in-out infinite alternate; }
+.a-flip { animation: flipX 2.6s ease-in-out infinite; }
+.a-ring { animation: ringPulse 2.4s ease-out infinite; }
+.a-rise { animation: riseY 1.9s ease-in-out infinite; }
+.a-bolt { animation: boltFlick 1.7s ease-in-out infinite; }
+.a-draw { animation: pulseOp 2.6s ease-in-out infinite; }
+.a-knob1 { animation: knobA 2.2s ease-in-out infinite alternate; }
+.a-knob2 { animation: knobA 3s ease-in-out infinite alternate-reverse; }
+.a-knob3 { animation: knobA 2.6s ease-in-out infinite alternate; }
+.a-cell { animation: cellMove 4s steps(1, end) infinite; }
+.a-key { fill: currentColor; animation: pulseOp 2.4s ease-in-out infinite; }
+.a-dot { animation: dotBlink 2.4s ease-in-out infinite; }
+.d1 { animation-delay: 0.2s; } .d2 { animation-delay: 0.4s; } .d3 { animation-delay: 0.6s; }
+.d4 { animation-delay: 0.8s; } .d5 { animation-delay: 1s; } .d6 { animation-delay: 1.2s; }
+.d7 { animation-delay: 1.4s; } .d8 { animation-delay: 1.6s; }
+/* icons only animate while visible on screen (toggled by IntersectionObserver) */
+.ico:not(.live) svg * { animation-play-state: paused !important; }
+body.modal-open .container .ico svg * { animation-play-state: paused !important; }
+
+.pulse-dot, .live-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--good);
+    animation: pulseOp 2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+.live-dot { background: var(--warn); }
+.spinner {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    border: 3px solid rgba(var(--paper-rgb), 0.15);
+    border-top-color: var(--accent);
+    animation: spin 0.9s linear infinite;
+}
+.chev {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    margin-right: 2px;
+}
+.hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+/* ================= HEADER ================= */
 .header {
     display: flex;
     align-items: center;
     margin-bottom: 30px;
     width: 100%;
+    gap: 10px;
 }
 .header-left {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 14px;
+    min-width: 0;
 }
-.tools-btn {
-    margin-left: auto;
-    background: #1a2235;
-    color: #6b9bd1;
-    border: 1px solid #2a3f5f;
-    padding: 10px 20px;
-    border-radius: 8px;
+h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.5em, 5vw, 2.2em);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text);
+}
+h2, h3, h4 { font-family: var(--serif); }
+.tools-btn,
+.back-btn {
+    color: var(--accent);
+    padding: 10px 18px;
+    border-radius: 14px;
     cursor: pointer;
     font-size: 0.95em;
-    transition: all 0.3s ease;
-    display: flex;
+    font-family: inherit;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     white-space: nowrap;
+    transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.tools-btn:hover {
-    background: #243047;
-    border-color: #6b9bd1;
-    transform: translateY(-2px);
-}
-.back-btn {
-    background: #1a2235;
-    color: #6b9bd1;
-    border: 1px solid #2a3f5f;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.95em;
-    transition: all 0.3s ease;
-}
+.header-left .tools-btn { margin-left: auto; }
+.tools-btn .ico { width: 22px; height: 22px; }
+.tools-btn:hover,
 .back-btn:hover {
-    background: #243047;
-    border-color: #6b9bd1;
-    transform: translateX(-3px);
+    background: rgba(var(--paper-rgb), 0.12);
+    border-color: rgba(var(--accent-rgb), 0.6);
+    box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.25), inset 0 1px 0 rgba(var(--paper-rgb), 0.18);
 }
-h1 {
-    color: #e8eaf0;
-    font-size: 2em;
-    font-weight: 600;
-}
+.tools-btn:hover { transform: translateY(-2px); }
+.back-btn:hover { transform: translateX(-3px); }
+
+/* ================= WATERMARK ================= */
 .watermark {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(135deg, #141b2d 0%, #1a2235 100%);
-    border-top: 1px solid #2a3f5f;
+    background: rgba(var(--ink-rgb), 0.94);
+    border-top: 1px solid var(--stroke);
     padding: 15px;
     z-index: 100;
 }
@@ -163,27 +346,28 @@ h1 {
     gap: 5px;
 }
 .watermark span {
-    color: #6b9bd1;
+    color: var(--muted);
     font-size: 0.9em;
     font-weight: 500;
 }
 .watermark a {
-    color: #5ec78a;
+    color: var(--good);
     text-decoration: none;
     font-weight: 600;
 }
-.watermark a:hover {
-    text-decoration: underline;
-}
+.watermark a:hover { text-decoration: underline; }
 .visitor-count {
-    background: #0f1420;
-    padding: 5px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(var(--paper-rgb), 0.06);
+    padding: 5px 14px;
     border-radius: 15px;
-    border: 1px solid #2a3f5f;
+    border: 1px solid var(--stroke);
 }
-.visitor-count span {
-    color: #f39c12;
-}
+.visitor-count span { color: var(--warn); }
+
+/* ================= TOOLS MODAL ================= */
 .tools-modal {
     display: none;
     position: fixed;
@@ -191,23 +375,25 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(var(--bg-rgb), 0.72);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     z-index: 1000;
     justify-content: center;
     align-items: center;
 }
 .tools-modal.show {
     display: flex;
-    animation: fadeIn 0.3s ease;
+    animation: fadeOnly 0.2s ease;
 }
 .tools-content {
-    background: #141b2d;
-    border-radius: 15px;
-    padding: 30px;
-    max-width: 500px;
-    width: 90%;
-    border: 1px solid #2a3f5f;
-    max-height: 80vh;
+    background: var(--bg);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    border-radius: 22px;
+    padding: 28px;
+    max-width: 520px;
+    width: 92%;
+    max-height: 82vh;
     overflow-y: auto;
 }
 .tools-header {
@@ -217,79 +403,86 @@ h1 {
     margin-bottom: 20px;
 }
 .tools-header h2 {
-    color: #6b9bd1;
+    color: var(--accent);
     font-size: 1.5em;
 }
 .close-btn {
-    background: none;
-    border: none;
-    color: #6b9bd1;
-    font-size: 1.5em;
+    background: rgba(var(--paper-rgb), 0.06);
+    border: 1px solid var(--stroke);
+    color: var(--accent);
+    font-size: 1.4em;
     cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: 10px;
     transition: all 0.3s ease;
 }
 .close-btn:hover {
-    background: #1a2235;
+    background: rgba(var(--paper-rgb), 0.14);
+    transform: rotate(90deg);
 }
 .tool-section-title {
-    color: #8a95a8;
+    color: var(--muted);
     font-size: 0.85em;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 20px 0 10px 0;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #2a3f5f;
+    letter-spacing: 1.5px;
+    margin: 22px 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--stroke);
 }
 .tool-item {
-    background: #0f1420;
-    border: 1px solid #2a3f5f;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(var(--paper-rgb), 0.05);
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     user-select: none;
     -webkit-user-select: none;
 }
+.tool-item .ico { width: 38px; height: 38px; }
 .tool-item:hover {
-    border-color: #6b9bd1;
+    border-color: rgba(var(--accent-rgb), 0.6);
+    background: rgba(var(--paper-rgb), 0.09);
     transform: translateX(5px);
 }
 .tool-item h3 {
-    color: #6b9bd1;
-    font-size: 1.1em;
-    margin-bottom: 5px;
+    color: var(--accent);
+    font-size: 1.05em;
+    margin-bottom: 3px;
 }
 .tool-item p {
-    color: #8a95a8;
-    font-size: 0.9em;
+    color: var(--muted);
+    font-size: 0.88em;
 }
 .tool-content-box {
-    background: #0f1420;
-    border-radius: 10px;
+    background: rgba(var(--ink-rgb), 0.4);
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
     padding: 20px;
-    margin-top: 15px;
+    margin: -4px 0 16px 0;
     display: none;
 }
 .tool-content-box.show {
     display: block;
+    animation: slideUp 0.35s ease;
 }
 .calc-display {
-    background: #0a0e1a;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
+    background: var(--field);
+    border: 1px solid var(--stroke);
+    border-radius: 10px;
     padding: 15px;
     margin-bottom: 15px;
     text-align: right;
     font-size: 1.5em;
-    color: #e8eaf0;
+    color: var(--text);
     min-height: 50px;
     word-break: break-all;
 }
@@ -299,81 +492,41 @@ h1 {
     gap: 10px;
 }
 .calc-btn {
-    background: #1a2235;
-    border: 1px solid #2a3f5f;
-    color: #e8eaf0;
+    background: rgba(var(--paper-rgb), 0.07);
+    border: 1px solid var(--stroke);
+    color: var(--text);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 1.1em;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
     -webkit-user-select: none;
+    font-family: inherit;
 }
 .calc-btn:hover {
-    background: #243047;
-    border-color: #6b9bd1;
+    background: rgba(var(--paper-rgb), 0.14);
+    border-color: var(--accent);
 }
+.calc-btn:active { transform: scale(0.95); }
 .calc-btn.operator {
-    background: #2d4a6e;
-    color: #6b9bd1;
+    background: rgba(var(--accent-rgb), 0.16);
+    color: var(--accent);
 }
 .calc-btn.equals {
-    background: linear-gradient(135deg, #4a7ba7 0%, #6b9bd1 100%);
-    color: white;
+    background: var(--accent);
+    color: var(--on-accent);
     grid-column: span 2;
 }
-.password-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-.password-options label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #e8eaf0;
-    cursor: pointer;
-}
-.password-options input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-.password-length {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-.password-length input[type="range"] {
-    flex: 1;
-    cursor: pointer;
-}
-.password-length span {
-    color: #6b9bd1;
-    min-width: 30px;
-}
-.password-result {
-    background: #0a0e1a;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
-    padding: 15px;
-    font-family: monospace;
-    font-size: 1.2em;
-    color: #5ec78a;
-    word-break: break-all;
-    margin-bottom: 15px;
-}
 .tool-btn {
-    background: linear-gradient(135deg, #4a7ba7 0%, #6b9bd1 100%);
-    color: white;
+    background: var(--accent);
+    color: var(--on-accent);
     border: none;
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 0.95em;
+    font-family: inherit;
     transition: all 0.3s ease;
     margin-right: 10px;
     margin-bottom: 5px;
@@ -382,68 +535,34 @@ h1 {
 }
 .tool-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(107, 155, 209, 0.3);
+    box-shadow: 0 8px 22px rgba(var(--accent-rgb), 0.3);
 }
-.counter-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 10px;
-    margin-top: 15px;
-}
-.counter-stat {
-    background: #0a0e1a;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-}
-.counter-stat h4 {
-    color: #8a95a8;
-    font-size: 0.8em;
-    margin-bottom: 5px;
-}
-.counter-stat span {
-    color: #6b9bd1;
-    font-size: 1.5em;
-    font-weight: 600;
-}
-.counter-textarea {
-    width: 100%;
-    min-height: 80px;
-    padding: 15px;
-    font-size: 1em;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
-    background: #0a0e1a;
-    color: #e8eaf0;
-    resize: vertical;
-}
-.game-container {
-    text-align: center;
-}
+.game-container { text-align: center; }
 .game-display {
-    background: #0a0e1a;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
+    background: var(--field);
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
     padding: 20px;
     margin-bottom: 15px;
-    font-size: 1.2em;
-    color: #e8eaf0;
+    font-size: 1.15em;
+    color: var(--text);
 }
 .game-input {
     width: 100%;
     padding: 12px;
     font-size: 1.1em;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
-    background: #0a0e1a;
-    color: #e8eaf0;
+    font-family: inherit;
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
+    background: var(--field);
+    color: var(--text);
     text-align: center;
     margin-bottom: 15px;
 }
 .game-input:focus {
     outline: none;
-    border-color: #6b9bd1;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
 }
 .memory-board {
     display: grid;
@@ -453,39 +572,47 @@ h1 {
 }
 .memory-card {
     aspect-ratio: 1;
-    background: linear-gradient(135deg, #2d4a6e 0%, #1e3a5f 100%);
-    border-radius: 8px;
+    background: rgba(var(--accent-rgb), 0.22);
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8em;
+    font-size: 1.6em;
     cursor: pointer;
     transform-style: preserve-3d;
-    transition: transform 0.5s;
+    transition: transform 0.5s, background 0.3s, box-shadow 0.3s;
     user-select: none;
     -webkit-user-select: none;
 }
+.memory-card:hover { box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.3); }
 .memory-card.flipped {
     transform: rotateY(180deg);
-    background: #1a2235;
+    background: rgba(var(--paper-rgb), 0.08);
 }
 .memory-card.matched {
-    background: #2d5a3d;
+    background: rgba(var(--good-rgb), 0.2);
+    border-color: rgba(var(--good-rgb), 0.55);
+    box-shadow: 0 0 20px rgba(var(--good-rgb), 0.25);
     cursor: default;
 }
-.memory-card .card-front {
-    display: none;
-}
+.memory-card .card-front { display: none; }
 .memory-card.flipped .card-front {
-    display: block;
-    color: #6b9bd1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--accent);
+    transform: rotateY(180deg);
 }
-.memory-card .card-back {
-    color: #8a95a8;
+.memory-card .card-front svg {
+    width: 58%;
+    height: 58%;
+    animation: floatY 2s ease-in-out infinite alternate;
 }
-.memory-card.flipped .card-back {
-    display: none;
-}
+.memory-card .card-back { color: var(--muted); }
+.memory-card.flipped .card-back { display: none; }
 .memory-stats {
     display: flex;
     justify-content: center;
@@ -500,66 +627,78 @@ h1 {
 }
 .mole-hole {
     aspect-ratio: 1;
-    background: #1a2235;
+    background: rgba(var(--paper-rgb), 0.06);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2em;
     cursor: pointer;
-    border: 2px solid #2a3f5f;
+    border: 2px solid var(--stroke);
     transition: all 0.2s;
     user-select: none;
     -webkit-user-select: none;
+    color: var(--accent);
 }
+.mole-hole svg { width: 70%; height: 70%; overflow: visible; }
 .mole-hole.active {
-    background: #e74c3c;
-    border-color: #c0392b;
+    background: rgba(var(--bad-rgb), 0.2);
+    border-color: var(--bad);
+    color: var(--bad);
     transform: scale(0.95);
+    box-shadow: 0 0 24px rgba(var(--bad-rgb), 0.4);
 }
 .mole-hole.hit {
-    background: #5ec78a;
-    border-color: #27ae60;
+    background: rgba(var(--good-rgb), 0.22);
+    border-color: var(--good);
+    color: var(--good);
     transform: scale(1.1);
 }
+.mole-orb .orb-core { animation: orbBeat 0.8s ease-in-out infinite alternate; transform-origin: 24px 24px; }
+.mole-orb .orb-ring { transform-origin: 24px 24px; animation: ringPulse 1s ease-out infinite; }
+.mole-burst .ray { transform-origin: 24px 24px; animation: burst 0.3s ease-out forwards; }
+@keyframes orbBeat { from { transform: scale(0.85); } to { transform: scale(1.1); } }
+@keyframes burst { from { transform: scale(0.3); opacity: 1; } to { transform: scale(1.3); opacity: 0.2; } }
 .mole-timer {
     width: 100%;
     height: 10px;
-    background: #1a2235;
+    background: rgba(var(--paper-rgb), 0.08);
     border-radius: 5px;
     margin: 15px 0;
     overflow: hidden;
 }
 .mole-timer-bar {
     height: 100%;
-    background: linear-gradient(135deg, #4a7ba7 0%, #6b9bd1 100%);
+    background: var(--accent);
     width: 100%;
-    transition: width 0.1s linear;
+    transform-origin: left center;
+    transition: transform 0.1s linear;
 }
 .reaction-box {
     width: 100%;
     height: 150px;
-    border-radius: 10px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2em;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: 15px;
     user-select: none;
     -webkit-user-select: none;
+    border: 1px solid var(--stroke);
 }
 .reaction-box.waiting {
-    background: #e74c3c;
+    background: rgba(var(--bad-rgb), 0.75);
     color: white;
 }
 .reaction-box.ready {
-    background: #2ecc71;
+    background: rgba(var(--good-rgb), 0.8);
     color: white;
+    box-shadow: 0 0 40px rgba(var(--good-rgb), 0.5);
 }
 .reaction-box.result {
-    background: #3498db;
+    background: rgba(var(--accent-rgb), 0.75);
     color: white;
 }
 .color-picker-container {
@@ -570,8 +709,8 @@ h1 {
 .color-preview {
     width: 100%;
     height: 80px;
-    border-radius: 10px;
-    border: 2px solid #2a3f5f;
+    border-radius: 14px;
+    border: 2px solid var(--stroke);
 }
 .color-inputs {
     display: grid;
@@ -584,16 +723,17 @@ h1 {
     gap: 5px;
 }
 .color-input-group label {
-    color: #8a95a8;
+    color: var(--muted);
     font-size: 0.85em;
 }
 .color-input-group input {
     padding: 10px;
-    border: 1px solid #2a3f5f;
-    border-radius: 6px;
-    background: #0a0e1a;
-    color: #e8eaf0;
+    border: 1px solid var(--stroke);
+    border-radius: 10px;
+    background: var(--field);
+    color: var(--text);
     font-size: 0.95em;
+    font-family: inherit;
 }
 .converter-container {
     display: flex;
@@ -612,22 +752,24 @@ h1 {
     gap: 5px;
 }
 .converter-input label {
-    color: #8a95a8;
+    color: var(--muted);
     font-size: 0.85em;
 }
-.converter-input input, .converter-input select {
+.converter-input input,
+.converter-input select {
     padding: 10px;
-    border: 1px solid #2a3f5f;
-    border-radius: 6px;
-    background: #0a0e1a;
-    color: #e8eaf0;
+    border: 1px solid var(--stroke);
+    border-radius: 10px;
+    background: var(--field);
+    color: var(--text);
     font-size: 0.95em;
+    font-family: inherit;
 }
 .converter-arrow {
-    color: #6b9bd1;
-    font-size: 1.5em;
+    color: var(--accent);
     padding-bottom: 10px;
 }
+.converter-arrow .ico { width: 26px; height: 26px; }
 .quiz-options {
     display: flex;
     flex-direction: column;
@@ -635,31 +777,32 @@ h1 {
     margin: 20px 0;
 }
 .quiz-option {
-    background: #1a2235;
-    border: 2px solid #2a3f5f;
-    border-radius: 8px;
+    background: rgba(var(--paper-rgb), 0.06);
+    border: 2px solid var(--stroke);
+    border-radius: 12px;
     padding: 15px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: left;
     font-size: 1em;
-    color: #e8eaf0;
+    font-family: inherit;
+    color: var(--text);
     user-select: none;
     -webkit-user-select: none;
 }
 .quiz-option:hover {
-    border-color: #6b9bd1;
-    background: #243047;
+    border-color: var(--accent);
+    background: rgba(var(--paper-rgb), 0.12);
 }
 .quiz-option.correct {
-    background: #2d5a3d;
-    border-color: #5ec78a;
-    color: #5ec78a;
+    background: rgba(var(--good-rgb), 0.2);
+    border-color: var(--good);
+    color: var(--good);
 }
 .quiz-option.wrong {
-    background: #5a2d2d;
-    border-color: #e74c3c;
-    color: #e74c3c;
+    background: rgba(var(--bad-rgb), 0.2);
+    border-color: var(--bad);
+    color: var(--bad);
 }
 .quiz-stats {
     display: flex;
@@ -667,44 +810,47 @@ h1 {
     gap: 30px;
     margin-top: 15px;
 }
-#homePage {
-    display: block;
-}
+
+/* ================= HOME ================= */
+#homePage { display: block; }
 .cipher-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 15px;
+    gap: 16px;
 }
 .cipher-box {
-    background: #141b2d;
-    border-radius: 12px;
-    padding: 25px;
+    position: relative;
+    border-radius: var(--radius);
+    padding: 22px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid #1e2a42;
+    transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
     user-select: none;
     -webkit-user-select: none;
+    animation: boxIn 0.5s ease backwards;
+    animation-delay: calc(var(--i, 0) * 35ms);
 }
 .cipher-box:hover {
-    background: #1a2337;
-    border-color: #6b9bd1;
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(107, 155, 209, 0.15);
+    background: rgba(var(--paper-rgb), 0.08);
+    border-color: rgba(var(--accent-rgb), 0.55);
+    transform: translateY(-3px);
 }
+.cipher-box .ico { margin-bottom: 14px; }
 .cipher-box h2 {
-    font-size: 1.3em;
-    margin-bottom: 10px;
-    color: #6b9bd1;
+    font-size: 1.25em;
+    margin-bottom: 8px;
+    color: var(--text);
     font-weight: 600;
 }
 .cipher-box p {
     font-size: 0.9em;
-    color: #8a95a8;
+    color: var(--muted);
     line-height: 1.5;
 }
-.cipher-page {
-    display: none;
+@keyframes boxIn {
+    from { opacity: 0; transform: translateY(26px) scale(0.97); }
+    to { opacity: 1; transform: none; }
 }
+.cipher-page { display: none; }
 .cipher-page.active {
     display: block;
     animation: fadeIn 0.4s ease;
@@ -713,17 +859,17 @@ h1 {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ================= MODES / ENCODER BOX ================= */
 .mode-selector {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 12px;
-    margin-bottom: 25px;
+    margin-bottom: 22px;
 }
 .mode-btn {
-    background: #141b2d;
-    border: 1px solid #1e2a42;
-    padding: 18px;
-    border-radius: 10px;
+    padding: 16px;
+    border-radius: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
@@ -731,41 +877,39 @@ h1 {
     -webkit-user-select: none;
 }
 .mode-btn:hover {
-    border-color: #6b9bd1;
+    border-color: rgba(var(--accent-rgb), 0.6);
     transform: translateY(-2px);
 }
 .mode-btn.active {
-    background: linear-gradient(135deg, #2d4a6e 0%, #1e3a5f 100%);
-    border-color: #6b9bd1;
-    box-shadow: 0 4px 15px rgba(107, 155, 209, 0.2);
+    background: rgba(var(--accent-rgb), 0.22);
+    border-color: rgba(var(--accent-rgb), 0.65);
+    box-shadow: 0 8px 30px rgba(var(--accent-rgb), 0.18), inset 0 1px 0 rgba(var(--paper-rgb), 0.2);
 }
 .mode-btn h3 {
-    font-size: 1.1em;
-    color: #e8eaf0;
+    font-size: 1.08em;
+    color: var(--text);
     margin-bottom: 5px;
     font-weight: 600;
 }
 .mode-btn p {
-    color: #8a95a8;
+    color: var(--muted);
     font-size: 0.85em;
 }
 .encoder-box {
-    background: #141b2d;
-    border-radius: 12px;
-    padding: 25px;
-    border: 1px solid #1e2a42;
+    border-radius: 22px;
+    padding: 26px;
     display: none;
 }
 .encoder-box.show {
     display: block;
-    animation: slideUp 0.3s ease;
+    animation: slideUp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 .encoder-box h3 {
-    color: #6b9bd1;
+    color: var(--accent);
     margin-bottom: 20px;
     font-size: 1.4em;
     font-weight: 600;
@@ -780,24 +924,24 @@ textarea, input[type="text"] {
     padding: 15px;
     padding-right: 50px;
     font-size: 1em;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
-    background: #0f1420;
-    color: #e8eaf0;
+    font-family: inherit;
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
+    background: var(--field);
+    color: var(--text);
     resize: vertical;
     transition: all 0.3s ease;
 }
-input[type="text"] {
-    min-height: auto;
-}
+textarea::placeholder, input::placeholder { color: rgba(var(--paper-rgb), 0.38); }
+input[type="text"] { min-height: auto; }
 textarea:focus, input[type="text"]:focus {
     outline: none;
-    border-color: #6b9bd1;
-    box-shadow: 0 0 0 3px rgba(107, 155, 209, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.14), 0 0 26px rgba(var(--accent-rgb), 0.1);
 }
 textarea.error, input[type="text"].error {
-    border-color: #e74c3c !important;
-    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2) !important;
+    border-color: var(--bad) !important;
+    box-shadow: 0 0 0 3px rgba(var(--bad-rgb), 0.2) !important;
     animation: shake 0.5s ease;
 }
 @keyframes shake {
@@ -809,9 +953,9 @@ textarea.error, input[type="text"].error {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: #2a3f5f;
-    color: #e74c3c;
-    border: none;
+    background: rgba(var(--paper-rgb), 0.08);
+    color: var(--bad);
+    border: 1px solid var(--stroke);
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -821,15 +965,15 @@ textarea.error, input[type="text"].error {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    opacity: 0.7;
+    opacity: 0.75;
     user-select: none;
     -webkit-user-select: none;
 }
 .clear-btn:hover {
-    background: #e74c3c;
+    background: var(--bad);
     color: white;
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(90deg);
 }
 .btn-group {
     display: flex;
@@ -837,66 +981,54 @@ textarea.error, input[type="text"].error {
     gap: 10px;
     margin-bottom: 10px;
 }
-.btn-convert, .btn-save {
-    background: linear-gradient(135deg, #4a7ba7 0%, #6b9bd1 100%);
-    color: white;
+.btn-convert, .btn-save, .btn-clear-all, .btn-download {
+    color: var(--on-accent);
     border: none;
-    padding: 12px 30px;
+    padding: 12px 28px;
     font-size: 1em;
-    border-radius: 8px;
+    font-family: inherit;
+    border-radius: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
     user-select: none;
     -webkit-user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+.btn-convert, .btn-save {
+    background: var(--accent);
+    box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.3);
+}
+.btn-clear-all {
+    color: #fff;
+    padding: 12px 24px;
+    background: rgba(var(--bad-rgb), 0.75);
+    box-shadow: inset 0 1px 0 rgba(var(--paper-rgb), 0.25);
+}
+.btn-download {
+    background: rgba(var(--good-rgb), 0.8);
 }
 .btn-convert:hover, .btn-save:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(107, 155, 209, 0.3);
-}
-.btn-convert:active, .btn-save:active {
-    transform: translateY(0);
-}
-.btn-clear-all {
-    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1em;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    user-select: none;
-    -webkit-user-select: none;
+    box-shadow: 0 10px 26px rgba(var(--accent-rgb), 0.35), inset 0 1px 0 rgba(var(--paper-rgb), 0.3);
 }
 .btn-clear-all:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-}
-.btn-download {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1em;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    user-select: none;
-    -webkit-user-select: none;
+    box-shadow: 0 10px 26px rgba(var(--bad-rgb), 0.35);
 }
 .btn-download:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+    box-shadow: 0 10px 26px rgba(var(--good-rgb), 0.3);
 }
+.btn-convert:active, .btn-save:active, .btn-clear-all:active { transform: translateY(0) scale(0.98); }
 .result {
     margin-top: 20px;
     padding: 20px;
-    background: #0f1420;
-    border-radius: 8px;
-    border-left: 3px solid #6b9bd1;
+    background: rgba(var(--ink-rgb), 0.4);
+    border-radius: 14px;
+    border: 1px solid var(--stroke);
+    border-left: 3px solid var(--accent);
     display: none;
 }
 .result.show {
@@ -912,7 +1044,7 @@ textarea.error, input[type="text"].error {
     gap: 10px;
 }
 .result h4 {
-    color: #6b9bd1;
+    color: var(--accent);
     font-size: 1.1em;
     font-weight: 600;
 }
@@ -922,83 +1054,149 @@ textarea.error, input[type="text"].error {
     flex-wrap: wrap;
 }
 .copy-btn {
-    background: #1a2235;
-    color: #6b9bd1;
-    border: 1px solid #2a3f5f;
+    background: rgba(var(--paper-rgb), 0.07);
+    color: var(--accent);
+    border: 1px solid var(--stroke);
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 0.9em;
+    font-family: inherit;
     transition: all 0.3s ease;
     user-select: none;
     -webkit-user-select: none;
 }
 .copy-btn:hover {
-    background: #243047;
-    border-color: #6b9bd1;
+    background: rgba(var(--paper-rgb), 0.14);
+    border-color: var(--accent);
 }
 .copy-btn.copied {
-    background: #2d5a3d;
-    border-color: #5ec78a;
-    color: #5ec78a;
+    background: rgba(var(--good-rgb), 0.2);
+    border-color: var(--good);
+    color: var(--good);
 }
 .download-small-btn {
-    background: #1a3d2e;
-    color: #5ec78a;
-    border: 1px solid #2d5a3d;
+    background: rgba(var(--good-rgb), 0.14);
+    color: var(--good);
+    border: 1px solid rgba(var(--good-rgb), 0.4);
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 0.9em;
+    font-family: inherit;
     transition: all 0.3s ease;
     user-select: none;
     -webkit-user-select: none;
 }
 .download-small-btn:hover {
-    background: #2d5a3d;
-    border-color: #5ec78a;
+    background: rgba(var(--good-rgb), 0.28);
+    border-color: var(--good);
 }
 .result-text {
-    font-size: 1em;
+    font-family: var(--mono);
+    font-size: 0.92em;
     word-break: break-all;
-    color: #e8eaf0;
-    background: #0a0e1a;
+    color: var(--text);
+    background: var(--field);
     padding: 15px;
-    border-radius: 6px;
+    border-radius: 10px;
     line-height: 1.6;
+}
+.result-text.is-error {
+    color: var(--warn);
+    word-break: normal;
 }
 #qrOutput, #barcodeOutputContainer {
     display: flex;
     justify-content: center;
-    padding: 20px;
+    padding: 24px;
     background: white;
-    border-radius: 8px;
+    border-radius: 14px;
     margin-top: 10px;
 }
+#qrOutput img, #qrOutput canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ================= QR UPLOAD / CAMERA ================= */
 .qr-upload {
-    border: 2px dashed #2a3f5f;
-    border-radius: 8px;
-    padding: 30px;
+    border: 2px dashed rgba(var(--paper-rgb), 0.22);
+    border-radius: 16px;
+    padding: 28px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: 15px;
     user-select: none;
     -webkit-user-select: none;
+    color: var(--muted);
 }
-.qr-upload:hover {
-    border-color: #6b9bd1;
-    background: #0f1420;
+.qr-upload:hover, .qr-upload.drag {
+    border-color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.07);
+    box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.12);
 }
-.qr-upload input {
+.qr-upload .ico { margin: 0 auto 10px; }
+.qr-upload .qu-title { color: var(--accent); margin-bottom: 8px; }
+.qr-upload .qu-sub { font-size: 0.85em; }
+.qr-upload img {
+    max-width: 180px;
+    max-height: 180px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 2px solid var(--stroke);
+    background: white;
+}
+.qr-cam {
     display: none;
+    position: relative;
+    max-width: 420px;
+    margin: 0 auto 15px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--stroke);
+    background: #000;
 }
+.qr-cam.show { display: block; }
+.qr-cam video {
+    width: 100%;
+    display: block;
+}
+.scan-frame {
+    position: absolute;
+    inset: 14%;
+    pointer-events: none;
+}
+.scan-frame i {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border: 3px solid var(--accent);
+}
+.scan-frame i:nth-child(1) { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: 8px; }
+.scan-frame i:nth-child(2) { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: 8px; }
+.scan-frame i:nth-child(3) { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: 8px; }
+.scan-frame i:nth-child(4) { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 8px; }
+.scan-line {
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    box-shadow: 0 0 14px var(--accent);
+    animation: camScan 2.2s ease-in-out infinite alternate;
+}
+@keyframes camScan { from { top: 4%; } to { top: 96%; } }
+
+/* ================= VIGENERE / POLYBIUS TABLE ================= */
 .vigenere-table {
     overflow-x: auto;
     margin: 20px 0;
-    background: #0f1420;
+    background: rgba(var(--ink-rgb), 0.4);
+    border: 1px solid var(--stroke);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 14px;
 }
 .vigenere-table table {
     border-collapse: collapse;
@@ -1009,35 +1207,27 @@ textarea.error, input[type="text"].error {
     width: 25px;
     height: 25px;
     text-align: center;
-    border: 1px solid #2a3f5f;
-    color: #e8eaf0;
-    transition: all 0.2s ease;
+    border: 1px solid rgba(var(--paper-rgb), 0.1);
+    color: var(--text);
+    transition: background-color 0.15s ease;
 }
 .vigenere-table th {
-    background: #2d4a6e;
-    color: #6b9bd1;
+    background: rgba(var(--accent-rgb), 0.16);
+    color: var(--accent);
     font-weight: 600;
 }
-.vigenere-table td {
-    background: #141b2d;
-}
-.vigenere-table td.highlight-row, .vigenere-table th.highlight-row {
-    background: #3d5a8e !important;
-}
-.vigenere-table td.highlight-col, .vigenere-table th.highlight-col {
-    background: #3d5a8e !important;
-}
+.vigenere-table td { background: rgba(var(--paper-rgb), 0.035); }
+.vigenere-table tr.highlight-row td { background: rgba(var(--accent-rgb), 0.14); }
+.vigenere-table td.highlight-row, .vigenere-table th.highlight-row { background: rgba(var(--accent-rgb), 0.3) !important; }
+.vigenere-table td.highlight-col, .vigenere-table th.highlight-col { background: rgba(var(--accent-rgb), 0.3) !important; }
 .vigenere-table td.highlight-cell {
-    background: #5ec78a !important;
-    color: #0a0e27 !important;
+    background: var(--good) !important;
+    color: var(--bg) !important;
     font-weight: bold;
     transform: scale(1.2);
-    box-shadow: 0 0 10px rgba(94, 199, 138, 0.5);
+    box-shadow: 0 0 14px rgba(var(--good-rgb), 0.7);
 }
-.vigenere-inputs {
-    display: grid;
-    gap: 10px;
-}
+.vigenere-inputs { display: grid; gap: 10px; }
 .table-input-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1047,31 +1237,35 @@ textarea.error, input[type="text"].error {
 .table-input-group input {
     padding: 12px;
     font-size: 1em;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
-    background: #0a0e1a;
-    color: #e8eaf0;
+    font-family: inherit;
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
+    background: var(--field);
+    color: var(--text);
 }
 .table-input-group input:focus {
     outline: none;
-    border-color: #6b9bd1;
+    border-color: var(--accent);
 }
 .highlight-info {
-    background: #0a0e1a;
+    background: var(--field);
+    border: 1px solid var(--stroke);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 12px;
     margin-bottom: 15px;
     text-align: center;
 }
 .highlight-info span {
-    color: #6b9bd1;
+    color: var(--accent);
     font-weight: 600;
 }
 .highlight-info .result-letter {
-    color: #5ec78a;
+    color: var(--good);
     font-size: 1.5em;
     margin-left: 10px;
 }
+
+/* ================= BARCODE ================= */
 .barcode-type-selector {
     display: flex;
     flex-wrap: wrap;
@@ -1079,38 +1273,36 @@ textarea.error, input[type="text"].error {
     margin-bottom: 15px;
 }
 .barcode-type-btn {
-    background: #1a2235;
-    border: 1px solid #2a3f5f;
-    color: #e8eaf0;
+    background: rgba(var(--paper-rgb), 0.06);
+    border: 1px solid var(--stroke);
+    color: var(--text);
     padding: 8px 15px;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
+    font-family: inherit;
     transition: all 0.3s ease;
     user-select: none;
     -webkit-user-select: none;
 }
 .barcode-type-btn.active {
-    background: #2d4a6e;
-    border-color: #6b9bd1;
-    color: #6b9bd1;
+    background: rgba(var(--accent-rgb), 0.2);
+    border-color: var(--accent);
+    color: var(--accent);
 }
-.barcode-type-btn:hover {
-    border-color: #6b9bd1;
-}
+.barcode-type-btn:hover { border-color: var(--accent); }
 .barcode-error {
-    color: #e74c3c;
-    background: rgba(231, 76, 60, 0.1);
+    color: var(--bad);
+    background: rgba(var(--bad-rgb), 0.1);
+    border: 1px solid rgba(var(--bad-rgb), 0.3);
     padding: 10px;
-    border-radius: 6px;
+    border-radius: 10px;
     margin-top: 10px;
     display: none;
 }
-.barcode-error.show {
-    display: block;
-}
+.barcode-error.show { display: block; }
 .barcode-scanner-area {
-    border: 2px dashed #2a3f5f;
-    border-radius: 8px;
+    border: 2px dashed rgba(var(--paper-rgb), 0.22);
+    border-radius: 16px;
     padding: 30px;
     text-align: center;
     cursor: pointer;
@@ -1125,31 +1317,95 @@ textarea.error, input[type="text"].error {
     -webkit-user-select: none;
 }
 .barcode-scanner-area:hover {
-    border-color: #6b9bd1;
-    background: #0f1420;
+    border-color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.07);
 }
 #barcodeVideo {
     width: 100%;
     max-width: 400px;
-    border-radius: 8px;
+    border-radius: 14px;
     display: none;
 }
 .barcode-scan-result {
-    background: #0a0e1a;
+    background: var(--field);
+    border: 1px solid var(--stroke);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 12px;
     margin-top: 15px;
-    font-family: monospace;
-    color: #5ec78a;
+    font-family: var(--mono);
+    color: var(--good);
     display: none;
 }
-/* Rail fence visual */
+
+/* ================= CAESAR SHIFT ================= */
+.shift-control {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: rgba(var(--ink-rgb), 0.4);
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
+}
+.shift-control label {
+    color: var(--muted);
+    font-size: 0.9em;
+    flex-shrink: 0;
+}
+.shift-control input[type="range"] {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+    accent-color: var(--accent);
+}
+.shift-control input[type="number"] {
+    width: 64px;
+    padding: 9px 8px;
+    border: 1px solid var(--stroke);
+    border-radius: 10px;
+    background: var(--field);
+    color: var(--accent);
+    font-size: 1em;
+    font-family: inherit;
+    text-align: center;
+}
+.shift-control input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+.caesar-map {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    background: rgba(var(--ink-rgb), 0.4);
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
+    overflow-x: auto;
+}
+.caesar-map .cm-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: max-content;
+    font-family: var(--mono);
+    font-size: 0.82em;
+}
+.caesar-map .cm-row + .cm-row { margin-top: 6px; }
+.caesar-map .cm-row span {
+    width: 48px;
+    color: var(--muted);
+    flex-shrink: 0;
+}
+.caesar-map .cm-plain { color: var(--text); letter-spacing: 0.35em; }
+.caesar-map .cm-cipher { color: var(--good); letter-spacing: 0.35em; }
+
+/* ================= RAIL FENCE ================= */
 .rail-visual {
     overflow-x: auto;
-    background: #0a0e1a;
+    background: rgba(var(--ink-rgb), 0.4);
     padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #2a3f5f;
+    border-radius: 14px;
+    border: 1px solid var(--stroke);
     margin-top: 15px;
     display: none;
 }
@@ -1165,6 +1421,7 @@ textarea.error, input[type="text"].error {
     min-width: max-content;
 }
 .rail-label {
+    color: var(--accent);
     font-size: 0.78em;
     font-weight: 600;
     min-width: 58px;
@@ -1176,33 +1433,34 @@ textarea.error, input[type="text"].error {
     height: 24px;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
-    font-family: monospace;
+    border-radius: 6px;
+    font-family: var(--mono);
     font-weight: bold;
     font-size: 0.88em;
     border: 1px solid transparent;
 }
 .rail-char.active {
+    background: rgba(var(--accent-rgb), 0.14);
+    color: var(--accent);
+    border-color: rgba(var(--accent-rgb), 0.5);
     border-width: 1px;
     border-style: solid;
+    animation: cellIn 0.4s ease backwards;
 }
-.rail-char.empty {
-    color: #2a3f5f;
-}
-/* Pigpen Cipher */
+.rail-char.empty { color: rgba(var(--paper-rgb), 0.15); }
+
+/* ================= PIGPEN ================= */
 .pigpen-canvas-wrap {
     background: #ffffff;
-    border-radius: 10px;
+    border-radius: 14px;
     padding: 18px;
     display: flex;
     justify-content: center;
     overflow-x: auto;
 }
-.pigpen-canvas-wrap canvas {
-    display: block;
-}
+.pigpen-canvas-wrap canvas { display: block; }
 .pigpen-key-group-title {
-    color: #8a95a8;
+    color: var(--muted);
     font-size: 0.82em;
     margin: 16px 0 8px 0;
 }
@@ -1212,9 +1470,9 @@ textarea.error, input[type="text"].error {
     gap: 8px;
 }
 .pigpen-key-btn {
-    background: #0a0e1a;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
+    background: rgba(var(--ink-rgb), 0.45);
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
     cursor: pointer;
     padding: 6px 4px 4px 4px;
     display: flex;
@@ -1226,42 +1484,41 @@ textarea.error, input[type="text"].error {
     -webkit-user-select: none;
 }
 .pigpen-key-btn:hover {
-    border-color: #6b9bd1;
+    border-color: var(--accent);
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.2);
 }
-.pigpen-key-btn.readonly {
-    cursor: default;
-}
+.pigpen-key-btn.readonly { cursor: default; }
 .pigpen-key-btn.readonly:hover {
     transform: none;
-    border-color: #2a3f5f;
+    border-color: var(--stroke);
+    box-shadow: none;
 }
-.pigpen-key-btn canvas {
-    display: block;
-}
+.pigpen-key-btn canvas { display: block; }
 .pigpen-key-btn span {
     font-size: 0.72em;
-    color: #6b9bd1;
+    color: var(--accent);
     font-weight: 600;
 }
 .pigpen-buffer-bar {
-    background: #0a0e1a;
-    border: 1px solid #2a3f5f;
-    border-radius: 8px;
+    background: var(--field);
+    border: 1px solid var(--stroke);
+    border-radius: 12px;
     padding: 12px 15px;
     margin-bottom: 15px;
     min-height: 24px;
-    color: #5ec78a;
-    font-family: monospace;
+    color: var(--good);
+    font-family: var(--mono);
     font-size: 1.1em;
     word-break: break-all;
 }
 .pigpen-legend-toggle {
-    color: #6b9bd1;
+    color: var(--accent);
     background: none;
     border: none;
     cursor: pointer;
     font-size: 0.88em;
+    font-family: inherit;
     text-decoration: underline;
     margin-top: 10px;
     padding: 0;
@@ -1271,59 +1528,208 @@ textarea.error, input[type="text"].error {
 .pigpen-legend-box {
     display: none;
     margin-top: 15px;
-    background: #0f1420;
-    border: 1px solid #2a3f5f;
-    border-radius: 10px;
+    background: rgba(var(--ink-rgb), 0.4);
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
     padding: 18px;
 }
-.pigpen-legend-box.show {
+.pigpen-legend-box.show { display: block; }
+
+/* ================= BRAILLE ================= */
+.dots-visual {
+    display: none;
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(var(--ink-rgb), 0.4);
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
+}
+.dots-visual > p {
+    color: var(--muted);
+    font-size: 0.82em;
+    margin-bottom: 12px;
+}
+.dots-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.braille-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    animation: cellIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 28ms);
+}
+.braille-cell .bc-dots {
+    display: grid;
+    grid-template-rows: repeat(3, 10px);
+    grid-template-columns: repeat(2, 10px);
+    grid-auto-flow: column;
+    gap: 5px;
+    padding: 8px 9px;
+    border-radius: 10px;
+    background: rgba(var(--paper-rgb), 0.05);
+    border: 1px solid var(--stroke);
+}
+.bc-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(var(--paper-rgb), 0.08);
+}
+.bc-dot.on {
+    background: radial-gradient(circle at 35% 35%, #ffffff, var(--accent));
+    box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.85);
+}
+.braille-cell .bc-label {
+    font-size: 0.78em;
+    color: var(--muted);
+    font-family: var(--mono);
+    min-height: 1em;
+}
+.braille-cell.space .bc-dots { opacity: 0.3; border-style: dashed; }
+@keyframes cellIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.8); }
+    to { opacity: 1; transform: none; }
+}
+.braille-builder {
+    margin-bottom: 18px;
+    padding: 16px;
+    background: rgba(var(--ink-rgb), 0.4);
+    border: 1px solid var(--stroke);
+    border-radius: 14px;
+}
+.braille-builder > p {
+    color: var(--muted);
+    font-size: 0.85em;
+    margin-bottom: 14px;
+}
+.bb-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.bb-cell {
+    display: grid;
+    grid-template-rows: repeat(3, 34px);
+    grid-template-columns: repeat(2, 34px);
+    grid-auto-flow: column;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(var(--paper-rgb), 0.05);
+    border: 1px solid var(--stroke);
+}
+.bb-dot {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--stroke);
+    background: rgba(var(--paper-rgb), 0.07);
+    color: var(--muted);
+    font-size: 0.78em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.bb-dot:hover { border-color: var(--accent); }
+.bb-dot.on {
+    background: radial-gradient(circle at 35% 35%, #ffffff, var(--accent));
+    color: var(--bg);
+    box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.8);
+    transform: scale(1.06);
+}
+.bb-info { text-align: center; }
+.bb-preview {
     display: block;
+    font-size: 3em;
+    line-height: 1.1;
+    color: var(--accent);
+    min-width: 1.2em;
 }
-/* number input style */
-input[type="number"] {
-    -moz-appearance: textfield;
+.bb-label {
+    color: var(--muted);
+    font-size: 0.85em;
 }
+
+.theme-btn {
+    position: fixed;
+    right: 16px;
+    bottom: 76px;
+    z-index: 120;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(var(--ink-rgb), 0.85);
+    border: 1px solid var(--stroke);
+    color: var(--accent);
+    cursor: pointer;
+    transition: transform 0.3s ease, border-color 0.25s ease;
+}
+.theme-btn:hover { transform: rotate(180deg); border-color: rgba(var(--accent-rgb), 0.6); }
+@keyframes fadeOnly { from { opacity: 0; } to { opacity: 1; } }
+
+input[type="number"] { -moz-appearance: textfield; }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 @media (max-width: 768px) {
     .watermark-content {
         gap: 15px;
         flex-wrap: wrap;
     }
-    .watermark-item {
-        font-size: 0.85em;
+    .watermark-item { font-size: 0.85em; }
+    .encoder-box { padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
     }
 }
 </style>
 </head>
 <body>
+
+<!-- Ambient motion background -->
+<div class="bg-fx" aria-hidden="true"></div>
+
 <div class="container">
     <div id="homePage">
         <div class="header">
             <div class="header-left">
-                <h1>🔐 Secret Cipher</h1>
-                <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+                <span class="ico logo" data-ico="logo"></span>
+                <h1>Secret Cipher</h1>
+                <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
             </div>
         </div>
         <div class="cipher-grid">
-            <div class="cipher-box" onclick="goToPage('binary')"><h2>Binary Code</h2><p>Convert text to binary and vice versa</p></div>
-            <div class="cipher-box" onclick="goToPage('caesar')"><h2>Caesar Cipher</h2><p>Encrypt with letter shifting</p></div>
-            <div class="cipher-box" onclick="goToPage('morse')"><h2>Morse Code</h2><p>Convert text to morse code</p></div>
-            <div class="cipher-box" onclick="goToPage('qr')"><h2>QR Code</h2><p>Generate and scan QR codes</p></div>
-            <div class="cipher-box" onclick="goToPage('barcode')"><h2>Barcode</h2><p>Generate and scan barcodes</p></div>
-            <div class="cipher-box" onclick="goToPage('t9')"><h2>T9 Keypad</h2><p>Encrypt with old phone keypad</p></div>
-            <div class="cipher-box" onclick="goToPage('qwerty')"><h2>QWERTY Cipher</h2><p>Encrypt with keyboard layout</p></div>
-            <div class="cipher-box" onclick="goToPage('vigenere')"><h2>Vigenere Cipher</h2><p>Encrypt with secret key + Tabula Recta</p></div>
-            <div class="cipher-box" onclick="goToPage('reverse')"><h2>Reverse Text</h2><p>Reverse text backwards</p></div>
-            <!-- Rail Fence Cipher -->
-            <div class="cipher-box" onclick="goToPage('railfence')"><h2>Rail Fence</h2><p>Zigzag transposition cipher with visual pattern</p></div>
-            <!-- Polybius Square Cipher -->
-            <div class="cipher-box" onclick="goToPage('polybius')"><h2>Polybius Square</h2><p>Classic 5x5 grid cipher using coordinate pairs</p></div>
-            <!-- Pigpen Cipher -->
-            <div class="cipher-box" onclick="goToPage('pigpen')"><h2>Pigpen Cipher</h2><p>Sandi kotak/pramuka — letters become geometric symbols</p></div>
+            <div class="cipher-box" onclick="goToPage('binary')"><span class="ico" data-ico="bin"></span><h2>Binary Code</h2><p>Convert text to binary and vice versa</p></div>
+            <div class="cipher-box" onclick="goToPage('caesar')"><span class="ico" data-ico="caesar"></span><h2>Caesar Cipher</h2><p>Encrypt with letter shifting (adjustable shift)</p></div>
+            <div class="cipher-box" onclick="goToPage('morse')"><span class="ico" data-ico="morse"></span><h2>Morse Code</h2><p>Convert text to morse code</p></div>
+            <div class="cipher-box" onclick="goToPage('qr')"><span class="ico" data-ico="qr"></span><h2>QR Code</h2><p>Generate and scan QR codes</p></div>
+            <div class="cipher-box" onclick="goToPage('barcode')"><span class="ico" data-ico="barcode"></span><h2>Barcode</h2><p>Generate and scan barcodes</p></div>
+            <div class="cipher-box" onclick="goToPage('t9')"><span class="ico" data-ico="t9"></span><h2>T9 Keypad</h2><p>Encrypt with old phone keypad</p></div>
+            <div class="cipher-box" onclick="goToPage('qwerty')"><span class="ico" data-ico="qwerty"></span><h2>QWERTY Cipher</h2><p>Encrypt with keyboard layout</p></div>
+            <div class="cipher-box" onclick="goToPage('vigenere')"><span class="ico" data-ico="vig"></span><h2>Vigenere Cipher</h2><p>Encrypt with secret key + Tabula Recta</p></div>
+            <div class="cipher-box" onclick="goToPage('reverse')"><span class="ico" data-ico="rev"></span><h2>Reverse Text</h2><p>Reverse text backwards</p></div>
+            <div class="cipher-box" onclick="goToPage('railfence')"><span class="ico" data-ico="rail"></span><h2>Rail Fence</h2><p>Zigzag transposition cipher with visual pattern</p></div>
+            <div class="cipher-box" onclick="goToPage('polybius')"><span class="ico" data-ico="poly"></span><h2>Polybius Square</h2><p>Classic 5x5 grid cipher using coordinate pairs</p></div>
+            <div class="cipher-box" onclick="goToPage('pigpen')"><span class="ico" data-ico="pig"></span><h2>Pigpen Cipher</h2><p>Sandi kotak/pramuka: letters become geometric symbols</p></div>
+            <div class="cipher-box" onclick="goToPage('braille')"><span class="ico" data-ico="braille"></span><h2>Braille Code</h2><p>Convert text to Braille dot cells and back</p></div>
         </div>
     </div>
 
@@ -1331,10 +1737,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="binaryPage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Binary Code</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('binary', 'textToBinary')"><h3>Text to Binary</h3><p>Convert text to binary</p></div>
@@ -1382,17 +1788,26 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="caesarPage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Caesar Cipher</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('caesar', 'encrypt')"><h3>Encrypt</h3><p>Encrypt text</p></div>
             <div class="mode-btn" onclick="selectMode('caesar', 'decrypt')"><h3>Decrypt</h3><p>Decrypt text</p></div>
         </div>
         <div id="encryptBox" class="encoder-box show">
-            <h3>Encrypt (Shift 3)</h3>
+            <h3>Encrypt (Shift <span class="caesar-shift-val">3</span>)</h3>
+            <div class="shift-control">
+                <label>Shift</label>
+                <input type="range" class="caesar-range" min="1" max="25" value="3" oninput="setCaesarShift(this.value)">
+                <input type="number" class="caesar-num" min="1" max="25" value="3" oninput="setCaesarShift(this.value)" onchange="setCaesarShift(this.value, true)">
+            </div>
+            <div class="caesar-map">
+                <div class="cm-row"><span>Plain</span><b class="cm-plain"></b></div>
+                <div class="cm-row"><span>Cipher</span><b class="cm-cipher"></b></div>
+            </div>
             <div class="input-wrapper">
                 <textarea id="caesarEncryptInput" placeholder="Write your text here..."></textarea>
                 <button class="clear-btn" onclick="clearInput('caesarEncryptInput')" title="Clear">×</button>
@@ -1410,7 +1825,16 @@ input[type="number"]::-webkit-inner-spin-button {
             </div>
         </div>
         <div id="decryptBox" class="encoder-box">
-            <h3>Decrypt (Shift 3)</h3>
+            <h3>Decrypt (Shift <span class="caesar-shift-val">3</span>)</h3>
+            <div class="shift-control">
+                <label>Shift</label>
+                <input type="range" class="caesar-range" min="1" max="25" value="3" oninput="setCaesarShift(this.value)">
+                <input type="number" class="caesar-num" min="1" max="25" value="3" oninput="setCaesarShift(this.value)" onchange="setCaesarShift(this.value, true)">
+            </div>
+            <div class="caesar-map">
+                <div class="cm-row"><span>Plain</span><b class="cm-plain"></b></div>
+                <div class="cm-row"><span>Cipher</span><b class="cm-cipher"></b></div>
+            </div>
             <div class="input-wrapper">
                 <textarea id="caesarDecryptInput" placeholder="Enter encrypted text..."></textarea>
                 <button class="clear-btn" onclick="clearInput('caesarDecryptInput')" title="Clear">×</button>
@@ -1433,10 +1857,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="morsePage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Morse Code</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('morse', 'textToMorse')"><h3>Text to Morse</h3><p>Convert text to morse</p></div>
@@ -1484,10 +1908,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="qrPage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>QR Code</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('qr', 'textToQR')"><h3>Text to QR</h3><p>Generate QR code</p></div>
@@ -1515,13 +1939,22 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
         <div id="qrToTextBox" class="encoder-box">
             <h3>Scan QR Code</h3>
-            <!-- FIXED: Better upload area with reset & preview -->
-            <div class="qr-upload" id="qrUploadArea" onclick="document.getElementById('qrFileInput').click()">
-                <p style="color: #6b9bd1; margin-bottom: 10px;">📷 Click to upload QR image</p>
-                <p style="color: #8a95a8; font-size: 0.85em;">JPG, PNG, or WEBP accepted</p>
-                <input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)">
+            <div class="qr-upload" id="qrUploadArea"
+                 onclick="document.getElementById('qrFileInput').click()"
+                 ondragover="event.preventDefault(); this.classList.add('drag')"
+                 ondragleave="this.classList.remove('drag')"
+                 ondrop="handleQRDrop(event)">
+                <div id="qrUploadInner"></div>
             </div>
-            <canvas id="qrCanvas" style="display:none;"></canvas>
+            <input type="file" id="qrFileInput" accept="image/*" style="display:none;" onchange="scanQR(event)">
+            <div class="btn-group">
+                <button class="btn-convert" onclick="startQRCamera()">Scan with Camera</button>
+                <button class="btn-clear-all" onclick="stopQRCamera()">Stop Camera</button>
+            </div>
+            <div class="qr-cam" id="qrCam">
+                <video id="qrVideo" playsinline muted></video>
+                <div class="scan-frame"><i></i><i></i><i></i><i></i><span class="scan-line"></span></div>
+            </div>
             <div id="qrToTextResult" class="result">
                 <div class="result-header">
                     <h4>Scan Result:</h4>
@@ -1536,10 +1969,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="barcodePage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Barcode</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('barcode', 'textToBarcode')">
@@ -1559,9 +1992,7 @@ input[type="number"]::-webkit-inner-spin-button {
                 <button class="barcode-type-btn" onclick="selectBarcodeType('EAN13', this)">EAN-13</button>
                 <button class="barcode-type-btn" onclick="selectBarcodeType('UPC', this)">UPC</button>
             </div>
-            <p style="color: #8a95a8; margin-bottom: 15px; font-size: 0.9em;" id="barcodeHint">
-                💡 CODE128: Accepts ANY text, numbers, or symbols! (Recommended)
-            </p>
+            <p class="hint"><span class="pulse-dot"></span><span id="barcodeHint">CODE128: Accepts ANY text, numbers, or symbols! (Recommended)</span></p>
             <div class="input-wrapper">
                 <input type="text" id="barcodeInput" placeholder="Enter any text or numbers..." style="min-height: auto;">
                 <button class="clear-btn" onclick="clearInput('barcodeInput')" title="Clear">×</button>
@@ -1583,10 +2014,7 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
         <div id="barcodeToTextBox" class="encoder-box">
             <h3>Scan Barcode</h3>
-            <div class="barcode-scanner-area" id="barcodeScannerArea" onclick="startBarcodeScan()">
-                <p style="color: #6b9bd1; margin-bottom: 10px;">📷 Click to start camera for barcode scanning</p>
-                <p style="color: #8a95a8; font-size: 0.9em;">Allow camera access when prompted</p>
-            </div>
+            <div class="barcode-scanner-area" id="barcodeScannerArea" onclick="startBarcodeScan()"></div>
             <video id="barcodeVideo" playsinline></video>
             <canvas id="barcodeCanvas" style="display:none;"></canvas>
             <div class="barcode-scan-result" id="barcodeScanResult"></div>
@@ -1601,10 +2029,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="t9Page" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>T9 Keypad</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('t9', 'textToT9')"><h3>Text to T9</h3><p>Convert text to keypad</p></div>
@@ -1652,10 +2080,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="qwertyPage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>QWERTY Cipher</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('qwerty', 'encrypt')"><h3>Encrypt</h3><p>Encrypt with QWERTY</p></div>
@@ -1703,10 +2131,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="vigenerePage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Vigenere Cipher</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('vigenere', 'encrypt')"><h3>Encrypt</h3><p>Encrypt with key</p></div>
@@ -1763,7 +2191,7 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
         <div id="vigenereTableBox" class="encoder-box">
             <h3>Tabula Recta (Vigenere Square)</h3>
-            <p style="color: #8a95a8; margin-bottom: 15px;">Type plaintext and key to see highlighted encryption path</p>
+            <p style="color: var(--muted); margin-bottom: 15px;">Type plaintext and key to see highlighted encryption path</p>
             <div class="table-input-group">
                 <input type="text" id="tableKeyInput" placeholder="Key letter (e.g.: K)" maxlength="1" oninput="updateTableHighlight()">
                 <input type="text" id="tablePlainInput" placeholder="Plain letter (e.g.: H)" maxlength="1" oninput="updateTableHighlight()">
@@ -1779,10 +2207,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="reversePage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Reverse Text</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="encoder-box show">
             <h3>Reverse Text</h3>
@@ -1804,29 +2232,28 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
     </div>
 
-    <!-- ✨ NEW: Rail Fence Cipher Page -->
+    <!-- Rail Fence Cipher Page -->
     <div id="railfencePage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Rail Fence</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('railfence', 'rfEncrypt')"><h3>Encrypt</h3><p>Zigzag encrypt</p></div>
             <div class="mode-btn" onclick="selectMode('railfence', 'rfDecrypt')"><h3>Decrypt</h3><p>Zigzag decrypt</p></div>
         </div>
 
-        <!-- Encrypt Box -->
         <div id="rfEncryptBox" class="encoder-box show">
             <h3>Rail Fence Encrypt</h3>
-            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Writes text in a zigzag pattern across N rails, then reads each rail left-to-right.</p>
+            <p style="color: var(--muted); font-size:0.88em; margin-bottom:15px;">Writes text in a zigzag pattern across N rails, then reads each rail left-to-right.</p>
             <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
-                <label style="color:#8a95a8; font-size:0.9em; flex-shrink:0;">Number of Rails:</label>
+                <label style="color: var(--muted); font-size:0.9em; flex-shrink:0;">Number of Rails:</label>
                 <input type="number" id="rfEncryptRails" value="3" min="2" max="10"
-                       style="width:70px; min-height:auto; padding:9px 10px; border:1px solid #2a3f5f; border-radius:6px; background:#0a0e1a; color:#e8eaf0; font-size:1em; text-align:center;">
-                <span style="color:#5ec78a; font-size:0.82em;">(2–10)</span>
+                       style="width:70px; min-height:auto; padding:9px 10px; border:1px solid var(--stroke); border-radius:10px; background: var(--field); color: var(--text); font-size:1em; text-align:center;">
+                <span style="color: var(--good); font-size:0.82em;">(2-10)</span>
             </div>
             <div class="input-wrapper">
                 <textarea id="rfEncryptInput" placeholder="Write your text here..."></textarea>
@@ -1836,9 +2263,8 @@ input[type="number"]::-webkit-inner-spin-button {
                 <button class="btn-convert" onclick="encryptRailFence()">Encrypt</button>
                 <button class="btn-clear-all" onclick="clearAll('rfEncrypt')">Remove All</button>
             </div>
-            <!-- Visual Pattern -->
             <div class="rail-visual" id="rfEncryptVisual">
-                <p style="color:#8a95a8; font-size:0.82em; margin-bottom:10px;">📊 Zigzag Rail Pattern:</p>
+                <p style="color: var(--muted); font-size:0.82em; margin-bottom:10px;">Zigzag Rail Pattern:</p>
                 <div class="rail-visual-inner" id="rfEncryptVisualInner"></div>
             </div>
             <div id="rfEncryptResult" class="result">
@@ -1850,15 +2276,14 @@ input[type="number"]::-webkit-inner-spin-button {
             </div>
         </div>
 
-        <!-- Decrypt Box -->
         <div id="rfDecryptBox" class="encoder-box">
             <h3>Rail Fence Decrypt</h3>
-            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Use the same number of rails as encryption to recover the original text.</p>
+            <p style="color: var(--muted); font-size:0.88em; margin-bottom:15px;">Use the same number of rails as encryption to recover the original text.</p>
             <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
-                <label style="color:#8a95a8; font-size:0.9em; flex-shrink:0;">Number of Rails:</label>
+                <label style="color: var(--muted); font-size:0.9em; flex-shrink:0;">Number of Rails:</label>
                 <input type="number" id="rfDecryptRails" value="3" min="2" max="10"
-                       style="width:70px; min-height:auto; padding:9px 10px; border:1px solid #2a3f5f; border-radius:6px; background:#0a0e1a; color:#e8eaf0; font-size:1em; text-align:center;">
-                <span style="color:#5ec78a; font-size:0.82em;">(must match encrypt)</span>
+                       style="width:70px; min-height:auto; padding:9px 10px; border:1px solid var(--stroke); border-radius:10px; background: var(--field); color: var(--text); font-size:1em; text-align:center;">
+                <span style="color: var(--good); font-size:0.82em;">(must match encrypt)</span>
             </div>
             <div class="input-wrapper">
                 <textarea id="rfDecryptInput" placeholder="Enter encrypted text..."></textarea>
@@ -1868,9 +2293,8 @@ input[type="number"]::-webkit-inner-spin-button {
                 <button class="btn-convert" onclick="decryptRailFence()">Decrypt</button>
                 <button class="btn-clear-all" onclick="clearAll('rfDecrypt')">Remove All</button>
             </div>
-            <!-- Visual Pattern -->
             <div class="rail-visual" id="rfDecryptVisual">
-                <p style="color:#8a95a8; font-size:0.82em; margin-bottom:10px;">📊 Zigzag Rail Pattern (decrypted):</p>
+                <p style="color: var(--muted); font-size:0.82em; margin-bottom:10px;">Zigzag Rail Pattern (decrypted):</p>
                 <div class="rail-visual-inner" id="rfDecryptVisualInner"></div>
             </div>
             <div id="rfDecryptResult" class="result">
@@ -1887,10 +2311,10 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="polybiusPage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Polybius Square</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('polybius', 'pbEncrypt')"><h3>Encrypt</h3><p>Letters to coordinates</p></div>
@@ -1900,7 +2324,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
         <div id="pbEncryptBox" class="encoder-box show">
             <h3>Polybius Encrypt</h3>
-            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Each letter is replaced by its row and column number in a 5x5 grid (I and J share a cell). Output is pairs of digits separated by spaces.</p>
+            <p style="color: var(--muted); font-size:0.88em; margin-bottom:15px;">Each letter is replaced by its row and column number in a 5x5 grid (I and J share a cell). Output is pairs of digits separated by spaces.</p>
             <div class="input-wrapper">
                 <textarea id="pbEncryptInput" placeholder="Write your text here..."></textarea>
                 <button class="clear-btn" onclick="clearInput('pbEncryptInput')" title="Clear">×</button>
@@ -1920,7 +2344,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
         <div id="pbDecryptBox" class="encoder-box">
             <h3>Polybius Decrypt</h3>
-            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Enter pairs of digits separated by spaces (e.g.: 23 15 31 31 34).</p>
+            <p style="color: var(--muted); font-size:0.88em; margin-bottom:15px;">Enter pairs of digits separated by spaces (e.g.: 23 15 31 31 34).</p>
             <div class="input-wrapper">
                 <textarea id="pbDecryptInput" placeholder="Enter coordinates (e.g.: 23 15 31 31 34)"></textarea>
                 <button class="clear-btn" onclick="clearInput('pbDecryptInput')" title="Clear">×</button>
@@ -1939,8 +2363,8 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
 
         <div id="pbGridBox" class="encoder-box">
-            <h3>Polybius Square (5×5)</h3>
-            <p style="color:#8a95a8; margin-bottom: 15px;">Type a letter to see its row/column position highlighted</p>
+            <h3>Polybius Square (5x5)</h3>
+            <p style="color: var(--muted); margin-bottom: 15px;">Type a letter to see its row/column position highlighted</p>
             <div class="table-input-group" style="grid-template-columns: 1fr;">
                 <input type="text" id="pbGridLetterInput" placeholder="Letter (e.g.: H)" maxlength="1" oninput="updatePolybiusHighlight()">
             </div>
@@ -1955,20 +2379,19 @@ input[type="number"]::-webkit-inner-spin-button {
     <div id="pigpenPage" class="cipher-page">
         <div class="header">
             <div class="header-left">
-                <button class="back-btn" onclick="goToHome()">← Back</button>
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
                 <h1>Pigpen Cipher</h1>
             </div>
-            <button class="tools-btn" onclick="openTools()">🛠️ Tools</button>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
         </div>
         <div class="mode-selector">
             <div class="mode-btn active" onclick="selectMode('pigpen', 'pgEncrypt')"><h3>Encrypt</h3><p>Text to symbols</p></div>
             <div class="mode-btn" onclick="selectMode('pigpen', 'pgDecrypt')"><h3>Decrypt</h3><p>Click symbols to decode</p></div>
         </div>
 
-        <!-- Encrypt Box -->
         <div id="pgEncryptBox" class="encoder-box show">
             <h3>Pigpen Encrypt</h3>
-            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Also known as Sandi Kotak (Pramuka). Every letter becomes a geometric symbol based on its position in two grids and an X — only someone with the key can read it back.</p>
+            <p style="color: var(--muted); font-size:0.88em; margin-bottom:15px;">Also known as Sandi Kotak (Pramuka). Every letter becomes a geometric symbol based on its position in two grids and an X. Only someone with the key can read it back.</p>
             <div class="input-wrapper">
                 <textarea id="pgEncryptInput" placeholder="Write your text here..."></textarea>
                 <button class="clear-btn" onclick="clearInput('pgEncryptInput')" title="Clear">×</button>
@@ -1988,40 +2411,129 @@ input[type="number"]::-webkit-inner-spin-button {
                     <canvas id="pgEncryptCanvas"></canvas>
                 </div>
             </div>
-            <button class="pigpen-legend-toggle" onclick="togglePigpenLegend('pgLegendEncrypt')">🔑 Show Key / Legend</button>
+            <button class="pigpen-legend-toggle" onclick="togglePigpenLegend('pgLegendEncrypt')">Show Key / Legend</button>
             <div class="pigpen-legend-box" id="pgLegendEncrypt"></div>
         </div>
 
-        <!-- Decrypt Box -->
         <div id="pgDecryptBox" class="encoder-box">
             <h3>Pigpen Decrypt</h3>
-            <p style="color:#8a95a8; font-size:0.88em; margin-bottom:15px;">Tap the symbols below in order, matching the encrypted message you received, to reveal the plain text.</p>
-            <h4 style="color:#6b9bd1; font-size:1em; margin-bottom:8px;">Decoded Text:</h4>
-            <div class="pigpen-buffer-bar" id="pgBufferText">—</div>
+            <p style="color: var(--muted); font-size:0.88em; margin-bottom:15px;">Tap the symbols below in order, matching the encrypted message you received, to reveal the plain text.</p>
+            <h4 style="color: var(--accent); font-size:1em; margin-bottom:8px;">Decoded Text:</h4>
+            <div class="pigpen-buffer-bar" id="pgBufferText">-</div>
             <div class="btn-group">
                 <button class="btn-convert" onclick="pigpenAddSpace()">Add Space</button>
-                <button class="btn-convert" onclick="pigpenBackspace()">← Backspace</button>
+                <button class="btn-convert" onclick="pigpenBackspace()">Backspace</button>
                 <button class="btn-clear-all" onclick="pigpenClearBuffer()">Clear</button>
             </div>
 
-            <div class="pigpen-key-group-title">Plain Grid — A to I</div>
+            <div class="pigpen-key-group-title">Plain Grid: A to I</div>
             <div class="pigpen-key-grid" id="pgPaletteGrid1"></div>
 
-            <div class="pigpen-key-group-title">Dotted Grid — J to R</div>
+            <div class="pigpen-key-group-title">Dotted Grid: J to R</div>
             <div class="pigpen-key-grid" id="pgPaletteGrid2"></div>
 
-            <div class="pigpen-key-group-title">Plain X — S to V</div>
+            <div class="pigpen-key-group-title">Plain X: S to V</div>
             <div class="pigpen-key-grid x-grid" id="pgPaletteGrid3"></div>
 
-            <div class="pigpen-key-group-title">Dotted X — W to Z</div>
+            <div class="pigpen-key-group-title">Dotted X: W to Z</div>
             <div class="pigpen-key-grid x-grid" id="pgPaletteGrid4"></div>
+        </div>
+    </div>
+
+    <!-- Braille Page -->
+    <div id="braillePage" class="cipher-page">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
+                <h1>Braille Code</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span>Tools</button>
+        </div>
+        <div class="mode-selector">
+            <div class="mode-btn active" onclick="selectMode('braille', 'textToBraille')"><h3>Text to Braille</h3><p>Convert text to dot cells</p></div>
+            <div class="mode-btn" onclick="selectMode('braille', 'brailleToText')"><h3>Braille to Text</h3><p>Decode dot cells to text</p></div>
+        </div>
+
+        <div id="textToBrailleBox" class="encoder-box show">
+            <h3>Text to Braille</h3>
+            <p style="color: var(--muted); font-size:0.88em; margin-bottom:15px;">Letters, numbers (with number sign) and basic punctuation become Braille cells. Capital letters get a capital sign before them.</p>
+            <div class="input-wrapper">
+                <textarea id="textToBrailleInput" placeholder="Write your text here..."></textarea>
+                <button class="clear-btn" onclick="clearInput('textToBrailleInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="convertTextToBraille()">Convert</button>
+                <button class="btn-clear-all" onclick="clearAll('textToBraille')">Remove All</button>
+            </div>
+            <div class="dots-visual" id="textToBrailleVisual">
+                <p>Braille cells (dots 1-2-3 on the left, 4-5-6 on the right):</p>
+                <div class="dots-inner" id="textToBrailleVisualInner"></div>
+            </div>
+            <div id="textToBrailleResult" class="result">
+                <div class="result-header">
+                    <h4>Braille Result:</h4>
+                    <button class="copy-btn" onclick="copyText('textToBrailleOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="textToBrailleOutput" style="font-size:1.5em; word-break: break-word;"></div>
+            </div>
+        </div>
+
+        <div id="brailleToTextBox" class="encoder-box">
+            <h3>Braille to Text</h3>
+            <p style="color: var(--muted); font-size:0.88em; margin-bottom:15px;">Paste Braille characters, or build them cell by cell with the dot builder below.</p>
+            <div class="braille-builder">
+                <p>Dot Builder: tap the dots to form one cell, then add it to the input.</p>
+                <div class="bb-row">
+                    <div class="bb-cell">
+                        <button class="bb-dot" data-n="1" onclick="bbToggle(1)">1</button>
+                        <button class="bb-dot" data-n="2" onclick="bbToggle(2)">2</button>
+                        <button class="bb-dot" data-n="3" onclick="bbToggle(3)">3</button>
+                        <button class="bb-dot" data-n="4" onclick="bbToggle(4)">4</button>
+                        <button class="bb-dot" data-n="5" onclick="bbToggle(5)">5</button>
+                        <button class="bb-dot" data-n="6" onclick="bbToggle(6)">6</button>
+                    </div>
+                    <div class="bb-info">
+                        <span class="bb-preview" id="bbPreview"></span>
+                        <span class="bb-label" id="bbLabel">empty cell</span>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-convert" onclick="bbAdd()">Add Cell</button>
+                    <button class="btn-convert" onclick="bbSpace()">Space</button>
+                    <button class="btn-convert" onclick="bbBackspace()">Backspace</button>
+                    <button class="btn-clear-all" onclick="bbReset()">Reset Dots</button>
+                </div>
+            </div>
+            <div class="input-wrapper">
+                <textarea id="brailleToTextInput" placeholder="Paste Braille here..." style="font-size:1.3em;"></textarea>
+                <button class="clear-btn" onclick="clearInput('brailleToTextInput')" title="Clear">×</button>
+            </div>
+            <div class="btn-group">
+                <button class="btn-convert" onclick="convertBrailleToText()">Convert</button>
+                <button class="btn-clear-all" onclick="clearAll('brailleToText')">Remove All</button>
+            </div>
+            <div class="dots-visual" id="brailleToTextVisual">
+                <p>Decoded cells:</p>
+                <div class="dots-inner" id="brailleToTextVisualInner"></div>
+            </div>
+            <div id="brailleToTextResult" class="result">
+                <div class="result-header">
+                    <h4>Text Result:</h4>
+                    <button class="copy-btn" onclick="copyText('brailleToTextOutput', this)">Copy</button>
+                </div>
+                <div class="result-text" id="brailleToTextOutput"></div>
+            </div>
         </div>
     </div>
 
 </div>
 
 
-<!-- Watermark Footer — 👁️ emoji + unique visitor fix -->
+<button class="theme-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Switch color theme" title="Switch theme (warm / cool)">
+    <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
+</button>
+
+<!-- Watermark Footer -->
 <div class="watermark" id="watermarkFooter">
     <div class="watermark-content">
         <div class="watermark-item">
@@ -2033,7 +2545,8 @@ input[type="number"]::-webkit-inner-spin-button {
             <a href="https://instagram.com/edd_00z" target="_blank">@edd_00z</a>
         </div>
         <div class="visitor-count">
-            <span>👁️ Visitors: <span id="visitorCount">0</span></span>
+            <i class="live-dot"></i>
+            <span>Visitors: <span id="visitorCount">0</span></span>
         </div>
     </div>
 </div>
@@ -2042,21 +2555,21 @@ input[type="number"]::-webkit-inner-spin-button {
 <div class="tools-modal" id="toolsModal">
     <div class="tools-content">
         <div class="tools-header">
-            <h2>🛠️ Tools</h2>
+            <h2>Tools</h2>
             <button class="close-btn" onclick="closeTools()">×</button>
         </div>
-        
-        <div class="tool-section-title">📊 Utilities</div>
-        
+
+        <div class="tool-section-title">Utilities</div>
+
         <div class="tool-item" onclick="toggleTool('calculator')">
-            <h3>🔢 Calculator 🧮</h3>
-            <p>Simple calculator for quick math</p>
+            <span class="ico" data-ico="calc"></span>
+            <div><h3>Calculator</h3><p>Simple calculator for quick math</p></div>
         </div>
         <div id="calculatorTool" class="tool-content-box">
             <div class="calc-display" id="calcDisplay">0</div>
             <div class="calc-buttons">
                 <button class="calc-btn" onclick="calcClear()">C</button>
-                <button class="calc-btn" onclick="calcDelete()">←</button>
+                <button class="calc-btn" onclick="calcDelete()">DEL</button>
                 <button class="calc-btn operator" onclick="calcInput('/')">/</button>
                 <button class="calc-btn operator" onclick="calcInput('*')">×</button>
                 <button class="calc-btn" onclick="calcInput('7')">7</button>
@@ -2076,44 +2589,9 @@ input[type="number"]::-webkit-inner-spin-button {
             </div>
         </div>
 
-        <div class="tool-item" onclick="toggleTool('password')">
-            <h3>🔑 Password Generator 🔒</h3>
-            <p>Generate secure random passwords</p>
-        </div>
-        <div id="passwordTool" class="tool-content-box">
-            <div class="password-length">
-                <span>Length:</span>
-                <input type="range" id="passLength" min="6" max="32" value="16" oninput="updateLengthDisplay()">
-                <span id="lengthDisplay">16</span>
-            </div>
-            <div class="password-options">
-                <label><input type="checkbox" id="passUpper" checked> A-Z</label>
-                <label><input type="checkbox" id="passLower" checked> a-z</label>
-                <label><input type="checkbox" id="passNumbers" checked> 0-9</label>
-                <label><input type="checkbox" id="passSymbols"> !@#$</label>
-            </div>
-            <div class="password-result" id="passwordResult">Click Generate!</div>
-            <button class="tool-btn" onclick="generatePassword()">Generate</button>
-            <button class="tool-btn" onclick="copyPassword()">Copy</button>
-        </div>
-
-        <div class="tool-item" onclick="toggleTool('textCounter')">
-            <h3>📝 Text Counter 🗒️</h3>
-            <p>Count characters, words, and lines</p>
-        </div>
-        <div id="textCounterTool" class="tool-content-box">
-            <textarea class="counter-textarea" id="counterInput" placeholder="Type or paste text here..." oninput="updateCounter()"></textarea>
-            <div class="counter-stats">
-                <div class="counter-stat"><h4>Chars</h4><span id="charCount">0</span></div>
-                <div class="counter-stat"><h4>Words</h4><span id="wordCount">0</span></div>
-                <div class="counter-stat"><h4>Lines</h4><span id="lineCount">0</span></div>
-                <div class="counter-stat"><h4>No Space</h4><span id="noSpaceCount">0</span></div>
-            </div>
-        </div>
-
         <div class="tool-item" onclick="toggleTool('colorPicker')">
-            <h3>🎨 Color Picker 🖍️</h3>
-            <p>Convert colors between HEX and RGB</p>
+            <span class="ico" data-ico="color"></span>
+            <div><h3>Color Picker</h3><p>Convert colors between HEX and RGB</p></div>
         </div>
         <div id="colorPickerTool" class="tool-content-box">
             <div class="color-picker-container">
@@ -2150,14 +2628,14 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
 
         <div class="tool-item" onclick="toggleTool('unitConverter')">
-            <h3>📏 Unit Converter ⏲️</h3>
-            <p>Convert length, weight, and temperature</p>
+            <span class="ico" data-ico="rev"></span>
+            <div><h3>Unit Converter</h3><p>Convert length, weight, and temperature</p></div>
         </div>
         <div id="unitConverterTool" class="tool-content-box">
             <div class="converter-container">
                 <div class="color-input-group" style="margin-bottom: 15px;">
                     <label>Type</label>
-                    <select id="unitType" onchange="updateUnitOptions()" style="padding: 10px; border: 1px solid #2a3f5f; border-radius: 6px; background: #0a0e1a; color: #e8eaf0;">
+                    <select id="unitType" onchange="updateUnitOptions()" style="padding: 10px; border: 1px solid var(--stroke); border-radius: 10px; background: var(--field); color: var(--text);">
                         <option value="length">Length</option>
                         <option value="weight">Weight</option>
                         <option value="temperature">Temperature</option>
@@ -2167,7 +2645,7 @@ input[type="number"]::-webkit-inner-spin-button {
                     <div class="converter-input">
                         <label>From</label>
                         <input type="number" id="unitFromValue" value="1" oninput="convertUnits()">
-                        <select id="unitFrom" onchange="convertUnits()" style="margin-top: 5px; padding: 8px; border: 1px solid #2a3f5f; border-radius: 6px; background: #0a0e1a; color: #e8eaf0;">
+                        <select id="unitFrom" onchange="convertUnits()" style="margin-top: 5px; padding: 8px; border: 1px solid var(--stroke); border-radius: 10px; background: var(--field); color: var(--text);">
                             <option value="m">Meters</option>
                             <option value="km">Kilometers</option>
                             <option value="cm">Centimeters</option>
@@ -2175,11 +2653,11 @@ input[type="number"]::-webkit-inner-spin-button {
                             <option value="in">Inches</option>
                         </select>
                     </div>
-                    <div class="converter-arrow">→</div>
+                    <div class="converter-arrow"><span class="ico" data-ico="arrow"></span></div>
                     <div class="converter-input">
                         <label>To</label>
-                        <input type="text" id="unitToValue" readonly style="background: #141b2d;">
-                        <select id="unitTo" onchange="convertUnits()" style="margin-top: 5px; padding: 8px; border: 1px solid #2a3f5f; border-radius: 6px; background: #0a0e1a; color: #e8eaf0;">
+                        <input type="text" id="unitToValue" readonly style="background: rgba(var(--paper-rgb), 0.05);">
+                        <select id="unitTo" onchange="convertUnits()" style="margin-top: 5px; padding: 8px; border: 1px solid var(--stroke); border-radius: 10px; background: var(--field); color: var(--text);">
                             <option value="m">Meters</option>
                             <option value="km">Kilometers</option>
                             <option value="cm">Centimeters</option>
@@ -2191,20 +2669,20 @@ input[type="number"]::-webkit-inner-spin-button {
             </div>
         </div>
 
-        <div class="tool-section-title">🎮 Games</div>
-        
+        <div class="tool-section-title">Games</div>
+
         <div class="tool-item" onclick="toggleTool('triviaGame')">
-            <h3>🧠 Trivia Quiz ❓</h3>
-            <p>Test your knowledge with fun questions</p>
+            <span class="ico" data-ico="trivia"></span>
+            <div><h3>Trivia Quiz</h3><p>Test your knowledge with fun questions</p></div>
         </div>
         <div id="triviaGameTool" class="tool-content-box">
             <div class="game-container">
                 <div class="game-display" id="triviaQuestion">Loading question...</div>
                 <div class="quiz-options" id="triviaOptions"></div>
                 <div class="quiz-stats">
-                    <div><p style="color: #8a95a8;">Score</p><span id="triviaScore" style="color: #6b9bd1; font-weight: bold;">0</span></div>
-                    <div><p style="color: #8a95a8;">Question</p><span id="triviaProgress" style="color: #f39c12; font-weight: bold;">0/10</span></div>
-                    <div><p style="color: #8a95a8;">Best</p><span id="triviaBest" style="color: #5ec78a; font-weight: bold;">0</span></div>
+                    <div><p style="color: var(--muted);">Score</p><span id="triviaScore" style="color: var(--accent); font-weight: bold;">0</span></div>
+                    <div><p style="color: var(--muted);">Question</p><span id="triviaProgress" style="color: var(--warn); font-weight: bold;">0/10</span></div>
+                    <div><p style="color: var(--muted);">Best</p><span id="triviaBest" style="color: var(--good); font-weight: bold;">0</span></div>
                 </div>
                 <button class="tool-btn" onclick="nextTriviaQuestion()">Next Question</button>
                 <button class="tool-btn" onclick="resetTriviaGame()">Reset Game</button>
@@ -2212,17 +2690,17 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
 
         <div class="tool-item" onclick="toggleTool('memoryGame')">
-            <h3>🗃️ Memory Cards 🃏</h3>
-            <p>Test your memory with matching cards</p>
+            <span class="ico" data-ico="memory"></span>
+            <div><h3>Memory Cards</h3><p>Test your memory with matching cards</p></div>
         </div>
         <div id="memoryGameTool" class="tool-content-box">
             <div class="game-container">
                 <div class="game-display" id="memoryDisplay">Match the pairs! Click on cards to reveal them.</div>
                 <div class="memory-board" id="memoryBoard"></div>
                 <div class="memory-stats">
-                    <div><p style="color: #8a95a8;">Moves</p><span id="movesCount" style="color: #6b9bd1; font-weight: bold;">0</span></div>
-                    <div><p style="color: #8a95a8;">Time</p><span id="timeCount" style="color: #6b9bd1; font-weight: bold;">0s</span></div>
-                    <div><p style="color: #8a95a8;">Pairs</p><span id="pairsCount" style="color: #5ec78a; font-weight: bold;">0/8</span></div>
+                    <div><p style="color: var(--muted);">Moves</p><span id="movesCount" style="color: var(--accent); font-weight: bold;">0</span></div>
+                    <div><p style="color: var(--muted);">Time</p><span id="timeCount" style="color: var(--accent); font-weight: bold;">0s</span></div>
+                    <div><p style="color: var(--muted);">Pairs</p><span id="pairsCount" style="color: var(--good); font-weight: bold;">0/8</span></div>
                 </div>
                 <button class="tool-btn" onclick="startMemoryGame()">New Game</button>
                 <button class="tool-btn" onclick="resetMemoryGame()">Reset</button>
@@ -2230,26 +2708,26 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
 
         <div class="tool-item" onclick="toggleTool('guessGame')">
-            <h3>🎯 Number Guessing 🧐</h3>
-            <p>Guess the secret number (1-100)</p>
+            <span class="ico" data-ico="guess"></span>
+            <div><h3>Number Guessing</h3><p>Guess the secret number (1-100)</p></div>
         </div>
         <div id="guessGameTool" class="tool-content-box">
             <div class="game-container">
                 <div class="game-display" id="guessDisplay">I'm thinking of a number between 1-100. Can you guess it?</div>
                 <input type="number" class="game-input" id="guessInput" placeholder="Enter your guess..." min="1" max="100">
-                <p style="color: #8a95a8; margin-bottom: 15px;">Attempts: <span id="guessAttempts" style="color: #5ec78a; font-weight: bold;">0</span></p>
+                <p style="color: var(--muted); margin-bottom: 15px;">Attempts: <span id="guessAttempts" style="color: var(--good); font-weight: bold;">0</span></p>
                 <button class="tool-btn" onclick="makeGuess()">Guess!</button>
                 <button class="tool-btn" onclick="resetGuessGame()">New Game</button>
             </div>
         </div>
 
         <div class="tool-item" onclick="toggleTool('moleGame')">
-            <h3>🕳️ Whack-a-Mole 🐭</h3>
-            <p>Click the moles as they appear!</p>
+            <span class="ico" data-ico="mole"></span>
+            <div><h3>Whack-a-Mole</h3><p>Click the targets as they appear!</p></div>
         </div>
         <div id="moleGameTool" class="tool-content-box">
             <div class="game-container">
-                <div class="game-display" id="moleDisplay">Click the moles! Score as many as you can in 30 seconds!</div>
+                <div class="game-display" id="moleDisplay">Click the targets! Score as many as you can in 30 seconds!</div>
                 <div class="mole-timer"><div class="mole-timer-bar" id="moleTimerBar"></div></div>
                 <div class="mole-grid" id="moleGrid">
                     <div class="mole-hole" onclick="whackMole(0)"></div>
@@ -2263,9 +2741,9 @@ input[type="number"]::-webkit-inner-spin-button {
                     <div class="mole-hole" onclick="whackMole(8)"></div>
                 </div>
                 <div class="memory-stats">
-                    <div><p style="color: #8a95a8;">Score</p><span id="moleScore" style="color: #6b9bd1; font-weight: bold;">0</span></div>
-                    <div><p style="color: #8a95a8;">Time Left</p><span id="moleTime" style="color: #f39c12; font-weight: bold;">30s</span></div>
-                    <div><p style="color: #8a95a8;">Best</p><span id="moleBest" style="color: #5ec78a; font-weight: bold;">0</span></div>
+                    <div><p style="color: var(--muted);">Score</p><span id="moleScore" style="color: var(--accent); font-weight: bold;">0</span></div>
+                    <div><p style="color: var(--muted);">Time Left</p><span id="moleTime" style="color: var(--warn); font-weight: bold;">30s</span></div>
+                    <div><p style="color: var(--muted);">Best</p><span id="moleBest" style="color: var(--good); font-weight: bold;">0</span></div>
                 </div>
                 <button class="tool-btn" onclick="startMoleGame()">Start Game</button>
                 <button class="tool-btn" onclick="stopMoleGame()">Stop</button>
@@ -2273,14 +2751,14 @@ input[type="number"]::-webkit-inner-spin-button {
         </div>
 
         <div class="tool-item" onclick="toggleTool('reactionGame')">
-            <h3>⚡ Reaction Time 💨</h3>
-            <p>Test your reaction speed</p>
+            <span class="ico" data-ico="bolt"></span>
+            <div><h3>Reaction Time</h3><p>Test your reaction speed</p></div>
         </div>
         <div id="reactionGameTool" class="tool-content-box">
             <div class="game-container">
                 <div class="reaction-box waiting" id="reactionBox" onclick="handleReactionClick()">Wait for green...</div>
                 <div class="game-display" id="reactionDisplay">Click "Start" then wait for the box to turn green!</div>
-                <p style="color: #8a95a8; margin-bottom: 15px;">Best Time: <span id="bestReaction" style="color: #5ec78a; font-weight: bold;">-- ms</span></p>
+                <p style="color: var(--muted); margin-bottom: 15px;">Best Time: <span id="bestReaction" style="color: var(--good); font-weight: bold;">-- ms</span></p>
                 <button class="tool-btn" onclick="startReaction()">Start</button>
                 <button class="tool-btn" onclick="resetReaction()">Reset Best</button>
             </div>
@@ -2290,22 +2768,65 @@ input[type="number"]::-webkit-inner-spin-button {
 
 <script>
 // ============================================================
-// VISITOR COUNTER — 👁️ emoji, count once per browser via localStorage
+// ANIMATED ICON LIBRARY (SVG motion graphics, replaces all emoji)
+// ============================================================
+const ICONS = {
+    logo: `<svg viewBox="0 0 48 48"><path d="M24 4l17 9v14c0 10-7.5 15.5-17 18C14.5 42.5 7 37 7 27V13z"/><circle class="a-spin-fast" cx="24" cy="22" r="8" stroke-dasharray="3 3.7"/><path class="a-pulse" d="M24 19v6"/><circle class="fill a-pulse" cx="24" cy="29" r="1.6"/></svg>`,
+    tools: `<svg viewBox="0 0 48 48"><path d="M6 12h36M6 24h36M6 36h36" opacity=".35"/><circle class="fill a-knob1" cx="16" cy="12" r="4.4"/><circle class="fill a-knob2" cx="30" cy="24" r="4.4"/><circle class="fill a-knob3" cx="20" cy="36" r="4.4"/></svg>`,
+    bin: `<svg viewBox="0 0 48 48"><g font-family="monospace" font-size="15" font-weight="700" fill="currentColor" stroke="none"><text class="a-pulse" x="5" y="20">0</text><text class="a-pulse d2" x="18" y="20">1</text><text class="a-pulse d4" x="31" y="20">0</text><text class="a-pulse d3" x="5" y="40">1</text><text class="a-pulse d5" x="18" y="40">0</text><text class="a-pulse d1" x="31" y="40">1</text></g></svg>`,
+    caesar: `<svg viewBox="0 0 48 48"><circle class="a-spin" cx="24" cy="24" r="19" stroke-dasharray="2 5.9"/><circle class="a-spin-rev" cx="24" cy="24" r="11" stroke-dasharray="14 6"/><circle class="fill a-pulse" cx="24" cy="24" r="2.6"/></svg>`,
+    morse: `<svg viewBox="0 0 48 48"><circle class="fill a-pulse" cx="9" cy="24" r="3.4"/><rect class="fill a-pulse d3" x="16" y="21.4" width="14" height="5.2" rx="2.6"/><circle class="fill a-pulse d6" cx="38" cy="24" r="3.4"/></svg>`,
+    qr: `<svg viewBox="0 0 48 48"><rect x="6" y="6" width="14" height="14" rx="3"/><rect x="28" y="6" width="14" height="14" rx="3"/><rect x="6" y="28" width="14" height="14" rx="3"/><path d="M28 30h4M38 30h4M28 38h4M28 42h14M38 36h4"/><path class="a-scan" d="M3 24h42"/></svg>`,
+    barcode: `<svg viewBox="0 0 48 48"><g class="fill"><rect class="a-bar" x="7" y="9" width="3" height="30"/><rect class="a-bar d2" x="13" y="9" width="2" height="30"/><rect class="a-bar d4" x="18" y="9" width="4" height="30"/><rect class="a-bar d1" x="25" y="9" width="2" height="30"/><rect class="a-bar d3" x="30" y="9" width="3" height="30"/><rect class="a-bar d5" x="36" y="9" width="2" height="30"/><rect class="a-bar d6" x="40" y="9" width="2.4" height="30"/></g></svg>`,
+    t9: `<svg viewBox="0 0 48 48"><g class="fill"><circle class="a-pulse" cx="12" cy="12" r="3.6"/><circle class="a-pulse d1" cx="24" cy="12" r="3.6"/><circle class="a-pulse d2" cx="36" cy="12" r="3.6"/><circle class="a-pulse d5" cx="12" cy="24" r="3.6"/><circle class="a-pulse d4" cx="24" cy="24" r="3.6"/><circle class="a-pulse d3" cx="36" cy="24" r="3.6"/><circle class="a-pulse d6" cx="12" cy="36" r="3.6"/><circle class="a-pulse d7" cx="24" cy="36" r="3.6"/><circle class="a-pulse d8" cx="36" cy="36" r="3.6"/></g></svg>`,
+    qwerty: `<svg viewBox="0 0 48 48"><rect class="a-key" x="4" y="10" width="7" height="7" rx="2"/><rect class="a-key d1" x="13" y="10" width="7" height="7" rx="2"/><rect class="a-key d2" x="22" y="10" width="7" height="7" rx="2"/><rect class="a-key d3" x="31" y="10" width="7" height="7" rx="2"/><rect class="a-key d4" x="40" y="10" width="5" height="7" rx="2"/><rect class="a-key d5" x="8" y="21" width="7" height="7" rx="2"/><rect class="a-key d6" x="17" y="21" width="7" height="7" rx="2"/><rect class="a-key d7" x="26" y="21" width="7" height="7" rx="2"/><rect class="a-key d8" x="35" y="21" width="7" height="7" rx="2"/><rect class="a-key d3" x="12" y="32" width="7" height="7" rx="2"/><rect class="a-key d1" x="21" y="32" width="7" height="7" rx="2"/><rect class="a-key d5" x="30" y="32" width="7" height="7" rx="2"/></svg>`,
+    vig: `<svg viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="4"/><path d="M18 6v36M30 6v36M6 18h36M6 30h36" opacity=".45"/><rect class="fill a-cell" x="8" y="8" width="8" height="8" rx="2"/></svg>`,
+    rev: `<svg viewBox="0 0 48 48"><g class="a-slideR"><path d="M8 17h28M30 11l6 6-6 6"/></g><g class="a-slideL"><path d="M40 31H12M18 25l-6 6 6 6"/></g></svg>`,
+    rail: `<svg viewBox="0 0 48 48"><path d="M4 12h40M4 24h40M4 36h40" opacity=".22"/><path class="a-draw" pathLength="100" d="M4 36L14 12L24 36L34 12L44 36"/></svg>`,
+    poly: (function () {
+        let s = '<svg viewBox="0 0 48 48"><g class="fill">';
+        for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) {
+            s += `<circle class="a-pulse" style="animation-delay:${((r + c) * 0.15).toFixed(2)}s" cx="${8 + c * 8}" cy="${8 + r * 8}" r="2.4"/>`;
+        }
+        return s + '</g></svg>';
+    })(),
+    pig: `<svg viewBox="0 0 48 48"><path class="a-draw" pathLength="100" d="M18 6v36M30 6v36M6 18h36M6 30h36"/><circle class="fill a-pulse" cx="24" cy="24" r="3.2"/></svg>`,
+    braille: `<svg viewBox="0 0 48 48"><g class="fill"><circle class="a-dot" cx="17" cy="12" r="4.4"/><circle class="a-dot d3" cx="17" cy="24" r="4.4"/><circle class="a-dot d6" cx="17" cy="36" r="4.4"/><circle class="a-dot d2" cx="31" cy="12" r="4.4"/><circle class="a-dot d5" cx="31" cy="24" r="4.4"/><circle class="a-dot d8" cx="31" cy="36" r="4.4"/></g></svg>`,
+    calc: `<svg viewBox="0 0 48 48"><rect class="a-pulse" x="7" y="7" width="15" height="15" rx="4"/><rect class="a-pulse d2" x="26" y="7" width="15" height="15" rx="4"/><rect class="a-pulse d4" x="7" y="26" width="15" height="15" rx="4"/><rect class="a-pulse d6" x="26" y="26" width="15" height="15" rx="4"/></svg>`,
+    pass: `<svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="20" rx="7"/><circle class="fill a-pulse" cx="16" cy="24" r="2.6"/><circle class="fill a-pulse d3" cx="24" cy="24" r="2.6"/><circle class="fill a-pulse d6" cx="32" cy="24" r="2.6"/></svg>`,
+    txt: `<svg viewBox="0 0 48 48"><path class="a-grow" d="M7 13h34"/><path class="a-grow d3" d="M7 24h24"/><path class="a-grow d6" d="M7 35h30"/></svg>`,
+    color: `<svg viewBox="0 0 48 48"><circle class="a-spin-fast" cx="24" cy="24" r="17" stroke-dasharray="26 8"/><circle class="fill a-pulse" cx="24" cy="24" r="6"/></svg>`,
+    arrow: `<svg viewBox="0 0 24 24"><path class="a-slideR" d="M4 12h14M13 7l5 5-5 5"/></svg>`,
+    trivia: `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18"/><circle class="a-ring" cx="24" cy="24" r="18"/><text class="a-float" x="24" y="32" text-anchor="middle" font-size="24" font-weight="700" font-family="sans-serif" fill="currentColor" stroke="none">?</text></svg>`,
+    memory: `<svg viewBox="0 0 48 48"><rect class="a-flip" x="6" y="12" width="16" height="24" rx="4"/><rect class="a-flip d4" x="26" y="12" width="16" height="24" rx="4"/></svg>`,
+    guess: `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" opacity=".5"/><circle class="a-ring" cx="24" cy="24" r="19"/><circle class="a-ring d4" cx="24" cy="24" r="19"/><circle class="fill a-pulse" cx="24" cy="24" r="4"/></svg>`,
+    mole: `<svg viewBox="0 0 48 48"><path d="M6 38h36" opacity=".45"/><circle class="fill a-rise" cx="24" cy="26" r="8"/><circle class="a-ring" cx="24" cy="30" r="14"/></svg>`,
+    bolt: `<svg viewBox="0 0 48 48"><path class="a-bolt" d="M27 5L11 27h12l-2 16 16-22H25z"/></svg>`
+};
+// Animate an icon only while it is actually on screen (big win on phones)
+const iconIO = ('IntersectionObserver' in window)
+    ? new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('live', e.isIntersecting)), { rootMargin: '40px' })
+    : null;
+function fillIcons(root) {
+    (root || document).querySelectorAll('[data-ico]').forEach(el => {
+        if (!el.dataset.filled) {
+            el.innerHTML = ICONS[el.dataset.ico] || '';
+            el.dataset.filled = '1';
+            if (iconIO) iconIO.observe(el); else el.classList.add('live');
+        }
+    });
+}
+
+// ============================================================
+// VISITOR COUNTER, count once per browser via localStorage
 // ============================================================
 async function updateVisitorCount() {
-    // Globally shared counter (works across different devices/phones) via a free counting service.
-    // Change COUNTER_KEY to any unique string if you ever want to start a fresh count.
     const COUNTER_KEY = 'secretcipher-ajaxx-edd00z-v1';
     const countEl = document.getElementById('visitorCount');
     const hasVisited = localStorage.getItem('sc_hasVisited');
     const cachedCount = localStorage.getItem('sc_lastKnownCount');
-
-    // Show last known number immediately so it's not blank while the network request runs
     if (cachedCount) countEl.textContent = cachedCount;
-
     try {
-        // First-time visitor on this device -> increment the global counter.
-        // Returning visitor -> just fetch the current global value (no double-counting).
         const endpoint = hasVisited
             ? `https://countapi.mileshilliard.com/api/v1/get/${COUNTER_KEY}`
             : `https://countapi.mileshilliard.com/api/v1/hit/${COUNTER_KEY}`;
@@ -2316,16 +2837,14 @@ async function updateVisitorCount() {
             localStorage.setItem('sc_lastKnownCount', data.value);
         }
     } catch (err) {
-        // Offline or the counting service is unreachable — silently keep showing the cached number
         console.warn('Visitor counter: could not reach counting service.', err);
     }
-
     if (!hasVisited) localStorage.setItem('sc_hasVisited', '1');
 }
 
 // Tools Modal
-function openTools() { document.getElementById('toolsModal').classList.add('show'); }
-function closeTools() { document.getElementById('toolsModal').classList.remove('show'); }
+function openTools() { document.getElementById('toolsModal').classList.add('show'); document.body.classList.add('modal-open'); }
+function closeTools() { document.getElementById('toolsModal').classList.remove('show'); document.body.classList.remove('modal-open'); }
 function toggleTool(toolId) { document.getElementById(toolId + 'Tool').classList.toggle('show'); }
 
 // Calculator
@@ -2343,41 +2862,6 @@ function calcCalculate() {
         calcExpression = result.toString();
         document.getElementById('calcDisplay').textContent = calcExpression;
     } catch(e) { document.getElementById('calcDisplay').textContent = 'Error'; calcExpression = '0'; }
-}
-
-// Password Generator
-function updateLengthDisplay() { document.getElementById('lengthDisplay').textContent = document.getElementById('passLength').value; }
-function generatePassword() {
-    const length = parseInt(document.getElementById('passLength').value);
-    const useUpper = document.getElementById('passUpper').checked;
-    const useLower = document.getElementById('passLower').checked;
-    const useNumbers = document.getElementById('passNumbers').checked;
-    const useSymbols = document.getElementById('passSymbols').checked;
-    let chars = '';
-    if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
-    if (useNumbers) chars += '0123456789';
-    if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    if (!chars) { document.getElementById('passwordResult').textContent = 'Select at least one option!'; return; }
-    let password = '';
-    for (let i = 0; i < length; i++) password += chars.charAt(Math.floor(Math.random() * chars.length));
-    document.getElementById('passwordResult').textContent = password;
-}
-function copyPassword() {
-    const password = document.getElementById('passwordResult').textContent;
-    if (password && password !== 'Click Generate!' && password !== 'Select at least one option!') {
-        navigator.clipboard.writeText(password);
-        alert('Password copied!');
-    }
-}
-
-// Text Counter
-function updateCounter() {
-    const text = document.getElementById('counterInput').value;
-    document.getElementById('charCount').textContent = text.length;
-    document.getElementById('noSpaceCount').textContent = text.replace(/\s/g, '').length;
-    document.getElementById('wordCount').textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
-    document.getElementById('lineCount').textContent = text ? text.split(/\n/).length : 0;
 }
 
 // Color Picker
@@ -2489,16 +2973,35 @@ function endTriviaGame() {
 function resetTriviaGame() { initTriviaGame(); }
 function shuffleArray(arr) { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
 
-// Memory Card Game
+// Memory Card Game (animated geometric shapes instead of emoji)
+const MEM_SHAPES = {
+    circle:   '<circle cx="12" cy="12" r="8" fill="currentColor"/>',
+    ring:     '<circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="3"/>',
+    diamond:  '<path d="M12 2l9 10-9 10-9-10z" fill="currentColor"/>',
+    triangle: '<path d="M12 3l10 18H2z" fill="currentColor"/>',
+    hexagon:  '<path d="M12 2l8.7 5v10L12 22l-8.7-5V7z" fill="currentColor"/>',
+    star:     '<path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7.3L12 17.8 5.7 21.5l1.7-7.3L2 9.5l7.1-.6z" fill="currentColor"/>',
+    plus:     '<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="currentColor"/>',
+    cross:    '<path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/>',
+    crescent: '<path d="M16 3a9 9 0 1 0 5 14 7.5 7.5 0 0 1-5-14z" fill="currentColor"/>',
+    bars:     '<g fill="currentColor"><rect x="3" y="4" width="4" height="16" rx="2"/><rect x="10" y="8" width="4" height="12" rx="2"/><rect x="17" y="2" width="4" height="18" rx="2"/></g>',
+    wave:     '<path d="M2 14c3-8 6-8 10 0s7 8 10 0" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>',
+    dots:     '<g fill="currentColor"><circle cx="6" cy="12" r="3"/><circle cx="12" cy="12" r="3"/><circle cx="18" cy="12" r="3"/></g>',
+    half:     '<path d="M2 16a10 10 0 0 1 20 0z" fill="currentColor"/>',
+    target:   '<g fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/></g><circle cx="12" cy="12" r="4" fill="currentColor"/>'
+};
+const memorySymbols = Object.keys(MEM_SHAPES);
+function memShapeSvg(key) {
+    return `<svg viewBox="0 0 24 24">${MEM_SHAPES[key]}</svg>`;
+}
 let memoryCards=[],flippedCards=[],moves=0,matchedPairs=0,memoryTimer=null,seconds=0;
-const memorySymbols=['🍎','🍌','🍒','🍇','🍊','🍓','🥭','🍍','🍉','🍈','🍔','🫜','🥕','🌽'];
 function startMemoryGame() {
     resetMemoryGame();
     let cardValues=[...memorySymbols,...memorySymbols]; cardValues.sort(()=>Math.random()-0.5);
     const board=document.getElementById('memoryBoard'); board.innerHTML='';
     cardValues.forEach((sym,idx) => {
         const card=document.createElement('div'); card.className='memory-card';
-        card.innerHTML=`<div class="card-back">?</div><div class="card-front">${sym}</div>`;
+        card.innerHTML=`<div class="card-back">?</div><div class="card-front">${memShapeSvg(sym)}</div>`;
         card.dataset.symbol=sym; card.dataset.index=idx;
         card.onclick=()=>flipMemoryCard(card); board.appendChild(card); memoryCards.push(card);
     });
@@ -2512,7 +3015,7 @@ function flipMemoryCard(card) {
         const [c1,c2]=flippedCards;
         if (c1.dataset.symbol===c2.dataset.symbol) {
             setTimeout(()=>{ c1.classList.add('matched'); c2.classList.add('matched'); matchedPairs++; document.getElementById('pairsCount').textContent=matchedPairs+'/14'; flippedCards=[];
-                if(matchedPairs===14){clearInterval(memoryTimer);document.getElementById('memoryDisplay').textContent=`🎉 You won! Time: ${seconds}s, Moves: ${moves}`;} },500);
+                if(matchedPairs===14){clearInterval(memoryTimer);document.getElementById('memoryDisplay').textContent=`You won! Time: ${seconds}s, Moves: ${moves}`;} },500);
         } else { setTimeout(()=>{ c1.classList.remove('flipped'); c2.classList.remove('flipped'); flippedCards=[]; },1000); }
     }
 }
@@ -2522,26 +3025,28 @@ function resetMemoryGame() { clearInterval(memoryTimer); memoryCards=[]; flipped
 let secretNumber=Math.floor(Math.random()*100)+1, guessAttempts=0;
 function makeGuess() {
     const guess=parseInt(document.getElementById('guessInput').value), display=document.getElementById('guessDisplay');
-    if (isNaN(guess)||guess<1||guess>100) { display.textContent='Please enter a number between 1-100!'; display.style.color='#e74c3c'; return; }
+    if (isNaN(guess)||guess<1||guess>100) { display.textContent='Please enter a number between 1-100!'; display.style.color='var(--bad)'; return; }
     guessAttempts++; document.getElementById('guessAttempts').textContent=guessAttempts;
-    if (guess===secretNumber) { display.textContent=`🎉 Correct! The number was ${secretNumber}! You got it in ${guessAttempts} attempts!`; display.style.color='#5ec78a'; }
-    else if (guess<secretNumber) { display.textContent='📈 Too low! Try a higher number.'; display.style.color='#f39c12'; }
-    else { display.textContent='📉 Too high! Try a lower number.'; display.style.color='#f39c12'; }
+    if (guess===secretNumber) { display.textContent=`Correct! The number was ${secretNumber}! You got it in ${guessAttempts} attempts!`; display.style.color='var(--good)'; }
+    else if (guess<secretNumber) { display.textContent='Too low! Try a higher number.'; display.style.color='var(--warn)'; }
+    else { display.textContent='Too high! Try a lower number.'; display.style.color='var(--warn)'; }
     document.getElementById('guessInput').value='';
 }
-function resetGuessGame() { secretNumber=Math.floor(Math.random()*100)+1; guessAttempts=0; document.getElementById('guessAttempts').textContent='0'; document.getElementById('guessDisplay').textContent="I'm thinking of a number between 1-100. Can you guess it?"; document.getElementById('guessDisplay').style.color='#e8eaf0'; document.getElementById('guessInput').value=''; }
+function resetGuessGame() { secretNumber=Math.floor(Math.random()*100)+1; guessAttempts=0; document.getElementById('guessAttempts').textContent='0'; document.getElementById('guessDisplay').textContent="I'm thinking of a number between 1-100. Can you guess it?"; document.getElementById('guessDisplay').style.color='var(--text)'; document.getElementById('guessInput').value=''; }
 
-// Whack-a-Mole
+// Whack-a-Mole (animated orbs instead of emoji)
+const MOLE_ORB = '<svg class="mole-orb" viewBox="0 0 48 48"><circle class="orb-ring" cx="24" cy="24" r="14" fill="none" stroke="currentColor" stroke-width="2"/><circle class="orb-core" cx="24" cy="24" r="10" fill="currentColor"/></svg>';
+const MOLE_BURST = '<svg class="mole-burst" viewBox="0 0 48 48"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path class="ray" d="M24 4v10"/><path class="ray" d="M24 34v10"/><path class="ray" d="M4 24h10"/><path class="ray" d="M34 24h10"/><path class="ray" d="M10 10l7 7"/><path class="ray" d="M31 31l7 7"/><path class="ray" d="M38 10l-7 7"/><path class="ray" d="M17 31l-7 7"/></g></svg>';
 let moleScore=0,moleTimeLeft=30,moleGameInterval=null,moleTimerInterval=null,activeMoles=[];
 let moleBestScore=parseInt(localStorage.getItem('moleBestScore')||'0');
 function startMoleGame() {
     if (moleGameInterval) return;
     moleScore=0; moleTimeLeft=30; activeMoles=[];
     document.getElementById('moleScore').textContent='0'; document.getElementById('moleTime').textContent='30s'; document.getElementById('moleBest').textContent=moleBestScore;
-    document.getElementById('moleDisplay').textContent='Game started! Click the moles!'; document.getElementById('moleTimerBar').style.width='100%';
+    document.getElementById('moleDisplay').textContent='Game started! Click the targets!'; document.getElementById('moleTimerBar').style.transform='scaleX(1)';
     document.querySelectorAll('.mole-hole').forEach(h=>{h.className='mole-hole';h.innerHTML='';});
     moleTimerInterval=setInterval(()=>{
-        moleTimeLeft--; document.getElementById('moleTime').textContent=moleTimeLeft+'s'; document.getElementById('moleTimerBar').style.width=(moleTimeLeft/30*100)+'%';
+        moleTimeLeft--; document.getElementById('moleTime').textContent=moleTimeLeft+'s'; document.getElementById('moleTimerBar').style.transform='scaleX('+Math.max(0,moleTimeLeft/30)+')';
         if(moleTimeLeft<=0){stopMoleGame();document.getElementById('moleDisplay').textContent=`Game Over! Final Score: ${moleScore}. Best: ${moleBestScore}`;}
     },1000);
     moleGameInterval=setInterval(spawnMole,800);
@@ -2553,13 +3058,13 @@ function spawnMole() {
     if (!avail.length) return;
     const randIdx=Math.floor(Math.random()*avail.length);
     const hIdx=Array.from(holes).indexOf(avail[randIdx]);
-    activeMoles.push(hIdx); holes[hIdx].classList.add('active'); holes[hIdx].innerHTML='🐹';
+    activeMoles.push(hIdx); holes[hIdx].classList.add('active'); holes[hIdx].innerHTML=MOLE_ORB;
     setTimeout(()=>{ if(holes[hIdx].classList.contains('active')){holes[hIdx].classList.remove('active');holes[hIdx].innerHTML='';activeMoles=activeMoles.filter(i=>i!==hIdx);} },Math.random()*1000+800);
 }
 function whackMole(index) {
     const hole=document.querySelectorAll('.mole-hole')[index];
     if (hole.classList.contains('active')) {
-        hole.classList.remove('active'); hole.classList.add('hit'); hole.innerHTML='💥'; moleScore++;
+        hole.classList.remove('active'); hole.classList.add('hit'); hole.innerHTML=MOLE_BURST; moleScore++;
         document.getElementById('moleScore').textContent=moleScore;
         if(moleScore>moleBestScore){moleBestScore=moleScore;localStorage.setItem('moleBestScore',moleBestScore);document.getElementById('moleBest').textContent=moleBestScore;}
         activeMoles=activeMoles.filter(i=>i!==index);
@@ -2583,7 +3088,7 @@ function startReaction() {
 }
 function handleReactionClick() {
     const box=document.getElementById('reactionBox'), display=document.getElementById('reactionDisplay');
-    if (reactionState==='waiting') { clearTimeout(reactionTimeout); reactionState='idle'; box.className='reaction-box result'; box.textContent='Too early! 😅'; display.textContent='You clicked too soon! Click Start to try again.'; }
+    if (reactionState==='waiting') { clearTimeout(reactionTimeout); reactionState='idle'; box.className='reaction-box result'; box.textContent='Too early!'; display.textContent='You clicked too soon! Click Start to try again.'; }
     else if (reactionState==='ready') {
         const t=Date.now()-reactionStartTime; reactionState='idle'; box.className='reaction-box result'; box.textContent=`${t} ms`; display.textContent=`Your reaction time: ${t}ms`;
         if(t<bestReactionTime){bestReactionTime=t;document.getElementById('bestReaction').textContent=`${t} ms`;}
@@ -2607,9 +3112,8 @@ function clearAll(prefix) {
     if (inputEl) { inputEl.value=''; inputEl.classList.remove('error'); }
     if (keyEl) { keyEl.value=''; keyEl.classList.remove('error'); }
     if (resultEl) resultEl.classList.remove('show');
-    if (outputEl) outputEl.textContent='';
-    // Hide visual div (used by Rail Fence)
-    if (visualEl) { visualEl.style.display='none'; const inner=visualEl.querySelector('.rail-visual-inner'); if(inner) inner.innerHTML=''; }
+    if (outputEl) { outputEl.textContent=''; outputEl.classList.remove('is-error'); }
+    if (visualEl) { visualEl.style.display='none'; const inner=visualEl.querySelector('.rail-visual-inner, .dots-inner'); if(inner) inner.innerHTML=''; }
 }
 function clearAllQR() {
     document.getElementById('textToQRInput').value='';
@@ -2643,12 +3147,15 @@ function goToPage(page) {
     if (page==='vigenere') generateVigenereTable();
     else if (page==='polybius') generatePolybiusGrid();
     else if (page==='barcode') stopBarcodeScan();
+    else if (page==='qr') { ensureQRCodeLoaded(); ensureJsQRLoaded(); }
+    window.scrollTo(0, 0);
 }
 function goToHome() {
     document.querySelectorAll('.cipher-page').forEach(p=>p.classList.remove('active'));
     document.getElementById('homePage').style.display='block';
     document.getElementById('watermarkFooter').style.display='block';
     stopBarcodeScan();
+    stopQRCamera();
 }
 function selectMode(cipher, mode) {
     const page=document.getElementById(cipher+'Page');
@@ -2660,6 +3167,8 @@ function selectMode(cipher, mode) {
         boxId = mode==='textToBarcode' ? 'textToBarcodeBox' : 'barcodeToTextBox';
         if (mode==='barcodeToText') setTimeout(()=>startBarcodeScan(),100);
         else stopBarcodeScan();
+    } else if (cipher==='qr') {
+        if (mode!=='qrToText') stopQRCamera();
     } else if (cipher==='qwerty') {
         boxId = mode==='encrypt' ? 'qwertyEncryptBox' : 'qwertyDecryptBox';
     } else if (cipher==='vigenere') {
@@ -2675,67 +3184,209 @@ function copyText(elementId, btn) {
 }
 
 // ============================================================
-// QR CODE — FIXED: preview + ❗QR not detected message
+// QR CODE: generate + robust scan (upload & camera)
 // ============================================================
-function generateQR() {
+function loadScriptSeq(urls, test) {
+    return new Promise(resolve => {
+        let i = 0;
+        const next = () => {
+            if (test()) return resolve(true);
+            if (i >= urls.length) return resolve(false);
+            const s = document.createElement('script');
+            s.src = urls[i++];
+            s.onload = () => (test() ? resolve(true) : next());
+            s.onerror = next;
+            document.head.appendChild(s);
+        };
+        next();
+    });
+}
+let jsqrPromise = null, qrcodePromise = null;
+function ensureJsQRLoaded() {
+    if (typeof jsQR === 'function') return Promise.resolve(true);
+    if (!jsqrPromise) jsqrPromise = loadScriptSeq([
+        'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js',
+        'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js'
+    ], () => typeof jsQR === 'function').then(ok => { if (!ok) jsqrPromise = null; return ok; });
+    return jsqrPromise;
+}
+function ensureQRCodeLoaded() {
+    if (typeof QRCode === 'function') return Promise.resolve(true);
+    if (!qrcodePromise) qrcodePromise = loadScriptSeq([
+        'https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+    ], () => typeof QRCode === 'function').then(ok => { if (!ok) qrcodePromise = null; return ok; });
+    return qrcodePromise;
+}
+
+async function generateQR() {
     const text=document.getElementById('textToQRInput').value.trim();
     if (!text) { const el=document.getElementById('textToQRInput'); el.classList.add('error'); setTimeout(()=>el.classList.remove('error'),2000); return; }
     const qrOutput=document.getElementById('qrOutput'); qrOutput.innerHTML='';
-    new QRCode(qrOutput, { text, width:200, height:200, colorDark:"#000000", colorLight:"#ffffff", correctLevel:QRCode.CorrectLevel.H });
+    const ok = await ensureQRCodeLoaded();
+    if (!ok) { qrOutput.innerHTML='<p style="color:#b00020;">QR library could not be loaded. Check your internet connection.</p>'; document.getElementById('textToQRResult').classList.add('show'); return; }
+    const levels = [QRCode.CorrectLevel.M, QRCode.CorrectLevel.L];
+    let made = false;
+    for (const lvl of levels) {
+        try {
+            qrOutput.innerHTML='';
+            new QRCode(qrOutput, { text, width:320, height:320, colorDark:"#000000", colorLight:"#ffffff", correctLevel:lvl });
+            made = true; break;
+        } catch (e) { made = false; }
+    }
+    if (!made) { qrOutput.innerHTML='<p style="color:#b00020;">Text is too long for a QR code.</p>'; }
     document.getElementById('textToQRResult').classList.add('show');
 }
 function downloadQR() {
-    const qrCanvas=document.querySelector('#qrOutput canvas');
-    if (qrCanvas) { const link=document.createElement('a'); link.download='qr-code.png'; link.href=qrCanvas.toDataURL('image/png'); link.click(); }
+    const holder=document.getElementById('qrOutput');
+    const src=holder.querySelector('canvas') || holder.querySelector('img');
+    if (!src) return;
+    const size = src.width || src.naturalWidth || 320;
+    const pad = Math.round(size * 0.14);   // quiet zone so the saved image is scannable
+    const out = document.createElement('canvas');
+    out.width = size + pad*2; out.height = size + pad*2;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,out.width,out.height);
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(src, pad, pad, size, size);
+    const link=document.createElement('a'); link.download='qr-code.png'; link.href=out.toDataURL('image/png'); link.click();
 }
 
-// FIXED scanQR: preview + proper error message + file input reset
-function scanQR(event) {
-    const file=event.target.files[0];
+// ---- QR scanning helpers ----
+function drawToScanData(source, sw, sh, maxDim, padRatio) {
+    const scale = maxDim / Math.max(sw, sh);
+    const w = Math.max(1, Math.round(sw * scale)), h = Math.max(1, Math.round(sh * scale));
+    const p = Math.round(Math.max(w, h) * padRatio);
+    const c = document.createElement('canvas');
+    c.width = w + p*2; c.height = h + p*2;
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.fillStyle = '#ffffff';                    // opaque white: transparent PNGs and quiet zone
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(source, p, p, w, h);
+    return ctx.getImageData(0, 0, c.width, c.height);
+}
+async function decodeQR(source, sw, sh) {
+    if ('BarcodeDetector' in window) {
+        try {
+            const det = new BarcodeDetector({ formats: ['qr_code'] });
+            const r = await det.detect(source);
+            if (r && r.length && r[0].rawValue) return r[0].rawValue;
+        } catch (e) { /* fall through to jsQR */ }
+    }
+    const ok = await ensureJsQRLoaded();
+    if (!ok) throw new Error('jsqr-unavailable');
+    const maxSide = Math.max(sw, sh);
+    const tried = new Set();
+    for (const size of [Math.min(maxSide, 1200), 900, 640, 440, 300, 1500]) {
+        if (tried.has(size)) continue;
+        tried.add(size);
+        const d = drawToScanData(source, sw, sh, size, 0.1);
+        const code = jsQR(d.data, d.width, d.height, { inversionAttempts: 'attemptBoth' });
+        if (code && code.data) return code.data;
+        await new Promise(r => setTimeout(r, 0));   // keep the UI responsive
+    }
+    return null;
+}
+function loadImageFromUrl(url) {
+    return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+}
+function showQRResult(text, message) {
+    const out = document.getElementById('qrToTextOutput');
+    if (text) { out.textContent = text; out.classList.remove('is-error'); }
+    else { out.textContent = message || 'QR not detected. Make sure the QR code is sharp, fully visible, and not cropped, then try again.'; out.classList.add('is-error'); }
+    document.getElementById('qrToTextResult').classList.add('show');
+}
+function setQRUploadState(state, url) {
+    const el = document.getElementById('qrUploadInner');
+    if (!el) return;
+    if (state === 'loading') el.innerHTML = '<div class="spinner"></div><p class="qu-title">Scanning...</p>';
+    else if (state === 'preview') el.innerHTML = `<img src="${url}" alt="QR preview"><p class="qu-sub">Click or drop to try a different image</p>`;
+    else if (state === 'error') el.innerHTML = '<p class="qu-title" style="color:var(--bad);">Failed to load image.</p><p class="qu-sub">Try a JPG, PNG, or WEBP file.</p>';
+    else { el.innerHTML = '<span class="ico big" data-ico="qr"></span><p class="qu-title">Click or drop a QR image here</p><p class="qu-sub">JPG, PNG, or WEBP accepted</p>'; fillIcons(el); }
+}
+let qrPreviewUrl = null;
+async function processQRFile(file) {
     if (!file) return;
-    const uploadArea=document.getElementById('qrUploadArea');
-    const resultDiv=document.getElementById('qrToTextResult');
-    const outputDiv=document.getElementById('qrToTextOutput');
+    stopQRCamera();
+    setQRUploadState('loading');
+    if (qrPreviewUrl) URL.revokeObjectURL(qrPreviewUrl);
+    const url = qrPreviewUrl = URL.createObjectURL(file);
+    let img;
+    try { img = await loadImageFromUrl(url); }
+    catch (e) { setQRUploadState('error'); showQRResult(null, 'This image could not be opened. Try a JPG, PNG, or WEBP file.'); return; }
+    setQRUploadState('preview', url);
+    try {
+        const text = await decodeQR(img, img.naturalWidth, img.naturalHeight);
+        showQRResult(text);
+    } catch (e) {
+        showQRResult(null, 'The scanner library could not be loaded. Check your internet connection and try again.');
+    }
+}
+function scanQR(event) {
+    const file = event.target.files[0];
+    processQRFile(file).finally(() => { event.target.value = ''; });   // reset so the same file can be picked again
+}
+function handleQRDrop(event) {
+    event.preventDefault();
+    document.getElementById('qrUploadArea').classList.remove('drag');
+    const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+    if (file) processQRFile(file);
+}
 
-    // Show loading state
-    uploadArea.innerHTML=`<p style="color:#f39c12; font-size:1.1em;">⏳ Scanning...</p><input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)" style="display:none;">`;
-
-    const reader=new FileReader();
-    reader.onload=function(e) {
-        const img=new Image();
-        img.onload=function() {
-            // Show preview
-            uploadArea.innerHTML=`
-                <img src="${e.target.result}" style="max-width:180px;max-height:180px;border-radius:8px;margin-bottom:10px;border:2px solid #2a3f5f;">
-                <p style="color:#8a95a8;font-size:0.82em;margin-top:6px;">🔄 Click to try a different image</p>
-                <input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)" style="display:none;">`;
-
-            const canvas=document.getElementById('qrCanvas');
-            const ctx=canvas.getContext('2d');
-            canvas.width=img.width; canvas.height=img.height;
-            ctx.drawImage(img,0,0);
-            const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-
-            // Try normal + inverted scan for better detection
-            let code = null;
-            try {
-                code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts:"dontInvert" });
-                if (!code) code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts:"onlyInvert" });
-            } catch(err) { code = null; }
-
-            if (code) {
-                outputDiv.textContent=code.data;
-            } else {
-                outputDiv.textContent='❗QR not detected. Make sure the image is clear and try again.';
+// ---- QR live camera scan ----
+let qrStream = null, qrRaf = null, qrLastTick = 0;
+async function startQRCamera() {
+    stopQRCamera();
+    const ready = await ensureJsQRLoaded();
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showQRResult(null, 'Camera is not available here. Open this page over HTTPS to use the camera.');
+        return;
+    }
+    const video = document.getElementById('qrVideo');
+    try {
+        qrStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } } });
+    } catch (err) {
+        showQRResult(null, 'Camera access was denied. Please allow camera access and try again.');
+        return;
+    }
+    video.srcObject = qrStream;
+    try { await video.play(); } catch (e) {}
+    document.getElementById('qrCam').classList.add('show');
+    document.getElementById('qrToTextResult').classList.remove('show');
+    const detector = ('BarcodeDetector' in window) ? new BarcodeDetector({ formats: ['qr_code'] }) : null;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const tick = async (t) => {
+        if (!qrStream) return;
+        if (video.readyState >= 2 && video.videoWidth && t - qrLastTick > 120) {
+            qrLastTick = t;
+            const scale = Math.min(1, 720 / Math.max(video.videoWidth, video.videoHeight));
+            canvas.width = Math.round(video.videoWidth * scale);
+            canvas.height = Math.round(video.videoHeight * scale);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            let text = null;
+            if (detector) { try { const r = await detector.detect(canvas); if (r && r.length) text = r[0].rawValue; } catch (e) {} }
+            if (!text && ready && typeof jsQR === 'function') {
+                const d = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(d.data, d.width, d.height, { inversionAttempts: 'attemptBoth' });
+                if (code && code.data) text = code.data;
             }
-            resultDiv.classList.add('show');
-        };
-        img.onerror=function() {
-            uploadArea.innerHTML=`<p style="color:#e74c3c;">❌ Failed to load image.</p><input type="file" id="qrFileInput" accept="image/*" onchange="scanQR(event)" style="display:none;">`;
-        };
-        img.src=e.target.result;
+            if (text) { showQRResult(text); stopQRCamera(); return; }
+        }
+        qrRaf = requestAnimationFrame(tick);
     };
-    reader.readAsDataURL(file);
+    qrRaf = requestAnimationFrame(tick);
+}
+function stopQRCamera() {
+    if (qrRaf) { cancelAnimationFrame(qrRaf); qrRaf = null; }
+    if (qrStream) { qrStream.getTracks().forEach(t => t.stop()); qrStream = null; }
+    const video = document.getElementById('qrVideo');
+    if (video) video.srcObject = null;
+    const cam = document.getElementById('qrCam');
+    if (cam) cam.classList.remove('show');
 }
 
 // ============================================================
@@ -2745,7 +3396,7 @@ let currentBarcodeType='CODE128', barcodeStream=null;
 function selectBarcodeType(type, btn) {
     currentBarcodeType=type;
     document.querySelectorAll('.barcode-type-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-    const hints={'CODE128':'💡 CODE128: Accepts ANY text, numbers, or symbols! (Recommended)','CODE39':'💡 CODE39: Letters, numbers, and some symbols (-.$/+%).','EAN13':'💡 EAN-13: 12-13 digits only (product barcodes).','UPC':'💡 UPC: 11-12 digits only (US product codes).'};
+    const hints={'CODE128':'CODE128: Accepts ANY text, numbers, or symbols! (Recommended)','CODE39':'CODE39: Letters, numbers, and some symbols (-.$/+%).','EAN13':'EAN-13: 12-13 digits only (product barcodes).','UPC':'UPC: 11-12 digits only (US product codes).'};
     document.getElementById('barcodeHint').textContent=hints[type]||'';
 }
 function generateBarcode() {
@@ -2754,13 +3405,13 @@ function generateBarcode() {
     errorDiv.classList.remove('show'); outputDiv.innerHTML='';
     if (!input) { document.getElementById('barcodeInput').classList.add('error'); setTimeout(()=>document.getElementById('barcodeInput').classList.remove('error'),2000); return; }
     try {
-        if (currentBarcodeType==='EAN13' && !/^\d{12,13}$/.test(input)) { errorDiv.textContent='⚠️ EAN-13 requires exactly 12 or 13 digits'; errorDiv.classList.add('show'); return; }
-        if (currentBarcodeType==='UPC' && !/^\d{11,12}$/.test(input)) { errorDiv.textContent='⚠️ UPC requires exactly 11 or 12 digits'; errorDiv.classList.add('show'); return; }
+        if (currentBarcodeType==='EAN13' && !/^\d{12,13}$/.test(input)) { errorDiv.textContent='EAN-13 requires exactly 12 or 13 digits'; errorDiv.classList.add('show'); return; }
+        if (currentBarcodeType==='UPC' && !/^\d{11,12}$/.test(input)) { errorDiv.textContent='UPC requires exactly 11 or 12 digits'; errorDiv.classList.add('show'); return; }
         const encodedInput=encodeURIComponent(input);
         const apiUrls={'CODE128':`https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Code128&translate-esc=on`,'CODE39':`https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Code39&translate-esc=on`,'EAN13':`https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=Ean13&translate-esc=on`,'UPC':`https://barcode.tec-it.com/barcode.ashx?data=${encodedInput}&code=UPCA&translate-esc=on`};
         const barcodeImg=document.createElement('img'); barcodeImg.src=apiUrls[currentBarcodeType]||apiUrls['CODE128']; barcodeImg.alt=`Barcode: ${input}`; barcodeImg.style.cssText='width:100%;max-width:400px;height:auto;';
         outputDiv.appendChild(barcodeImg); resultDiv.classList.add('show');
-    } catch(error) { errorDiv.textContent='⚠️ Error generating barcode. Please try again.'; errorDiv.classList.add('show'); }
+    } catch(error) { errorDiv.textContent='Error generating barcode. Please try again.'; errorDiv.classList.add('show'); }
 }
 function downloadBarcode() {
     const barcodeImg=document.querySelector('#barcodeOutputContainer img');
@@ -2770,18 +3421,21 @@ function downloadBarcode() {
         img.crossOrigin='anonymous'; img.src=barcodeImg.src;
     }
 }
+function barcodeIdleMarkup() {
+    return '<span class="ico big" data-ico="barcode"></span><p style="color: var(--accent); margin-bottom:10px;">Click to start camera for barcode scanning</p><p style="color: var(--muted); font-size:0.9em;">Allow camera access when prompted</p>';
+}
 function startBarcodeScan() {
     const area=document.getElementById('barcodeScannerArea'), video=document.getElementById('barcodeVideo');
     area.style.display='none'; video.style.display='block'; document.getElementById('barcodeScanResult').style.display='none';
     navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}})
         .then(stream=>{barcodeStream=stream;video.srcObject=stream;video.play();})
-        .catch(err=>{area.innerHTML=`<p style="color:#e74c3c;">Camera access denied. Please allow camera access.</p>`;area.style.display='flex';video.style.display='none';});
+        .catch(err=>{area.innerHTML='<p style="color:var(--bad);">Camera access denied. Please allow camera access.</p>';area.style.display='flex';video.style.display='none';});
 }
 function stopBarcodeScan() {
     if (barcodeStream){barcodeStream.getTracks().forEach(t=>t.stop());barcodeStream=null;}
     const video=document.getElementById('barcodeVideo'); video.style.display='none'; video.srcObject=null;
     const area=document.getElementById('barcodeScannerArea'); area.style.display='flex';
-    area.innerHTML=`<p style="color:#6b9bd1;margin-bottom:10px;">📷 Click to start camera for barcode scanning</p><p style="color:#8a95a8;font-size:0.9em;">Allow camera access when prompted</p>`;
+    area.innerHTML=barcodeIdleMarkup(); fillIcons(area);
     area.onclick=startBarcodeScan;
 }
 function clearBarcodeScan() { document.getElementById('barcodeScanResult').style.display='none'; }
@@ -2807,26 +3461,41 @@ function convertBinaryToText() {
 }
 
 // ============================================================
-// CAESAR
+// CAESAR (adjustable shift 1-25)
 // ============================================================
+let caesarShift = 3;
+function setCaesarShift(v, commit) {
+    let n = parseInt(v, 10);
+    if (isNaN(n)) { if (commit) n = caesarShift; else return; }
+    n = Math.min(25, Math.max(1, n));
+    caesarShift = n;
+    document.querySelectorAll('.caesar-range').forEach(e => { e.value = n; });
+    document.querySelectorAll('.caesar-num').forEach(e => { if (commit || document.activeElement !== e) e.value = n; });
+    document.querySelectorAll('.caesar-shift-val').forEach(e => { e.textContent = n; });
+    const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    document.querySelectorAll('.cm-plain').forEach(e => { e.textContent = A; });
+    document.querySelectorAll('.cm-cipher').forEach(e => { e.textContent = A.slice(n) + A.slice(0, n); });
+}
+function caesarApply(text, shift) {
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        let c = text[i]; const code = text.charCodeAt(i);
+        if (code >= 65 && code <= 90) c = String.fromCharCode(((code - 65 + shift) % 26) + 65);
+        else if (code >= 97 && code <= 122) c = String.fromCharCode(((code - 97 + shift) % 26) + 97);
+        result += c;
+    }
+    return result;
+}
 function encryptCaesar() {
     if (!validateInput('caesarEncryptInput')) return;
-    const text=document.getElementById('caesarEncryptInput').value; let result='';
-    for (let i=0;i<text.length;i++) { let c=text[i],code=text.charCodeAt(i);
-        if (code>=65&&code<=90) c=String.fromCharCode(((code-65+3)%26)+65);
-        else if (code>=97&&code<=122) c=String.fromCharCode(((code-97+3)%26)+97);
-        result+=c; }
-    document.getElementById('caesarEncryptOutput').textContent=result;
+    const text=document.getElementById('caesarEncryptInput').value;
+    document.getElementById('caesarEncryptOutput').textContent=caesarApply(text, caesarShift);
     document.getElementById('caesarEncryptResult').classList.add('show');
 }
 function decryptCaesar() {
     if (!validateInput('caesarDecryptInput')) return;
-    const text=document.getElementById('caesarDecryptInput').value; let result='';
-    for (let i=0;i<text.length;i++) { let c=text[i],code=text.charCodeAt(i);
-        if (code>=65&&code<=90) c=String.fromCharCode(((code-65-3+26)%26)+65);
-        else if (code>=97&&code<=122) c=String.fromCharCode(((code-97-3+26)%26)+97);
-        result+=c; }
-    document.getElementById('caesarDecryptOutput').textContent=result;
+    const text=document.getElementById('caesarDecryptInput').value;
+    document.getElementById('caesarDecryptOutput').textContent=caesarApply(text, 26 - caesarShift);
     document.getElementById('caesarDecryptResult').classList.add('show');
 }
 
@@ -2963,7 +3632,6 @@ function reverseText() {
 // ============================================================
 // POLYBIUS SQUARE CIPHER
 // ============================================================
-// Standard 5x5 grid, I and J share a cell
 const polybiusGrid=['ABCDE','FGHIK','LMNOP','QRSTU','VWXYZ'];
 function polybiusCoords(letter) {
     letter=letter.toUpperCase();
@@ -3041,8 +3709,6 @@ function updatePolybiusHighlight() {
 // ============================================================
 // PIGPEN CIPHER (Sandi Kotak)
 // ============================================================
-// Each letter's shape: 'grid' type uses box sides (top/right/bottom/left),
-// 'x' type uses one quadrant of an X. Dotted variants add a center dot.
 const pigpenShapes = {
     A:{type:'grid', sides:['right','bottom']},
     B:{type:'grid', sides:['left','right','bottom']},
@@ -3073,7 +3739,6 @@ const pigpenShapes = {
 };
 const pigpenOrder = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-// Draws a single pigpen glyph into a canvas context at (x,y) with given cell size
 function drawPigpenGlyph(ctx, x, y, size, def, strokeColor, dotColor) {
     if (!def) return;
     const pad = size*0.14;
@@ -3103,7 +3768,6 @@ function drawPigpenGlyph(ctx, x, y, size, def, strokeColor, dotColor) {
     }
 }
 
-// Renders a full string of pigpen glyphs onto a canvas, wrapping into rows
 function renderPigpenText(canvas, text, opts) {
     opts = opts || {};
     const ctx = canvas.getContext('2d');
@@ -3173,7 +3837,6 @@ function clearAllPigpenEncrypt() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-// Build a single read-only key card (used in legend + palette)
 function buildPigpenKeyButton(letter, clickable) {
     const btn = document.createElement('div');
     btn.className = 'pigpen-key-btn' + (clickable ? '' : ' readonly');
@@ -3183,7 +3846,8 @@ function buildPigpenKeyButton(letter, clickable) {
     canvas.style.width = size+'px'; canvas.style.height = size+'px';
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr,dpr);
-    drawPigpenGlyph(ctx, 0, 0, size, pigpenShapes[letter], '#6b9bd1', '#6b9bd1');
+    const col = themeAccent();
+    drawPigpenGlyph(ctx, 0, 0, size, pigpenShapes[letter], col, col);
     const label = document.createElement('span');
     label.textContent = letter;
     btn.appendChild(canvas);
@@ -3224,10 +3888,9 @@ function togglePigpenLegend(targetId) {
     document.getElementById(targetId).classList.toggle('show');
 }
 
-// Decrypt buffer logic — clicking palette symbols builds the plain text live
 let pigpenBuffer = '';
 function pigpenRenderBuffer() {
-    document.getElementById('pgBufferText').textContent = pigpenBuffer || '—';
+    document.getElementById('pgBufferText').textContent = pigpenBuffer || '-';
 }
 function pigpenPickLetter(letter) {
     pigpenBuffer += letter;
@@ -3247,11 +3910,9 @@ function pigpenClearBuffer() {
 }
 
 // ============================================================
-// ✨ RAIL FENCE CIPHER
+// RAIL FENCE CIPHER
 // ============================================================
-const railColors=['#6b9bd1','#5ec78a','#f39c12','#e74c3c','#9b59b6','#1abc9c','#e67e22','#2ecc71','#e91e8c','#00bcd4'];
 
-// Build the zigzag rail pattern array for a given text length and rail count
 function buildRailPattern(len, rails) {
     const pattern=[];
     let rail=0, dir=1;
@@ -3268,8 +3929,6 @@ function encryptRailFence() {
     if (!validateInput('rfEncryptInput')) return;
     const text=document.getElementById('rfEncryptInput').value;
     const rails=Math.min(10, Math.max(2, parseInt(document.getElementById('rfEncryptRails').value)||3));
-
-    // Edge case: if rails >= text length, no scrambling
     const pattern=buildRailPattern(text.length, rails);
     const fence=Array.from({length:rails}, ()=>[]);
     for (let i=0;i<text.length;i++) fence[pattern[i]].push(text[i]);
@@ -3287,15 +3946,12 @@ function decryptRailFence() {
     const len=text.length;
     const pattern=buildRailPattern(len, rails);
 
-    // Count chars per rail
     const railLens=Array(rails).fill(0);
     pattern.forEach(r=>railLens[r]++);
 
-    // Split text into per-rail segments
     const fence=[]; let idx=0;
     for (let r=0;r<rails;r++) { fence.push(text.slice(idx,idx+railLens[r]).split('')); idx+=railLens[r]; }
 
-    // Read back in zigzag order
     const railIdxs=Array(rails).fill(0);
     let result='';
     for (let i=0;i<len;i++) { const r=pattern[i]; result+=fence[r][railIdxs[r]++]||''; }
@@ -3311,24 +3967,19 @@ function drawRailVisual(containerId, innerId, text, pattern, rails) {
     if (!container||!inner) return;
 
     inner.innerHTML='';
-    // Cap display to 40 chars so it doesn't overflow badly on mobile
     const displayLen=Math.min(text.length, 40);
-    const suffix=text.length>40?' …':'';
+    const suffix=text.length>40?' ...':'';
 
     for (let r=0;r<rails;r++) {
         const row=document.createElement('div'); row.className='rail-row';
-        // Label
         const label=document.createElement('span'); label.className='rail-label';
-        label.style.color=railColors[r%railColors.length]; label.textContent=`Rail ${r+1}:`;
+        label.textContent=`Rail ${r+1}:`;
         row.appendChild(label);
-        // Characters
         for (let i=0;i<displayLen;i++) {
             const span=document.createElement('span');
             if (pattern[i]===r) {
                 span.className='rail-char active';
-                span.style.background=railColors[r%railColors.length]+'22';
-                span.style.color=railColors[r%railColors.length];
-                span.style.borderColor=railColors[r%railColors.length]+'80';
+                span.style.animationDelay=(i*25)+'ms';
                 span.textContent=text[i]===' '?'·':text[i];
             } else {
                 span.className='rail-char empty';
@@ -3336,24 +3987,202 @@ function drawRailVisual(containerId, innerId, text, pattern, rails) {
             }
             row.appendChild(span);
         }
-        if (suffix) { const s=document.createElement('span'); s.style.color='#8a95a8'; s.style.fontSize='0.8em'; s.textContent=suffix; row.appendChild(s); }
+        if (suffix) { const s=document.createElement('span'); s.style.color='var(--muted)'; s.style.fontSize='0.8em'; s.textContent=suffix; row.appendChild(s); }
         inner.appendChild(row);
     }
     container.style.display='block';
 }
 
 // ============================================================
+// BRAILLE CODE
+// ============================================================
+// BRAILLE START
+const BR_LETTERS = {
+    a:'1', b:'12', c:'14', d:'145', e:'15', f:'124', g:'1245', h:'125', i:'24', j:'245',
+    k:'13', l:'123', m:'134', n:'1345', o:'135', p:'1234', q:'12345', r:'1235', s:'234', t:'2345',
+    u:'136', v:'1236', w:'2456', x:'1346', y:'13456', z:'1356'
+};
+const BR_PUNCT = { '.':'256', ',':'2', ';':'23', ':':'25', '!':'235', '?':'236', "'":'3', '-':'36', '/':'34', '"':'2356' };
+function brMask(dots) { return [...dots].reduce((a, n) => a | (1 << (parseInt(n, 10) - 1)), 0); }
+function brChar(mask) { return String.fromCharCode(0x2800 + mask); }
+const BR_NUM = brMask('3456'), BR_CAP = brMask('6');
+const BR_MASK = {}, BR_REV = {}, BR_DIGIT = {};
+Object.keys(BR_LETTERS).forEach(k => { const m = brMask(BR_LETTERS[k]); BR_MASK[k] = m; BR_REV[m] = k; });
+Object.keys(BR_PUNCT).forEach(k => { const m = brMask(BR_PUNCT[k]); BR_MASK[k] = m; BR_REV[m] = k; });
+'abcdefghij'.split('').forEach((l, i) => { BR_DIGIT[BR_MASK[l]] = String((i + 1) % 10); });
+const BR_DIGIT_MASK = {};
+'1234567890'.split('').forEach((d, i) => { BR_DIGIT_MASK[d] = BR_MASK['abcdefghij'[i]]; });
+
+function encodeBraille(text) {
+    let out = '', num = false;
+    const cells = [];
+    for (const ch of text) {
+        if (ch === ' ' || ch === '\t') { out += ' '; num = false; cells.push({ mask: 0, label: '', space: true }); continue; }
+        if (ch === '\n') { out += '\n'; num = false; continue; }
+        if (/[0-9]/.test(ch)) {
+            if (!num) { out += brChar(BR_NUM); cells.push({ mask: BR_NUM, label: '#' }); num = true; }
+            const m = BR_DIGIT_MASK[ch];
+            out += brChar(m); cells.push({ mask: m, label: ch });
+            continue;
+        }
+        num = false;
+        const lower = ch.toLowerCase();
+        if (/^[a-z]$/.test(lower)) {
+            if (ch !== lower) { out += brChar(BR_CAP); cells.push({ mask: BR_CAP, label: '^' }); }
+            const m = BR_MASK[lower];
+            out += brChar(m); cells.push({ mask: m, label: ch });
+        } else if (BR_PUNCT[ch] !== undefined) {
+            const m = BR_MASK[ch];
+            out += brChar(m); cells.push({ mask: m, label: ch });
+        } else {
+            out += ch;   // unsupported character: keep as-is
+        }
+    }
+    return { text: out, cells };
+}
+function decodeBraille(str) {
+    let out = '', num = false, cap = false;
+    const cells = [];
+    for (const ch of str) {
+        const cp = ch.codePointAt(0);
+        if (ch === ' ' || cp === 0x2800) { out += ' '; num = false; cap = false; cells.push({ mask: 0, label: '', space: true }); continue; }
+        if (ch === '\n') { out += '\n'; num = false; cap = false; continue; }
+        if (cp < 0x2800 || cp > 0x28FF) { out += ch; num = false; continue; }
+        const mask = cp - 0x2800;
+        if (mask === BR_NUM) { num = true; cells.push({ mask, label: '#' }); continue; }
+        if (mask === BR_CAP) { cap = true; cells.push({ mask, label: '^' }); continue; }
+        let c;
+        if (num && BR_DIGIT[mask] !== undefined) c = BR_DIGIT[mask];
+        else { num = false; c = BR_REV[mask]; }
+        if (c === undefined) { out += ch; cap = false; cells.push({ mask, label: '?' }); continue; }
+        if (cap && /^[a-z]$/.test(c)) c = c.toUpperCase();
+        cap = false;
+        out += c;
+        cells.push({ mask, label: c });
+    }
+    return { text: out, cells };
+}
+// BRAILLE END
+
+function renderBrailleCells(containerId, innerId, cells) {
+    const container = document.getElementById(containerId);
+    const inner = document.getElementById(innerId);
+    if (!container || !inner) return;
+    inner.innerHTML = '';
+    cells.slice(0, 300).forEach((c, idx) => {
+        const cell = document.createElement('div');
+        cell.className = 'braille-cell' + (c.space ? ' space' : '');
+        cell.style.setProperty('--i', String(idx % 40));
+        const dots = document.createElement('div');
+        dots.className = 'bc-dots';
+        for (let n = 0; n < 6; n++) {
+            const d = document.createElement('span');
+            d.className = 'bc-dot' + ((c.mask & (1 << n)) ? ' on' : '');
+            dots.appendChild(d);
+        }
+        const label = document.createElement('span');
+        label.className = 'bc-label';
+        label.textContent = c.label || '';
+        cell.appendChild(dots);
+        cell.appendChild(label);
+        inner.appendChild(cell);
+    });
+    container.style.display = cells.length ? 'block' : 'none';
+}
+function convertTextToBraille() {
+    if (!validateInput('textToBrailleInput')) return;
+    const res = encodeBraille(document.getElementById('textToBrailleInput').value);
+    document.getElementById('textToBrailleOutput').textContent = res.text;
+    document.getElementById('textToBrailleResult').classList.add('show');
+    renderBrailleCells('textToBrailleVisual', 'textToBrailleVisualInner', res.cells);
+}
+function convertBrailleToText() {
+    if (!validateInput('brailleToTextInput')) return;
+    const res = decodeBraille(document.getElementById('brailleToTextInput').value);
+    document.getElementById('brailleToTextOutput').textContent = res.text;
+    document.getElementById('brailleToTextResult').classList.add('show');
+    renderBrailleCells('brailleToTextVisual', 'brailleToTextVisualInner', res.cells);
+}
+
+// Dot builder (compose a cell by tapping dots)
+let bbMask = 0;
+function bbUpdate() {
+    document.getElementById('bbPreview').textContent = brChar(bbMask);
+    const on = [1, 2, 3, 4, 5, 6].filter(n => bbMask & (1 << (n - 1)));
+    let label = on.length ? 'dots ' + on.join('-') : 'empty cell';
+    if (bbMask === BR_NUM) label += ' (number sign)';
+    else if (bbMask === BR_CAP) label += ' (capital sign)';
+    else if (BR_REV[bbMask] !== undefined) label += ' = ' + BR_REV[bbMask];
+    document.getElementById('bbLabel').textContent = label;
+}
+function bbToggle(n) {
+    bbMask ^= (1 << (n - 1));
+    const btn = document.querySelector('.bb-dot[data-n="' + n + '"]');
+    if (btn) btn.classList.toggle('on');
+    bbUpdate();
+}
+function bbReset() {
+    bbMask = 0;
+    document.querySelectorAll('.bb-dot').forEach(b => b.classList.remove('on'));
+    bbUpdate();
+}
+function bbAppend(str) {
+    const input = document.getElementById('brailleToTextInput');
+    input.value += str;
+    input.classList.remove('error');
+    convertBrailleToText();
+}
+function bbAdd() { if (!bbMask) return; bbAppend(brChar(bbMask)); bbReset(); }
+function bbSpace() { bbAppend(' '); }
+function bbBackspace() {
+    const input = document.getElementById('brailleToTextInput');
+    input.value = input.value.slice(0, -1);
+    if (input.value.trim()) convertBrailleToText();
+    else clearAll('brailleToText');
+}
+
+// ============================================================
+// THEME (warm = orange/brown-black, cool = cyan/blue/black)
+// ============================================================
+function themeAccent() {
+    return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d97757';
+}
+function rebuildPigpenKeys() {
+    ['pgPaletteGrid1', 'pgPaletteGrid2', 'pgPaletteGrid3', 'pgPaletteGrid4', 'pgLegendEncrypt'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.dataset.built) { el.innerHTML = ''; delete el.dataset.built; }
+    });
+    generatePigpenPalette();
+    const lg = document.getElementById('pgLegendEncrypt');
+    if (lg && lg.classList.contains('show')) generatePigpenLegend('pgLegendEncrypt');
+}
+function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'cool' ? 'warm' : 'cool';
+    if (next === 'cool') document.documentElement.setAttribute('data-theme', 'cool');
+    else document.documentElement.removeAttribute('data-theme');
+    try { localStorage.setItem('sc_theme', next); } catch (e) {}
+    rebuildPigpenKeys();
+}
+
+// ============================================================
 // INIT
 // ============================================================
 window.addEventListener('DOMContentLoaded', () => {
+    fillIcons();
     updateVisitorCount();
     initTriviaGame();
     generatePigpenPalette();
+    setCaesarShift(3, true);
+    setQRUploadState('idle');
+    bbUpdate();
+    const area = document.getElementById('barcodeScannerArea');
+    if (area) { area.innerHTML = barcodeIdleMarkup(); fillIcons(area); }
+    document.querySelectorAll('.cipher-box').forEach((box, i) => box.style.setProperty('--i', i));
     document.getElementById('guessInput')?.addEventListener('keypress', e=>{ if(e.key==='Enter') makeGuess(); });
 });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){closeTools();stopBarcodeScan();} });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){closeTools();stopBarcodeScan();stopQRCamera();} });
 document.addEventListener('mousedown', function(e) {
-    if (!e.target.matches('input')&&!e.target.matches('textarea')&&!e.target.classList.contains('result-text')&&!e.target.classList.contains('password-result')) {
+    if (!e.target.matches('input')&&!e.target.matches('textarea')&&!e.target.classList.contains('result-text')) {
         if (window.getSelection) window.getSelection().removeAllRanges();
     }
 });
