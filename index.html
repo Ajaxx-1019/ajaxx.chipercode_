@@ -2245,6 +2245,36 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
 
 .px-h { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
 .px-h small { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* tools: brush, bomb, undo */
+.px-bottom { flex-direction: column; align-items: stretch; gap: 10px; }
+.px-act { display: flex; align-items: center; gap: 10px; }
+.px-tools { display: flex; align-items: center; gap: 10px; }
+.px-seg { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 16px; background: rgba(var(--paper-rgb), 0.05); border: 1px solid rgba(var(--paper-rgb), 0.1); }
+.px-seg button, .px-undo { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 40px; padding: 0 8px; border: 0; border-radius: 12px; background: transparent; color: var(--muted); font: inherit; font-size: 0.88em; font-weight: 500; cursor: pointer; transition: background 0.25s ease, color 0.25s ease, transform 0.25s cubic-bezier(0.3, 1.4, 0.45, 1); }
+.px-seg button svg, .px-undo svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.px-seg button.on { background: rgba(var(--accent-rgb), 0.18); color: var(--text); box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.55); }
+.px-seg button.on svg { stroke: var(--accent); }
+.px-seg button:active, .px-undo:active { transform: scale(0.94); }
+.px-seg b, .px-undo b { min-width: 18px; padding: 1px 5px; border-radius: 999px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; line-height: 16px; text-align: center; color: #1a120d; background: var(--accent); font-variant-numeric: tabular-nums; }
+.px-undo { flex: none; width: auto; padding: 0 14px; height: 48px; border-radius: 16px; border: 1px solid rgba(var(--paper-rgb), 0.14); background: rgba(var(--paper-rgb), 0.05); color: var(--text); }
+.px-undo b:empty { display: none; }
+.px-undo.dead { opacity: 0.4; }
+#pxView.brush { cursor: crosshair; }
+#pxStar { position: absolute; left: 0; top: 0; width: 7px; height: 7px; image-rendering: pixelated; pointer-events: none; z-index: 2; opacity: 0.78; }
+#pxStar[hidden] { display: none; }
+#pxStar.boom { animation: pxBoom 0.55s ease-out; }
+@keyframes pxBoom { 0% { opacity: 1; transform-origin: 3.5px 3.5px; filter: brightness(2.2); } 100% { opacity: 0; filter: brightness(1); } }
+.px-rip.big { width: 22px; height: 22px; margin: -11px 0 0 -11px; border-width: 3px; animation: pxRipBig 0.8s ease-out forwards; }
+@keyframes pxRipBig { from { transform: scale(0.3); opacity: 1; } to { transform: scale(9); opacity: 0; } }
+@media (max-height: 640px) { .px-seg button span { display: none; } .px-undo span { display: none; } }
+
+.px-seg { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.px-seg button { gap: 5px; padding: 0 4px; font-size: 0.84em; min-width: 0; }
+.px-seg button span { overflow: hidden; text-overflow: ellipsis; }
+.px-undo span { display: none; }
+.px-undo { position: relative; width: 50px; padding: 0; }
+.px-undo b { position: absolute; top: -6px; right: -4px; }
 </style>
 </head>
 <body>
@@ -2252,7 +2282,7 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
 <!-- Ambient motion background -->
 <div class="bg-fx" aria-hidden="true"></div>
 <div id="fpsMeter" hidden>-- fps</div>
-<div id="pxFull" hidden role="dialog" aria-modal="true" aria-label="Pixel Wall"><div class="px-top"><button class="px-x" type="button" onclick="pxClose()" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="px-ttl"><div class="px-h"><b>Pixel Wall</b><small id="pxReset"></small></div><span class="px-net" id="pxNet"><i></i><em>Connecting</em></span></div><div class="px-ring" id="pxRing" title="Pixels left this minute"><svg viewBox="0 0 36 36" aria-hidden="true"><circle class="bg" cx="18" cy="18" r="15.9155" pathLength="100"/><circle class="fg" id="pxRingFg" cx="18" cy="18" r="15.9155" pathLength="100"/></svg><b id="pxRingN">25</b></div></div><div id="pxView"><div id="pxWorld"><canvas id="pxCv" width="100" height="100"></canvas></div><canvas id="pxGrid"></canvas><div id="pxSel" hidden></div><div class="px-coord" id="pxCoord">x -  y -</div><div class="px-zoom"><button type="button" onclick="pxZoomBy(1.6)" aria-label="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button type="button" onclick="pxZoomBy(0.625)" aria-label="Zoom out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button><button type="button" onclick="pxFit()" aria-label="Fit to screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div><div id="pxToast" role="status"></div></div><div class="px-bottom"><div class="px-sheet" id="pxSheet"><div class="px-sv" id="pxSV"><canvas id="pxSVcv" width="240" height="140"></canvas><span class="px-th" id="pxSVth"></span></div><div class="px-hue" id="pxHue"><span class="px-th" id="pxHueTh"></span></div><div class="px-hexrow"><span class="sw" id="pxPrevSw"></span><input id="pxHexIn" type="text" inputmode="text" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Hex color" oninput="pxHexType(this.value)"></div><span class="px-lbl">Palette (first one erases)</span><div class="px-pal" id="pxPal"></div><span class="px-lbl">Recent</span><div class="px-rec" id="pxRec"></div></div><button class="px-colbtn" id="pxColBtn" type="button" onclick="pxSheetToggle()" aria-label="Pick a color"><span class="sw" id="pxColSw"></span><span id="pxColHex">#D97757</span></button><button class="px-eye" id="pxEyeBtn" type="button" onclick="pxEye()" aria-label="Copy a color from the canvas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5l4 4M4 20l1-4 9.5-9.5 3 3L8 19z"/><path d="M16 4a2.1 2.1 0 0 1 3 0l1 1a2.1 2.1 0 0 1 0 3l-1.5 1.5-4-4z"/></svg></button><button class="px-place" id="pxPlace" type="button" onclick="pxPlace()"><span id="pxPlaceTxt">Tap a pixel to start</span></button></div></div>
+<div id="pxFull" hidden role="dialog" aria-modal="true" aria-label="Pixel Wall"><div class="px-top"><button class="px-x" type="button" onclick="pxClose()" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="px-ttl"><div class="px-h"><b>Pixel Wall</b><small id="pxReset"></small></div><span class="px-net" id="pxNet"><i></i><em>Connecting</em></span></div><div class="px-ring" id="pxRing" title="Pixels left this minute"><svg viewBox="0 0 36 36" aria-hidden="true"><circle class="bg" cx="18" cy="18" r="15.9155" pathLength="100"/><circle class="fg" id="pxRingFg" cx="18" cy="18" r="15.9155" pathLength="100"/></svg><b id="pxRingN">25</b></div></div><div id="pxView"><div id="pxWorld"><canvas id="pxCv" width="100" height="100"></canvas><canvas id="pxStar" width="7" height="7" hidden></canvas></div><canvas id="pxGrid"></canvas><div id="pxSel" hidden></div><div class="px-coord" id="pxCoord">x -  y -</div><div class="px-zoom"><button type="button" onclick="pxZoomBy(1.6)" aria-label="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button type="button" onclick="pxZoomBy(0.625)" aria-label="Zoom out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button><button type="button" onclick="pxFit()" aria-label="Fit to screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div><div id="pxToast" role="status"></div></div><div class="px-bottom"><div class="px-sheet" id="pxSheet"><div class="px-sv" id="pxSV"><canvas id="pxSVcv" width="240" height="140"></canvas><span class="px-th" id="pxSVth"></span></div><div class="px-hue" id="pxHue"><span class="px-th" id="pxHueTh"></span></div><div class="px-hexrow"><span class="sw" id="pxPrevSw"></span><input id="pxHexIn" type="text" inputmode="text" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Hex color" oninput="pxHexType(this.value)"></div><span class="px-lbl">Palette (first one erases)</span><div class="px-pal" id="pxPal"></div><span class="px-lbl">Recent</span><div class="px-rec" id="pxRec"></div></div><div class="px-tools"><div class="px-seg" id="pxSeg" role="group" aria-label="Tool"><button type="button" class="on" data-t="pixel" onclick="pxTool('pixel')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="8" height="8" rx="1.5"/><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg><span>Pixel</span></button><button type="button" data-t="brush" onclick="pxTool('brush')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20c2.5 0 4-1 4.5-3 .4-1.7-.7-3-2.3-2.6C4.2 14.900 3.500 17 4 20z"/><path d="M8.500 15.500L19 5a2.100 2.100 0 0 1 3 3L11.500 18.500"/></svg><span>Brush</span></button><button type="button" data-t="bomb" onclick="pxTool('bomb')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.600 5.400 5.900.8-4.300 4.100 1 5.800L12 16.300 6.800 19.100l1-5.800L3.500 9.200l5.900-.8z"/></svg><span>Bomb</span><b id="pxBombN">10</b></button></div><button class="px-undo dead" id="pxUndoBtn" type="button" onclick="pxUndo()" aria-label="Undo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.500a5.500 5.500 0 0 1 0 11H11"/></svg><span>Undo</span><b id="pxUndoN"></b></button></div><div class="px-act"><button class="px-colbtn" id="pxColBtn" type="button" onclick="pxSheetToggle()" aria-label="Pick a color"><span class="sw" id="pxColSw"></span><span id="pxColHex">#D97757</span></button><button class="px-eye" id="pxEyeBtn" type="button" onclick="pxEye()" aria-label="Copy a color from the canvas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5l4 4M4 20l1-4 9.5-9.5 3 3L8 19z"/><path d="M16 4a2.1 2.1 0 0 1 3 0l1 1a2.1 2.1 0 0 1 0 3l-1.5 1.5-4-4z"/></svg></button><button class="px-place" id="pxPlace" type="button" onclick="pxPlace()"><span id="pxPlaceTxt">Tap a pixel to start</span></button></div></div></div>
 
 <div class="container">
     <!-- TAB 1: HOME -->
@@ -2391,8 +2421,8 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
         </section>
         <section class="about-card glass-card" id="pixelCard">
             <h3>Pixel Wall</h3>
-            <p>One shared canvas of 100 x 100 pixels. Everyone paints on the same wall, and each person gets 25 pixels per minute. The wall is wiped every day at 00:00 WIB (Jakarta time), so it starts empty again.</p>
-            <div class="px-row"><button class="px-thumb" type="button" onclick="pxOpen()" aria-label="Open Pixel Wall"><canvas id="pxThumb" width="100" height="100"></canvas></button><div class="px-stats"><span class="px-live" id="pxLive"><i></i><b>Saved here</b></span><span id="pxCount">0 pixels painted</span><span id="pxLeftTxt">25 of 25 left</span><span id="pxResetTxt"></span></div></div>
+            <p>One shared canvas of 100 x 100 pixels. Everyone paints on the same wall, and each person gets 25 pixels per minute, plus a brush, 10 star bombs and an undo. The wall is wiped every day at 00:00 WIB (Jakarta time), so it starts empty again.</p>
+            <div class="px-row"><button class="px-thumb" type="button" onclick="pxOpen()" aria-label="Open Pixel Wall"><canvas id="pxThumb" width="100" height="100"></canvas></button><div class="px-stats"><span class="px-live" id="pxLive"><i></i><b>Saved here</b></span><span id="pxCount">0 pixels painted</span><span id="pxLeftTxt">25 of 25 left</span><span id="pxBombTxt">10 of 10 bombs left</span><span id="pxResetTxt"></span></div></div>
             <button class="btn-ghost" type="button" onclick="pxOpen()">Open Pixel Wall</button>
         </section>
         <section class="about-card glass-card">
@@ -5024,13 +5054,19 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
  * Rule: every person (uid) may place LIMIT pixels in any WINDOW milliseconds.
  *   Limiter   enforces it for the local player (sliding window, survives reloads when persisted by the caller).
  *   Gate      enforces it again on every incoming message, so honest clients agree on the same canvas.
+ *
+ * Other messages:
+ *   "2|<uid>|<index>.<rrggbb>"          bomb: paints a 7x7 star around index (BOMBS per person per day, counted by a second Gate)
+ *   "3|<uid>|p|<index>.<rrggbb>,..."    undo of placed pixels: restores old colors, gives the pixels back to the allowance
+ *   "3|<uid>|b|<index>.<rrggbb>,..."    undo of a bomb: restores old colors, gives the bomb back
  */
 (function (root, factory) {
     if (typeof module === 'object' && module.exports) module.exports = factory();
     else root.PixelCore = factory();
 })(typeof self !== 'undefined' ? self : this, function () {
     'use strict';
-    var SIZE = 100, CELLS = SIZE * SIZE, LIMIT = 25, WINDOW = 60000, MAX_BATCH = 40;
+    var SIZE = 100, CELLS = SIZE * SIZE, LIMIT = 25, WINDOW = 60000, MAX_BATCH = 40, BOMBS = 10, DAY = 86400000;
+    var STAR = ['...#...', '..###..', '#######', '.#####.', '..###..', '.##.##.', '.#...#.'];   // 25 cells, centre at column 3 row 3
 
     function hex2(n) { return (n < 16 ? '0' : '') + n.toString(16); }
     function rgbToHex(r, g, b) { return hex2(r) + hex2(g) + hex2(b); }
@@ -5077,6 +5113,45 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
         return out.length ? { uid: p[1], pixels: out } : null;
     }
 
+    function uidOk(u) { return /^[a-z0-9]{4,16}$/.test(u); }
+    // indexes a bomb dropped on `index` paints (cells that fall outside the canvas are skipped)
+    function starCells(index) {
+        var cx = index % SIZE, cy = Math.floor(index / SIZE), out = [];
+        for (var r = 0; r < STAR.length; r++) for (var c = 0; c < STAR[r].length; c++) {
+            if (STAR[r][c] !== '#') continue;
+            var x = cx + c - 3, y = cy + r - 3;
+            if (x >= 0 && y >= 0 && x < SIZE && y < SIZE) out.push(y * SIZE + x);
+        }
+        return out;
+    }
+    function encodeBomb(uid, index, hex) { return '2|' + uid + '|' + index + '.' + hex; }
+    function encodeUndo(uid, kind, pixels) {
+        var parts = [];
+        for (var k = 0; k < pixels.length && k < MAX_BATCH; k++) parts.push(pixels[k].i + '.' + pixels[k].c);
+        return '3|' + uid + '|' + kind + '|' + parts.join(',');
+    }
+    // any message -> {t:'px'|'bomb'|'undo', uid, kind?, pixels:[{i,c}]} or null
+    function decodeAny(msg) {
+        if (typeof msg !== 'string' || msg.length > 4000) return null;
+        var p = msg.split('|');
+        if (p[0] === '1') { var d = decode(msg); return d ? { t: 'px', uid: d.uid, pixels: d.pixels } : null; }
+        if (!uidOk(p[1] || '')) return null;
+        if (p[0] === '2' && p.length === 3) {
+            var m = /^(\d{1,4})\.([0-9a-f]{6})$/.exec(p[2]); if (!m) return null;
+            var i = parseInt(m[1], 10); if (i >= CELLS) return null;
+            return { t: 'bomb', uid: p[1], pixels: [{ i: i, c: m[2] }] };
+        }
+        if (p[0] === '3' && p.length === 4 && (p[2] === 'p' || p[2] === 'b')) {
+            var out = [], items = p[3].split(',');
+            for (var k = 0; k < items.length && k < MAX_BATCH; k++) {
+                var n = /^(\d{1,4})\.([0-9a-f]{6})$/.exec(items[k]); if (!n) continue;
+                var j = parseInt(n[1], 10); if (j < CELLS) out.push({ i: j, c: n[2] });
+            }
+            return out.length ? { t: 'undo', kind: p[2], uid: p[1], pixels: out } : null;
+        }
+        return null;
+    }
+
     // Local player's allowance: LIMIT placements in any rolling WINDOW.
     function Limiter(limit, windowMs, stamps) {
         this.limit = limit || LIMIT; this.win = windowMs || WINDOW; this.stamps = (stamps || []).slice();
@@ -5089,6 +5164,8 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
         if (this.left(now) <= 0) return false;
         this.stamps.push(now); return true;
     };
+    // give back the n most recent placements (undo)
+    Limiter.prototype.refund = function (n) { this.stamps.splice(Math.max(0, this.stamps.length - n), n); };
     // ms until one more placement is available (0 if available now)
     Limiter.prototype.nextIn = function (now) {
         this.prune(now);
@@ -5108,10 +5185,21 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
         if (++this.n > 4000) { this.n = 0; for (var u in this.by) if (!this.by[u].length || t - this.by[u][this.by[u].length - 1][0] > w) delete this.by[u]; }
         return ok;
     };
+    // undo on the receiving side: returns how many of `count` can be given back (never more than were used in the window)
+    Gate.prototype.refund = function (uid, t, count) {
+        var a = this.by[uid]; if (!a) return 0;
+        var w = this.win, i = 0;
+        while (i < a.length && t - a[i][0] >= w) i++;
+        if (i) a.splice(0, i);
+        var used = 0; for (var k = 0; k < a.length; k++) used += a[k][1];
+        var ok = Math.max(0, Math.min(count, used)), left = ok;
+        for (var j = a.length - 1; j >= 0 && left > 0; j--) { var take = Math.min(left, a[j][1]); a[j][1] -= take; left -= take; if (!a[j][1]) a.splice(j, 1); }
+        return ok;
+    };
 
     return {
-        SIZE: SIZE, CELLS: CELLS, LIMIT: LIMIT, WINDOW: WINDOW, MAX_BATCH: MAX_BATCH,
-        encode: encode, decode: decode, Limiter: Limiter, Gate: Gate,
+        SIZE: SIZE, CELLS: CELLS, LIMIT: LIMIT, WINDOW: WINDOW, MAX_BATCH: MAX_BATCH, BOMBS: BOMBS, DAY: DAY, STAR: STAR,
+        encode: encode, decode: decode, decodeAny: decodeAny, encodeBomb: encodeBomb, encodeUndo: encodeUndo, starCells: starCells, Limiter: Limiter, Gate: Gate,
         hexToRgb: hexToRgb, rgbToHex: rgbToHex, hsvToRgb: hsvToRgb, rgbToHsv: rgbToHsv
     };
 });
@@ -8047,7 +8135,7 @@ function pxFmtLeft(ms) {
     return h > 0 ? h + 'h ' + String(m).padStart(2, '0') + 'm' : m > 0 ? m + 'm ' + String(s % 60).padStart(2, '0') + 's' : s + 's';
 }
 const PX = {
-    day: 0,
+    day: 0, tool: 'pixel', undo: [], bombUsed: 0, bgate: null, stroke: null, inflight: new Set(),
     S: 100, img: null, lim: null, uid: '', color: 'd97757', hsv: [18, 0.6, 0.85], recent: [], sel: null, open: false,
     v: { x: 0, y: 0, s: 4, w: 0, h: 0 }, minS: 2, queue: [], seen: new Set(), gate: null, es: null, conn: false,
     lastId: '', pick: false, raf: 0, draw: 0, save: 0, fl: 0, sending: false, backoff: 0, tick: 0, ptr: new Map(),
@@ -8184,13 +8272,22 @@ function pxBind() {
         cancelAnimationFrame(PX.inert); PX.inert = 0; PX.vel.x = PX.vel.y = 0;
         try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
         P.set(e.pointerId, { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, t: performance.now() });
-        if (P.size === 1) PX.tap = true; else { PX.tap = false; pinStart(); }
+        if (P.size === 1) {
+            // brush: one finger paints (shift + mouse still pans); two fingers pan and zoom
+            if (PX.tool === 'brush' && !PX.pick && !(e.pointerType === 'mouse' && e.shiftKey)) { PX.tap = false; pxStrokeStart(pxCellAt(...rel(e))); }
+            else PX.tap = true;
+        } else { PX.tap = false; if (PX.stroke) pxStrokeEnd(); pinStart(); }
     });
     el.addEventListener('pointermove', e => {
         const p = P.get(e.pointerId);
         if (!p) { if (e.pointerType === 'mouse') pxCoordAt(...rel(e)); return; }
         const dx = e.clientX - p.x, dy = e.clientY - p.y, now = performance.now(), dt = Math.max(1, now - p.t);
         p.x = e.clientX; p.y = e.clientY; p.t = now;
+        if (P.size === 1 && PX.stroke) {
+            const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+            for (const ev of (evs.length ? evs : [e])) pxStrokeTo(pxCellAt(...rel(ev)));
+            pxDrawSoon(); return;
+        }
         if (P.size === 1) {
             if (PX.tap && Math.hypot(p.x - p.sx, p.y - p.sy) > 8) PX.tap = false;
             if (!PX.tap) {
@@ -8208,6 +8305,7 @@ function pxBind() {
     const up = e => {
         const p = P.get(e.pointerId); if (!p) return;
         P.delete(e.pointerId);
+        if (PX.stroke) pxStrokeEnd();
         if (P.size === 0) {
             if (PX.tap && e.type === 'pointerup') { const [x, y] = rel(e); pxTapAt(x, y); }
             else if (Math.hypot(PX.vel.x, PX.vel.y) > 0.08 && performance.now() - p.t < 90) pxInertia();
@@ -8226,9 +8324,9 @@ function pxCellAt(x, y) { const v = PX.v, cx = Math.floor((x - v.x) / v.s), cy =
 function pxCoordAt(x, y) { const c = pxCellAt(x, y); byId('pxCoord').textContent = c ? 'x ' + c.x + '  y ' + c.y : 'outside'; }
 function pxTapAt(x, y) {
     const c = pxCellAt(x, y);
-    if (!c) { PX.sel = null; pxSelPlace(); pxPlaceUI(); return; }
+    if (!c) { PX.sel = null; pxSelPlace(); pxStarUI(); pxPlaceUI(); return; }
     if (PX.pick) { pxSetColor(pxCell(c.y * PX.S + c.x)); pxEye(false); return; }
-    PX.sel = c; pxSelPlace(); pxCoordAt(x, y); pxPlaceUI();
+    PX.sel = c; pxSelPlace(); pxCoordAt(x, y); pxStarUI(); pxPlaceUI();
 }
 
 // ---------- color ----------
@@ -8252,6 +8350,7 @@ function pxColorUI(keepInput, redrawSV) {
     byId('pxSVth').style.left = (h[1] * 100) + '%'; byId('pxSVth').style.top = ((1 - h[2]) * 100) + '%';
     byId('pxHueTh').style.left = (h[0] / 360 * 100) + '%';
     if (redrawSV !== false) pxDrawSV();
+    if (typeof pxStarUI === 'function') pxStarUI();
 }
 function pxDrawSV() {
     const c = byId('pxSVcv'), g = c.getContext('2d'), w = c.width, h = c.height;
@@ -8307,22 +8406,138 @@ function pxToast(t) {
 }
 function pxLimiterSave() { pxLS('sc_px_t', JSON.stringify(PX.lim.stamps)); }
 function pxQueueSave() { pxLS('sc_px_q', JSON.stringify(PX.queue.slice(-300))); }
-function pxPlace() {
-    if (!PX.sel) { pxToast('Tap a pixel on the canvas first'); return; }
-    const i = PX.sel.y * PX.S + PX.sel.x, hex = PX.color, now = Date.now();
-    if (pxCell(i) === hex) { pxToast('That pixel already has this color'); return; }
-    if (!PX.lim.take(now)) { pxToast('No pixels left. Next one in ' + Math.ceil(PX.lim.nextIn(now) / 1000) + ' s'); pxTick(); return; }
-    pxSetCell(i, hex); pxDrawSoon(); pxCount(); pxSaveCanvasSoon();
-    PX.queue.push({ i: i, c: hex }); pxQueueSave(); pxLimiterSave(); pxFlushSoon();
-    pxRecentAdd(hex); pxRipple(PX.sel.x, PX.sel.y, hex); pxTick();
+function pxAfterPaint(rec, hex) {
+    pxDrawSoon(); pxCount(); pxSaveCanvasSoon(); pxQueueSave(); pxLimiterSave(); pxFlushSoon();
+    pxRecentAdd(hex); pxUndoPush(rec); pxTick();
 }
-function pxRipple(cx, cy, hex) {
+// paints one cell and books it; returns true (painted), false (nothing to do) or 'dry' (no pixels left)
+function pxPaintCell(i, hex, now, rec) {
+    const prev = pxCell(i); if (prev === hex) return false;
+    if (!PX.lim.take(now)) return 'dry';
+    pxSetCell(i, hex);
+    const item = { t: 'p', i: i, c: hex }; PX.queue.push(item);
+    rec.cells.push({ i: i, prev: prev, now: hex }); rec.items.push(item);
+    return true;
+}
+function pxPlace() {
+    if (PX.tool === 'brush') { pxToast('Drag on the canvas to paint'); return; }
+    if (PX.tool === 'bomb') { pxBomb(); return; }
+    if (!PX.sel) { pxToast('Tap a pixel on the canvas first'); return; }
+    const i = PX.sel.y * PX.S + PX.sel.x, hex = PX.color, now = Date.now(), rec = { k: 'p', cells: [], items: [] };
+    if (pxCell(i) === hex) { pxToast('That pixel already has this color'); return; }
+    if (pxPaintCell(i, hex, now, rec) === 'dry') { pxToast('No pixels left. Next one in ' + Math.ceil(PX.lim.nextIn(now) / 1000) + ' s'); pxTick(); return; }
+    pxAfterPaint(rec, hex); pxRipple(PX.sel.x, PX.sel.y, hex);
+}
+function pxRipple(cx, cy, hex, big) {
     const v = PX.v, r = document.createElement('i');
-    r.className = 'px-rip'; r.style.left = (v.x + (cx + 0.5) * v.s) + 'px'; r.style.top = (v.y + (cy + 0.5) * v.s) + 'px'; r.style.setProperty('--c', '#' + hex);
+    r.className = 'px-rip' + (big ? ' big' : ''); r.style.left = (v.x + (cx + 0.5) * v.s) + 'px'; r.style.top = (v.y + (cy + 0.5) * v.s) + 'px'; r.style.setProperty('--c', '#' + hex);
     byId('pxView').appendChild(r); r.addEventListener('animationend', () => r.remove());
+}
+
+// ---------- brush: drag to paint (every new pixel still costs one of your 25) ----------
+function pxStrokeStart(c) {
+    PX.stroke = { rec: { k: 'p', cells: [], items: [] }, last: null, dry: false };
+    pxStrokeTo(c); pxDrawSoon();
+}
+function pxStrokeTo(c) {
+    const st = PX.stroke; if (!st) return;
+    if (!c) { st.last = null; return; }
+    let x = c.x, y = c.y;
+    const pts = [];
+    if (!st.last) pts.push([x, y]);
+    else {   // Bresenham from the last cell so fast drags leave no gaps
+        let x0 = st.last.x, y0 = st.last.y; const dx = Math.abs(x - x0), dy = -Math.abs(y - y0), sx = x0 < x ? 1 : -1, sy = y0 < y ? 1 : -1; let err = dx + dy;
+        while (!(x0 === x && y0 === y)) { const e2 = 2 * err; if (e2 >= dy) { err += dy; x0 += sx; } if (e2 <= dx) { err += dx; y0 += sy; } pts.push([x0, y0]); }
+    }
+    st.last = { x: x, y: y };
+    if (st.dry) return;
+    const now = Date.now();
+    for (const q of pts) {
+        const r = pxPaintCell(q[1] * PX.S + q[0], PX.color, now, st.rec);
+        if (r === 'dry') { st.dry = true; pxToast('No pixels left. Next one in ' + Math.ceil(PX.lim.nextIn(now) / 1000) + ' s'); break; }
+    }
+}
+function pxStrokeEnd() {
+    const st = PX.stroke; PX.stroke = null; if (!st) return;
+    if (st.rec.cells.length) pxAfterPaint(st.rec, PX.color); else pxTick();
+}
+
+// ---------- bomb: a 7x7 star, 10 per day, not taken from the 25 per minute ----------
+function pxBombLeft() { return Math.max(0, PixelCore.BOMBS - PX.bombUsed); }
+function pxBombSave() { pxLS('sc_px_b', JSON.stringify({ d: PX.day, n: PX.bombUsed })); }
+function pxBomb() {
+    if (!PX.sel) { pxToast('Tap where the bomb should go'); return; }
+    if (pxBombLeft() <= 0) { pxToast('No bombs left today. They refill at 00:00 WIB'); return; }
+    const idx = PX.sel.y * PX.S + PX.sel.x, hex = PX.color, rec = { k: 'b', cells: [], items: [] };
+    for (const i of PixelCore.starCells(idx)) { const prev = pxCell(i); if (prev !== hex) rec.cells.push({ i: i, prev: prev, now: hex }); }
+    if (!rec.cells.length) { pxToast('Those pixels already have this color'); return; }
+    for (const c of rec.cells) pxSetCell(c.i, hex);
+    const item = { t: 'b', i: idx, c: hex }; PX.queue.push(item); rec.items.push(item);
+    PX.bombUsed++; pxBombSave();
+    pxDrawSoon(); pxCount(); pxSaveCanvasSoon(); pxQueueSave(); pxFlushSoon(); pxRecentAdd(hex); pxUndoPush(rec); pxTick();
+    pxRipple(PX.sel.x, PX.sel.y, hex, true); setTimeout(() => pxRipple(PX.sel.x, PX.sel.y, hex, true), 140);
+    const st = byId('pxStar'); st.classList.remove('boom'); void st.offsetWidth; st.classList.add('boom');
+}
+function pxStarUI() {
+    const st = byId('pxStar'); if (!st) return;
+    if (PX.tool !== 'bomb' || !PX.sel) { st.hidden = true; return; }
+    const g = st.getContext('2d'), rgb = PixelCore.hexToRgb(PX.color);
+    g.clearRect(0, 0, 7, 7); g.fillStyle = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 7; c++) {
+        const x = PX.sel.x + c - 3, y = PX.sel.y + r - 3;
+        if (PixelCore.STAR[r][c] === '#' && x >= 0 && y >= 0 && x < PX.S && y < PX.S) g.fillRect(c, r, 1, 1);
+    }
+    st.style.transform = 'translate(' + (PX.sel.x - 3) + 'px,' + (PX.sel.y - 3) + 'px)'; st.hidden = false;
+}
+
+// ---------- undo (yours only, and only while this screen stays open) ----------
+function pxUndoPush(rec) { PX.undo.push(rec); if (PX.undo.length > 60) PX.undo.shift(); pxUndoUI(); }
+function pxUndoUI() {
+    const b = byId('pxUndoBtn'), n = byId('pxUndoN'); if (!b) return;
+    b.classList.toggle('dead', !PX.undo.length); n.textContent = PX.undo.length ? String(PX.undo.length) : '';
+}
+function pxUndo() {
+    const rec = PX.undo.pop(); pxUndoUI();
+    if (!rec) { pxToast('Nothing to undo'); return; }
+    const back = [];   // cells that still show my color, so I do not wipe someone else's work
+    rec.cells.forEach((c, n) => { if (pxCell(c.i) === c.now) { pxSetCell(c.i, c.prev); back.push({ c: c, item: rec.items[rec.k === 'b' ? 0 : n] }); } });
+    if (!back.length) { pxToast('Someone painted over it, nothing to undo'); return; }
+    const send = [];
+    for (const b of back) {
+        const q = PX.queue.indexOf(b.item);
+        if (rec.k === 'p') { if (q >= 0 && !PX.inflight.has(b.item)) PX.queue.splice(q, 1); else send.push({ i: b.c.i, c: b.c.prev }); }
+        else send.push({ i: b.c.i, c: b.c.prev });
+    }
+    if (rec.k === 'p') {
+        PX.lim.refund(back.length); pxLimiterSave();
+        for (let k = 0; k < send.length; k += PixelCore.MAX_BATCH) PX.queue.push({ t: 'up', cells: send.slice(k, k + PixelCore.MAX_BATCH) });
+    } else {
+        PX.bombUsed = Math.max(0, PX.bombUsed - 1); pxBombSave();
+        const q = PX.queue.indexOf(rec.items[0]);
+        if (q >= 0 && !PX.inflight.has(rec.items[0])) PX.queue.splice(q, 1); else PX.queue.push({ t: 'ub', cells: send });
+    }
+    pxQueueSave(); pxFlushSoon(); pxDrawSoon(); pxCount(); pxSaveCanvasSoon(); pxTick();
+    pxToast(rec.k === 'b' ? 'Bomb taken back' : back.length === 1 ? 'Pixel taken back' : back.length + ' pixels taken back');
+}
+
+// ---------- tools ----------
+function pxTool(t) {
+    if (PX.stroke) pxStrokeEnd();
+    PX.tool = t; pxEye(false);
+    document.querySelectorAll('#pxSeg button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+    byId('pxView').classList.toggle('brush', t === 'brush');
+    pxStarUI(); pxPlaceUI();
+    if (t === 'brush') pxToast('Drag to paint. Two fingers move and zoom.');
 }
 function pxPlaceUI() {
     const b = byId('pxPlace'), t = byId('pxPlaceTxt'), now = Date.now(), left = PX.lim.left(now);
+    if (PX.tool === 'brush') { b.classList.add('dead'); t.textContent = left > 0 ? 'Drag on the canvas to paint' : 'Next pixel in ' + Math.ceil(PX.lim.nextIn(now) / 1000) + ' s'; return; }
+    if (PX.tool === 'bomb') {
+        const bl = pxBombLeft();
+        if (bl <= 0) { b.classList.add('dead'); t.textContent = 'No bombs left today'; }
+        else { b.classList.remove('dead'); t.textContent = PX.sel ? 'Bomb at ' + PX.sel.x + ', ' + PX.sel.y : 'Tap where the bomb goes'; }
+        return;
+    }
     if (left <= 0) { b.classList.add('dead'); t.textContent = 'Next pixel in ' + Math.ceil(PX.lim.nextIn(now) / 1000) + ' s'; }
     else { b.classList.remove('dead'); t.textContent = PX.sel ? 'Place at ' + PX.sel.x + ', ' + PX.sel.y : 'Tap a pixel to start'; }
 }
@@ -8335,6 +8550,8 @@ function pxTick() {
     byId('pxRingN').textContent = left;
     byId('pxRingFg').style.strokeDashoffset = String(100 - (left / n) * 100);
     byId('pxRing').classList.toggle('empty', left === 0);
+    const bn = byId('pxBombN'); if (bn) bn.textContent = pxBombLeft();
+    const bt = byId('pxBombTxt'); if (bt) bt.textContent = pxBombLeft() + ' of ' + PixelCore.BOMBS + ' bombs left';
     const t = byId('pxLeftTxt');
     if (t) t.textContent = left + ' of ' + n + ' left' + (left < n ? ' - +1 in ' + Math.ceil(PX.lim.nextIn(now) / 1000 || 0) + ' s' : '');
     if (PX.open) pxPlaceUI();
@@ -8346,16 +8563,25 @@ function pxNetUI() {
     const n = byId('pxNet'); if (n) { n.classList.toggle('on', on); n.lastChild.textContent = on ? 'Live' : (navigator.onLine === false ? 'Offline' : 'Connecting'); }
     const l = byId('pxLive'); if (l) { l.classList.toggle('on', on); l.querySelector('b').textContent = on ? 'Live' : (navigator.onLine === false ? 'Offline' : 'Saved here'); }
 }
+function pxApplyItem(q) {
+    if (q.t === 'b') PixelCore.starCells(q.i).forEach(i => pxSetCell(i, q.c));
+    else if (q.t === 'up' || q.t === 'ub') q.cells.forEach(x => pxSetCell(x.i, x.c));
+    else pxSetCell(q.i, q.c);
+}
 function pxIncoming(data) {
     let j; try { j = JSON.parse(data); } catch (e) { return; }
     if (!j || j.event !== 'message' || !j.id || PX.seen.has(j.id)) return;
     PX.seen.add(j.id); PX.lastId = j.id;
     if (pxDay((j.time || 0) * 1000) !== PX.day) return;     // yesterday's pixels are gone
-    const d = PixelCore.decode(j.message); if (!d) return;
-    const n = PX.gate.accept(d.uid, (j.time || 0) * 1000, d.pixels.length);
-    if (!n) return;
-    for (let k = 0; k < n; k++) pxSetCell(d.pixels[k].i, d.pixels[k].c);
-    for (const q of PX.queue) pxSetCell(q.i, q.c);     // my not-yet-sent pixels stay on top
+    const d = PixelCore.decodeAny(j.message); if (!d) return;
+    const tm = (j.time || 0) * 1000; let list = null;
+    if (d.t === 'px') { const n = PX.gate.accept(d.uid, tm, d.pixels.length); if (n) list = d.pixels.slice(0, n); }
+    else if (d.t === 'bomb') { if (PX.bgate.accept(d.uid, tm, 1)) list = PixelCore.starCells(d.pixels[0].i).map(i => ({ i: i, c: d.pixels[0].c })); }
+    else if (d.kind === 'p') { const n = PX.gate.refund(d.uid, tm, d.pixels.length); if (n) list = d.pixels.slice(0, n); }
+    else if (PX.bgate.refund(d.uid, tm, 1)) list = d.pixels.slice(0, 25);
+    if (!list) return;
+    for (const q of list) pxSetCell(q.i, q.c);
+    for (const q of PX.queue) pxApplyItem(q);     // my not-yet-sent actions stay on top
     PX.incomingDirty = true;
     if (!PX.incT) PX.incT = setTimeout(() => { PX.incT = 0; pxDrawSoon(); pxCount(); pxSaveCanvasSoon(); }, 120);
 }
@@ -8379,15 +8605,20 @@ async function pxFlush() {
     if (PX.sending || !PX.queue.length) return;
     if (navigator.onLine === false) { pxFlushSoon(8000); return; }
     PX.sending = true;
-    const batch = PX.queue.slice(0, PixelCore.MAX_BATCH);
+    const first = PX.queue[0]; let batch, body;
+    if (first.t === 'b') { batch = [first]; body = PixelCore.encodeBomb(PX.uid, first.i, first.c); }
+    else if (first.t === 'up' || first.t === 'ub') { batch = [first]; body = PixelCore.encodeUndo(PX.uid, first.t === 'up' ? 'p' : 'b', first.cells); }
+    else { batch = []; for (const q of PX.queue) { if (q.t !== 'p' || batch.length >= PixelCore.MAX_BATCH) break; batch.push(q); } body = PixelCore.encode(PX.uid, batch); }
+    PX.inflight = new Set(batch);
     let ok = false;
     try {
         const ac = new AbortController(), t = setTimeout(() => ac.abort(), 8000);
-        const r = await fetch(PX_URL, { method: 'POST', body: PixelCore.encode(PX.uid, batch), signal: ac.signal });
+        const r = await fetch(PX_URL, { method: 'POST', body: body, signal: ac.signal });
         clearTimeout(t); ok = r.ok;
     } catch (e) { ok = false; }
+    PX.inflight = new Set();
     PX.sending = false;
-    if (ok) { PX.queue.splice(0, batch.length); PX.backoff = 0; pxQueueSave(); if (PX.queue.length) pxFlushSoon(600); }
+    if (ok) { PX.queue = PX.queue.filter(q => !batch.includes(q)); PX.backoff = 0; pxQueueSave(); if (PX.queue.length) pxFlushSoon(250); }
     else { PX.backoff = Math.min(60000, (PX.backoff || 2000) * 2); pxFlushSoon(PX.backoff); }
 }
 
@@ -8402,6 +8633,8 @@ function pxOpen() {
 }
 function pxClose(fromPop) {
     const el = byId('pxFull');
+    if (PX.stroke) pxStrokeEnd();
+    PX.undo = []; pxUndoUI();      // leaving the wall makes your moves final
     PX.open = false; el.classList.remove('show'); pxSheetToggle(false); pxEye(false);
     try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {}); else if (document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen(); } catch (e) { /* ignore */ }
     if (PX.hist && !fromPop) { PX.hist = false; try { history.back(); } catch (e) { /* ignore */ } }
@@ -8411,27 +8644,29 @@ function pxClose(fromPop) {
 }
 function pxDayCheck() {
     PX.day = pxDay(Date.now());
-    if (pxLS('sc_px_d') !== String(PX.day)) { pxLS('sc_px_d', String(PX.day)); try { localStorage.removeItem('sc_px'); localStorage.removeItem('sc_px_q'); } catch (e) { /* ignore */ } }
+    if (pxLS('sc_px_d') !== String(PX.day)) { pxLS('sc_px_d', String(PX.day)); try { localStorage.removeItem('sc_px'); localStorage.removeItem('sc_px_q'); localStorage.removeItem('sc_px_b'); } catch (e) { /* ignore */ } }
 }
 function pxNewDay() {
     pxDayCheck();
     const d = PX.img.data;
     for (let i = 0; i < PX.S * PX.S; i++) { d[i * 4] = PX_BG[0]; d[i * 4 + 1] = PX_BG[1]; d[i * 4 + 2] = PX_BG[2]; d[i * 4 + 3] = 255; }
-    PX.queue = []; PX.sel = PX.open ? PX.sel : null; PX.gate = new PixelCore.Gate();
+    PX.queue = []; PX.undo = []; PX.bombUsed = 0; PX.sel = PX.open ? PX.sel : null; PX.gate = new PixelCore.Gate(); PX.bgate = new PixelCore.Gate(PixelCore.BOMBS, PixelCore.DAY);
+    pxUndoUI(); pxStarUI(); pxPlaceUI();
     pxCount(); pxDrawSoon(); pxSelPlace();
     if (PX.open) pxToast('New day. The wall is empty again');
 }
 function initPixel() {
     pxDayCheck();
-    PX.gate = new PixelCore.Gate();
+    PX.gate = new PixelCore.Gate(); PX.bgate = new PixelCore.Gate(PixelCore.BOMBS, PixelCore.DAY);
+    try { const bj = JSON.parse(pxLS('sc_px_b') || 'null'); if (bj && bj.d === PX.day && Number.isInteger(bj.n)) PX.bombUsed = Math.max(0, Math.min(PixelCore.BOMBS, bj.n)); } catch (e) { PX.bombUsed = 0; }
     PX.uid = pxLS('sc_px_u');
     if (!PX.uid || !/^[a-z0-9]{4,16}$/.test(PX.uid)) { PX.uid = Math.random().toString(36).slice(2, 10).padEnd(8, 'x'); pxLS('sc_px_u', PX.uid); }
     let st = []; try { st = JSON.parse(pxLS('sc_px_t') || '[]'); } catch (e) { st = []; }
     PX.lim = new PixelCore.Limiter(PixelCore.LIMIT, PixelCore.WINDOW, Array.isArray(st) ? st.filter(x => typeof x === 'number') : []);
-    try { const q = JSON.parse(pxLS('sc_px_q') || '[]'); if (Array.isArray(q)) PX.queue = q.filter(x => x && Number.isInteger(x.i) && /^[0-9a-f]{6}$/.test(x.c)); } catch (e) { PX.queue = []; }
+    try { const q = JSON.parse(pxLS('sc_px_q') || '[]'); if (Array.isArray(q)) PX.queue = q.map(x => (x && !x.t && !x.cells) ? { t: 'p', i: x.i, c: x.c } : x).filter(x => x && (((x.t === 'p' || x.t === 'b') && Number.isInteger(x.i) && x.i >= 0 && x.i < 10000 && /^[0-9a-f]{6}$/.test(x.c)) || ((x.t === 'up' || x.t === 'ub') && Array.isArray(x.cells) && x.cells.length > 0 && x.cells.every(k => k && Number.isInteger(k.i) && /^[0-9a-f]{6}$/.test(k.c))))); } catch (e) { PX.queue = []; }
     try { const r = JSON.parse(pxLS('sc_px_rc') || '[]'); if (Array.isArray(r)) PX.recent = r.filter(h => /^[0-9a-f]{6}$/.test(h)).slice(0, 10); } catch (e) { PX.recent = []; }
     const c = pxLS('sc_px_c'); if (c && /^[0-9a-f]{6}$/.test(c)) { const rgb = PixelCore.hexToRgb(c); PX.color = c; PX.hsv = PixelCore.rgbToHsv(rgb[0], rgb[1], rgb[2]); }
-    pxLoadCanvas(); pxBindPicker(); pxRecentUI(); pxColorUI(false, true); pxBind(); pxDrawSoon(); pxNetUI(); pxTick();
+    pxLoadCanvas(); pxBindPicker(); pxRecentUI(); pxColorUI(false, true); pxBind(); pxDrawSoon(); pxNetUI(); pxUndoUI(); pxTick();
     setInterval(() => { if (PX.open || curTab === 'about') pxTick(); }, 500);
     document.addEventListener('visibilitychange', pxSync);
     window.addEventListener('online', () => { pxSync(); if (PX.queue.length) pxFlushSoon(500); });
