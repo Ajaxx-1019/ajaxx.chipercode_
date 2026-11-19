@@ -652,88 +652,6 @@ h2, h3, h4 { font-family: var(--sans); letter-spacing: -0.005em; }
     gap: 30px;
     margin-top: 15px;
 }
-.mole-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin: 20px 0;
-}
-.mole-hole {
-    aspect-ratio: 1;
-    background: rgba(var(--paper-rgb), 0.06);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border: 2px solid var(--stroke);
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
-    user-select: none;
-    -webkit-user-select: none;
-    color: var(--accent);
-}
-.mole-hole svg { width: 70%; height: 70%; overflow: visible; }
-.mole-hole.active {
-    background: rgba(var(--bad-rgb), 0.2);
-    border-color: var(--bad);
-    color: var(--bad);
-    transform: scale(0.95);
-    box-shadow: none;
-}
-.mole-hole.hit {
-    background: rgba(var(--good-rgb), 0.22);
-    border-color: var(--good);
-    color: var(--good);
-    transform: scale(1.1);
-}
-.mole-orb .orb-core { animation: orbBeat 0.8s ease-in-out infinite alternate; transform-origin: 24px 24px; }
-.mole-orb .orb-ring { transform-origin: 24px 24px; animation: ringPulse 1s ease-out infinite; }
-.mole-burst .ray { transform-origin: 24px 24px; animation: burst 0.3s ease-out forwards; }
-@keyframes orbBeat { from { transform: scale(0.85); } to { transform: scale(1.1); } }
-@keyframes burst { from { transform: scale(0.3); opacity: 1; } to { transform: scale(1.3); opacity: 0.2; } }
-.mole-timer {
-    width: 100%;
-    height: 10px;
-    background: rgba(var(--paper-rgb), 0.08);
-    border-radius: 5px;
-    margin: 15px 0;
-    overflow: hidden;
-}
-.mole-timer-bar {
-    height: 100%;
-    background: var(--accent);
-    width: 100%;
-    transform-origin: left center;
-    transition: transform 0.1s linear;
-}
-.reaction-box {
-    width: 100%;
-    height: 150px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 15px;
-    user-select: none;
-    -webkit-user-select: none;
-    border: 1px solid var(--stroke);
-}
-.reaction-box.waiting {
-    background: rgba(var(--bad-rgb), 0.75);
-    color: white;
-}
-.reaction-box.ready {
-    background: rgba(var(--good-rgb), 0.8);
-    color: white;
-    box-shadow: none;
-}
-.reaction-box.result {
-    background: rgba(var(--accent-rgb), 0.75);
-    color: white;
-}
 .color-picker-container {
     display: flex;
     flex-direction: column;
@@ -803,46 +721,6 @@ h2, h3, h4 { font-family: var(--sans); letter-spacing: -0.005em; }
     padding-bottom: 10px;
 }
 .converter-arrow .ico { width: 26px; height: 26px; }
-.quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
-}
-.quiz-option {
-    background: rgba(var(--paper-rgb), 0.06);
-    border: 2px solid var(--stroke);
-    border-radius: 12px;
-    padding: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
-    text-align: left;
-    font-size: 1em;
-    font-family: inherit;
-    color: var(--text);
-    user-select: none;
-    -webkit-user-select: none;
-}
-.quiz-option:hover {
-    border-color: var(--accent);
-    background: rgba(var(--paper-rgb), 0.12);
-}
-.quiz-option.correct {
-    background: rgba(var(--good-rgb), 0.2);
-    border-color: var(--good);
-    color: var(--good);
-}
-.quiz-option.wrong {
-    background: rgba(var(--bad-rgb), 0.2);
-    border-color: var(--bad);
-    color: var(--bad);
-}
-.quiz-stats {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 15px;
-}
 
 /* ================= HOME ================= */
 /* #homePage (the Cipher tab) is shown through .tab-page.active */
@@ -2161,16 +2039,220 @@ html.lite .glass-card { -webkit-backdrop-filter: none; backdrop-filter: none; ba
 @keyframes scToolsOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.98); } }
 @keyframes scFadeOut { from { opacity: 1; } to { opacity: 0; } }
 .close-btn:active, .tool-item:active, .tool-btn:active, .mode-btn:active, .copy-btn:active, .download-small-btn:active,
-.barcode-type-btn:active, .pigpen-key-btn:active, .quiz-option:active { transform: scale(0.97); }
+.barcode-type-btn:active, .pigpen-key-btn:active { transform: scale(0.97); }
 @media (prefers-reduced-motion: reduce) {
     .tools-content, .tools-modal.closing, .tools-modal.closing .tools-content { animation-duration: 0.01s; }
 }
+
+/* ================= TURN 6: STEGANOGRAPHY ================= */
+.seg.n3 { grid-template-columns: repeat(3, 1fr); }
+.seg.n3 .seg-ind { width: calc((100% - 8px) / 3); }
+.st-opt { font-family: var(--mono); font-size: 0.62em; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-left: 8px; font-weight: 500; }
+#stegoPage h3 { margin: 18px 0 8px; }
+#stegoPage .sig-pane > h3:first-child { margin-top: 0; }
+.st-mini { margin: -2px 0 14px; padding: 10px 16px; font-size: 0.88em; width: auto; }
+.st-prev { display: block; width: 100%; max-height: 240px; object-fit: contain; border-radius: 14px; margin: 0 0 14px; background: rgba(var(--ink-rgb), 0.5); border: 1px solid rgba(var(--paper-rgb), 0.08); animation: fadeOnly 0.4s ease; }
+.st-audio { width: 100%; margin: 0 0 14px; height: 40px; }
+.st-bpc { margin: 4px 0 6px; }
+.st-bpc label { display: block; font-family: var(--mono); font-size: 0.64em; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.st-bpc .chips { margin-bottom: 8px; }
+.st-kind { margin-bottom: 12px; }
+.st-pw { position: relative; margin-bottom: 8px; }
+.st-pw input { width: 100%; padding-right: 54px; }
+.st-eye { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 12px; border: 0; background: none; color: var(--muted); cursor: pointer; display: grid; place-items: center; transition: color 0.25s ease, transform 0.25s ease; }
+.st-eye svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.st-eye.on { color: var(--accent); }
+.st-eye:active { transform: translateY(-50%) scale(0.92); }
+.st-hint { color: var(--muted); font-size: 0.8em; line-height: 1.55; margin: 0 2px 14px; }
+.st-cap { margin: 4px 0 12px; padding: 12px 14px; border-radius: 14px; background: rgba(var(--ink-rgb), 0.38); border: 1px solid rgba(var(--paper-rgb), 0.07); }
+.st-cap-top { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 0.72em; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
+.st-cap-top b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.st-cap-bar { height: 6px; border-radius: 6px; background: rgba(var(--paper-rgb), 0.08); overflow: hidden; }
+.st-cap-bar i { display: block; height: 100%; width: 100%; border-radius: 6px; background: var(--accent); transform-origin: left center; transform: scaleX(0); transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s ease; }
+.st-cap.over .st-cap-bar i { background: var(--bad); }
+.st-cap.over .st-cap-top b { color: var(--bad); }
+.st-out { margin-top: 18px; }
+.st-media { position: relative; border-radius: 14px; overflow: hidden; margin-bottom: 14px; }
+.st-media img, .st-media audio { display: block; width: 100%; }
+.st-media img { max-height: 280px; object-fit: contain; background: rgba(var(--ink-rgb), 0.5); border-radius: 14px; }
+.st-media textarea { width: 100%; min-height: 110px; }
+.st-sweep { position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.95), transparent); box-shadow: 0 0 18px 4px rgba(var(--accent-rgb), 0.5); opacity: 0; pointer-events: none; will-change: transform; }
+.st-media.scan .st-sweep { animation: stSweep 0.9s cubic-bezier(0.4, 0, 0.2, 1) 1; }
+@keyframes stSweep { 0% { opacity: 1; transform: translate3d(0, 0, 0); } 92% { opacity: 1; } 100% { opacity: 0; transform: translate3d(0, 260px, 0); } }
+.st-verify { font-size: 0.84em; margin: 12px 2px 4px; min-height: 1.3em; color: var(--muted); }
+.st-verify.ok { color: var(--good); }
+.st-verify.bad { color: var(--warn); }
+.st-logtop { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.st-logtop h3 { margin: 0 !important; }
+.st-vt { display: inline-flex; padding: 3px; border-radius: 12px; background: rgba(var(--ink-rgb), 0.45); border: 1px solid rgba(var(--paper-rgb), 0.09); }
+.st-vt button { border: 0; background: none; color: var(--muted); font-family: inherit; font-weight: 600; font-size: 0.8em; padding: 7px 14px; border-radius: 9px; cursor: pointer; transition: background-color 0.25s ease, color 0.25s ease; }
+.st-vt button.active { background: rgba(var(--accent-rgb), 0.22); color: var(--accent); }
+.st-sum { color: var(--muted); font-size: 0.84em; line-height: 1.6; margin: 8px 0 12px; }
+.st-sum b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.st-log { display: grid; gap: 6px; max-height: 440px; overflow-y: auto; overscroll-behavior: contain; padding-right: 2px; }
+.st-row { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 12px; background: rgba(var(--ink-rgb), 0.38); border: 1px solid rgba(var(--paper-rgb), 0.06); font-family: var(--mono); font-size: 0.72em; color: var(--muted); animation: stRow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(var(--r, 0) * 18ms); }
+@keyframes stRow { from { opacity: 0; transform: translate3d(0, 8px, 0); } to { opacity: 1; transform: none; } }
+.st-row .n { color: var(--accent); min-width: 2.2em; font-variant-numeric: tabular-nums; }
+.st-row .v { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; color: var(--text); min-width: 0; }
+.st-row .pos { color: var(--muted); }
+.st-sw { display: inline-block; width: 16px; height: 16px; border-radius: 5px; border: 1px solid rgba(var(--paper-rgb), 0.25); flex: none; }
+.st-arrow { color: var(--accent); }
+.st-d { color: var(--warn); }
+.st-mapwrap { animation: fadeOnly 0.4s ease; }
+.st-heat { display: block; width: 100%; border-radius: 14px; background: rgba(var(--ink-rgb), 0.5); border: 1px solid rgba(var(--paper-rgb), 0.08); }
+.st-legend { display: flex; gap: 16px; margin-top: 8px; font-family: var(--mono); font-size: 0.66em; letter-spacing: 0.08em; color: var(--muted); }
+.st-legend i { display: inline-block; width: 22px; height: 8px; border-radius: 4px; margin-right: 6px; vertical-align: middle; }
+.st-legend .lo { background: rgba(var(--paper-rgb), 0.25); }
+.st-legend .hi { background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.35), rgb(var(--accent-rgb))); }
+.st-more { margin-top: 10px; width: auto; padding: 10px 18px; }
+.st-dots { display: flex; flex-wrap: wrap; gap: 3px; padding: 4px 2px; }
+.st-dots i { width: 9px; height: 9px; border-radius: 3px; display: block; }
+.st-dots .z0 { background: rgb(var(--accent-rgb)); }
+.st-dots .z1 { background: var(--warn); }
+.st-dots .z2 { background: var(--good); }
+.st-dots .z3 { background: rgba(var(--paper-rgb), 0.75); }
+.st-hex { font-family: var(--mono); font-size: 0.72em; line-height: 1.7; word-break: break-all; padding: 12px 14px; border-radius: 14px; background: rgba(var(--ink-rgb), 0.5); border: 1px solid rgba(var(--paper-rgb), 0.07); color: var(--muted); }
+.st-hex .c { color: var(--muted); }
+.st-hex .h { color: rgb(var(--accent-rgb)); }
+.st-hex .f { color: var(--good); }
+.st-vis { padding: 14px; border-radius: 14px; background: rgba(var(--ink-rgb), 0.5); border: 1px solid rgba(var(--paper-rgb), 0.07); line-height: 1.7; word-break: break-word; }
+.st-vis mark { background: rgba(var(--accent-rgb), 0.28); color: var(--accent); border-radius: 6px; padding: 1px 6px; font-family: var(--mono); font-size: 0.8em; }
+.st-ares { display: none; margin-top: 16px; }
+.st-ares.show { display: block; animation: slideUp 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.st-verdict { padding: 14px 16px; border-radius: 14px; margin-bottom: 14px; font-weight: 600; background: rgba(var(--ink-rgb), 0.45); border: 1px solid rgba(var(--paper-rgb), 0.08); line-height: 1.5; }
+.st-verdict small { display: block; font-weight: 400; color: var(--muted); margin-top: 4px; font-size: 0.86em; }
+.st-verdict.hit { border-color: rgba(var(--accent-rgb), 0.6); background: rgba(var(--accent-rgb), 0.1); color: var(--accent); }
+.st-verdict.clean { border-color: rgba(var(--paper-rgb), 0.12); }
+.st-planes { margin-bottom: 12px; }
+.st-planes canvas { display: block; width: 100%; border-radius: 14px; background: #000; border: 1px solid rgba(var(--paper-rgb), 0.08); }
+.st-pl { margin-bottom: 14px; }
+
+/* shared look for the small stat grids used by stego */
+#stStats, #stAStats { margin-top: 2px; }
+#stegoPage [hidden] { display: none !important; }
+.st-pw input[type="password"], .st-pw input[type="text"] { width: 100%; min-height: auto; padding: 15px 54px 15px 15px; font-size: 1em; font-family: inherit; border: 1px solid var(--stroke); border-radius: 14px; background: var(--field); color: var(--text); transition: border-color 0.3s ease, box-shadow 0.3s ease; -webkit-appearance: none; appearance: none; }
+.st-pw input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12); }
+#stegoPage .header h1 { font-size: clamp(1.3em, 5.6vw, 2em); }
+
+/* ================= TURN 6: SETTINGS ================= */
+html.no-orbs .bg-fx::before { display: none; }
+html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-duration: 0.001s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.001s !important; scroll-behavior: auto !important; }
+.set-block { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(var(--paper-rgb), 0.07); color: var(--muted); font-size: 0.9em; }
+.set-block b { color: var(--text); display: block; font-size: 0.98em; margin-bottom: 10px; }
+.set-block .chips { margin-bottom: 0; }
+#settingsCard > .switch-row:first-of-type { margin-top: 0; padding-top: 0; border-top: 0; }
+.swatches { display: flex; flex-wrap: wrap; gap: 12px; }
+.sw-dot { position: relative; width: 38px; height: 38px; border-radius: 50%; border: 0; background: none; padding: 0; cursor: pointer; transition: transform 0.3s cubic-bezier(0.3, 1.4, 0.45, 1); }
+.sw-dot i { position: absolute; inset: 4px; border-radius: 50%; background: var(--c, var(--accent)); box-shadow: inset 0 0 0 1px rgba(var(--paper-rgb), 0.25); }
+.sw-dot.theme i { background: linear-gradient(135deg, #d97757 50%, #38bdf8 50%); }
+.sw-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--text); opacity: 0; transform: scale(0.8); transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.3, 1.4, 0.45, 1); }
+.sw-dot.active::after { opacity: 1; transform: none; }
+.sw-dot:active { transform: scale(0.9); }
+.set-reset { margin-top: 18px; width: auto; padding: 10px 18px; }
+#fpsMeter { position: fixed; top: calc(8px + env(safe-area-inset-top, 0px)); left: 10px; z-index: 10001; padding: 5px 10px; border-radius: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--good); background: rgba(var(--ink-rgb), 0.82); border: 1px solid rgba(var(--paper-rgb), 0.14); pointer-events: none; font-variant-numeric: tabular-nums; }
+#fpsMeter[data-q="mid"] { color: var(--warn); }
+#fpsMeter[data-q="low"] { color: var(--bad); }
+#fpsMeter[hidden] { display: none; }
+
+
+/* ---------- Pixel Wall ---------- */
+#pixelCard .px-row { display: flex; gap: 16px; align-items: center; margin: 14px 0 16px; }
+.px-thumb { position: relative; flex: 0 0 auto; width: 124px; height: 124px; padding: 0; border: 1px solid rgba(var(--paper-rgb), 0.16); border-radius: 14px; overflow: hidden; background: #f6f1e9; cursor: pointer; transition: transform 0.3s cubic-bezier(0.3, 1.4, 0.45, 1), border-color 0.25s ease; }
+.px-thumb canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.px-thumb:hover { border-color: rgba(var(--accent-rgb), 0.6); }
+.px-thumb:active { transform: scale(0.96); }
+.px-stats { display: flex; flex-direction: column; gap: 8px; min-width: 0; font-size: 0.9em; color: var(--muted); }
+.px-stats b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.px-live { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.px-live i, .px-net i { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); flex: none; }
+.px-live.on i, .px-net.on i { background: var(--good); animation: pxBeat 1.8s ease-in-out infinite; }
+@keyframes pxBeat { 0%, 100% { box-shadow: 0 0 0 0 rgba(var(--good-rgb), 0.5); } 50% { box-shadow: 0 0 0 6px rgba(var(--good-rgb), 0); } }
+#pixelCard .btn-ghost { width: 100%; }
+
+#pxFull { position: fixed; inset: 0; z-index: 10000; display: flex; flex-direction: column; background: rgb(var(--bg-rgb)); color: var(--text); opacity: 0; transform: scale(1.015); transition: opacity 0.26s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1); touch-action: none; -webkit-user-select: none; user-select: none; }
+#pxFull[hidden] { display: none; }
+#pxFull.show { opacity: 1; transform: none; }
+.px-top { flex: none; display: flex; align-items: center; gap: 12px; padding: calc(10px + env(safe-area-inset-top, 0px)) calc(14px + env(safe-area-inset-right, 0px)) 10px calc(14px + env(safe-area-inset-left, 0px)); border-bottom: 1px solid rgba(var(--paper-rgb), 0.08); }
+.px-x { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(var(--paper-rgb), 0.14); background: rgba(var(--paper-rgb), 0.05); color: var(--text); cursor: pointer; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.45, 1), background 0.2s ease; }
+.px-x:active { transform: scale(0.9); }
+.px-x svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.px-ttl { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.px-ttl b { font-size: 1.02em; font-weight: 600; letter-spacing: 0.01em; }
+.px-net { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+.px-ring { position: relative; width: 46px; height: 46px; flex: none; }
+.px-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.px-ring circle { fill: none; stroke-width: 3.2; }
+.px-ring .bg { stroke: rgba(var(--paper-rgb), 0.12); }
+.px-ring .fg { stroke: var(--accent); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 0; transition: stroke-dashoffset 0.4s ease, stroke 0.3s ease; }
+.px-ring.empty .fg { opacity: 0; }
+.px-ring b { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+
+#pxView { position: relative; flex: 1; min-height: 0; overflow: hidden; touch-action: none; cursor: grab; background: radial-gradient(120% 90% at 50% 40%, rgba(var(--paper-rgb), 0.045), transparent 70%); }
+#pxView.picking { cursor: crosshair; }
+#pxWorld { position: absolute; left: 0; top: 0; width: 100px; height: 100px; transform-origin: 0 0; will-change: transform; outline: 1px solid rgba(var(--paper-rgb), 0.2); outline-offset: 0; }
+#pxCv { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; image-rendering: pixelated; }
+#pxGrid { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 0.18s ease; }
+#pxGrid.on { opacity: 1; }
+#pxSel { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 2; background: var(--c, transparent); box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px #1a1511; }
+#pxSel[hidden] { display: none; }
+#pxSel::after { content: ''; position: absolute; inset: -7px; border: 1.5px solid rgba(255, 255, 255, 0.85); border-radius: 3px; animation: pxSelPulse 1.6s ease-in-out infinite; }
+@keyframes pxSelPulse { 0%, 100% { opacity: 0.15; transform: scale(0.94); } 50% { opacity: 0.9; transform: scale(1); } }
+.px-rip { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 2px solid var(--c); pointer-events: none; z-index: 3; animation: pxRip 0.6s ease-out forwards; }
+@keyframes pxRip { from { transform: scale(0.4); opacity: 1; } to { transform: scale(4); opacity: 0; } }
+.px-coord { position: absolute; left: calc(12px + env(safe-area-inset-left, 0px)); bottom: 12px; padding: 6px 10px; border-radius: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; color: var(--muted); background: rgba(var(--ink-rgb), 0.6); border: 1px solid rgba(var(--paper-rgb), 0.1); pointer-events: none; font-variant-numeric: tabular-nums; }
+.px-zoom { position: absolute; right: calc(12px + env(safe-area-inset-right, 0px)); bottom: 12px; display: flex; flex-direction: column; gap: 8px; z-index: 4; }
+.px-zoom button { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; border: 1px solid rgba(var(--paper-rgb), 0.14); background: rgba(var(--ink-rgb), 0.7); color: var(--text); cursor: pointer; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.45, 1), border-color 0.2s ease; }
+.px-zoom button:active { transform: scale(0.9); border-color: rgba(var(--accent-rgb), 0.6); }
+.px-zoom svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#pxToast { position: absolute; left: 50%; top: 14px; transform: translate(-50%, -8px); padding: 9px 16px; border-radius: 999px; font-size: 0.88em; color: var(--text); background: rgba(var(--ink-rgb), 0.88); border: 1px solid rgba(var(--paper-rgb), 0.16); opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.3, 1.4, 0.45, 1); z-index: 6; white-space: nowrap; max-width: 92%; overflow: hidden; text-overflow: ellipsis; }
+#pxToast.on { opacity: 1; transform: translate(-50%, 0); }
+
+.px-bottom { position: relative; flex: none; display: flex; align-items: center; gap: 10px; padding: 10px calc(14px + env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) calc(14px + env(safe-area-inset-left, 0px)); border-top: 1px solid rgba(var(--paper-rgb), 0.08); background: rgb(var(--bg-rgb)); }
+.px-colbtn { display: inline-flex; align-items: center; gap: 10px; height: 50px; padding: 0 14px 0 8px; border-radius: 16px; border: 1px solid rgba(var(--paper-rgb), 0.14); background: rgba(var(--paper-rgb), 0.05); color: var(--text); cursor: pointer; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.45, 1), border-color 0.2s ease; }
+.px-colbtn:active { transform: scale(0.95); }
+.px-colbtn.on, .px-eye.on { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.14); }
+.px-colbtn .sw { width: 34px; height: 34px; border-radius: 10px; flex: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.4); }
+.px-eye { width: 50px; height: 50px; flex: none; display: grid; place-items: center; border-radius: 16px; border: 1px solid rgba(var(--paper-rgb), 0.14); background: rgba(var(--paper-rgb), 0.05); color: var(--text); cursor: pointer; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.45, 1), border-color 0.2s ease; }
+.px-eye:active { transform: scale(0.92); }
+.px-eye svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.px-place { flex: 1; min-width: 0; height: 50px; padding: 0 14px; border: 0; border-radius: 16px; background: var(--accent); color: #1a120d; font: inherit; font-weight: 600; font-size: 0.95em; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.45, 1), background 0.25s ease, color 0.25s ease, opacity 0.25s ease; }
+.px-place:active { transform: scale(0.97); }
+.px-place.dead { background: rgba(var(--paper-rgb), 0.1); color: var(--muted); }
+
+.px-sheet { position: absolute; left: 0; right: 0; bottom: 100%; max-height: 62vh; overflow-y: auto; padding: 16px calc(16px + env(safe-area-inset-right, 0px)) 14px calc(16px + env(safe-area-inset-left, 0px)); background: rgb(var(--bg-rgb)); border-top: 1px solid rgba(var(--paper-rgb), 0.12); border-radius: 22px 22px 0 0; box-shadow: 0 -18px 40px -12px rgba(0, 0, 0, 0.55); transform: translateY(16px); opacity: 0; visibility: hidden; transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.22s ease, visibility 0s linear 0.32s; z-index: 5; overscroll-behavior: contain; touch-action: pan-y; }
+.px-sheet.show { transform: none; opacity: 1; visibility: visible; transition-delay: 0s; }
+.px-sv { position: relative; width: 100%; height: 112px; border-radius: 14px; overflow: hidden; touch-action: none; cursor: crosshair; box-shadow: 0 0 0 1px rgba(var(--paper-rgb), 0.14); }
+.px-sv canvas { display: block; width: 100%; height: 100%; }
+.px-th { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 3px 8px rgba(0, 0, 0, 0.45); pointer-events: none; }
+.px-hue { position: relative; height: 22px; margin: 14px 0; border-radius: 11px; touch-action: none; cursor: pointer; background: linear-gradient(90deg, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%); box-shadow: 0 0 0 1px rgba(var(--paper-rgb), 0.14); }
+.px-hue .px-th { top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+.px-hexrow { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.px-hexrow .sw { width: 44px; height: 44px; border-radius: 12px; flex: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.4); }
+.px-hexrow input { flex: 1; min-width: 0; height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid rgba(var(--paper-rgb), 0.14); background: var(--field); color: var(--text); font-family: var(--mono); font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; outline: none; -webkit-user-select: text; user-select: text; }
+.px-hexrow input:focus { border-color: var(--accent); }
+.px-lbl { display: block; margin: 0 0 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.px-pal { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; margin-bottom: 14px; }
+.px-rec { display: flex; flex-wrap: wrap; gap: 8px; min-height: 34px; }
+.px-pal button, .px-rec button { position: relative; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 10px; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.45, 1); }
+.px-pal button { aspect-ratio: 1; }
+.px-rec button { width: 34px; height: 34px; }
+.px-pal button i, .px-rec button i { position: absolute; inset: 0; border-radius: 10px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.35); }
+.px-pal button:active, .px-rec button:active { transform: scale(0.88); }
+.px-pal button.on::after { content: ''; position: absolute; inset: -4px; border-radius: 13px; border: 2px solid var(--text); }
+.px-none { font-size: 0.85em; color: var(--muted); align-self: center; }
+@media (max-height: 520px) { .px-sv { height: 96px; } .px-top { padding-top: 6px; padding-bottom: 6px; } }
+@media (prefers-reduced-motion: reduce) { #pxSel::after { animation: none; opacity: 0.6; } }
+
+.px-h { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.px-h small { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
 
 <!-- Ambient motion background -->
 <div class="bg-fx" aria-hidden="true"></div>
+<div id="fpsMeter" hidden>-- fps</div>
+<div id="pxFull" hidden role="dialog" aria-modal="true" aria-label="Pixel Wall"><div class="px-top"><button class="px-x" type="button" onclick="pxClose()" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="px-ttl"><div class="px-h"><b>Pixel Wall</b><small id="pxReset"></small></div><span class="px-net" id="pxNet"><i></i><em>Connecting</em></span></div><div class="px-ring" id="pxRing" title="Pixels left this minute"><svg viewBox="0 0 36 36" aria-hidden="true"><circle class="bg" cx="18" cy="18" r="15.9155" pathLength="100"/><circle class="fg" id="pxRingFg" cx="18" cy="18" r="15.9155" pathLength="100"/></svg><b id="pxRingN">25</b></div></div><div id="pxView"><div id="pxWorld"><canvas id="pxCv" width="100" height="100"></canvas></div><canvas id="pxGrid"></canvas><div id="pxSel" hidden></div><div class="px-coord" id="pxCoord">x -  y -</div><div class="px-zoom"><button type="button" onclick="pxZoomBy(1.6)" aria-label="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button type="button" onclick="pxZoomBy(0.625)" aria-label="Zoom out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button><button type="button" onclick="pxFit()" aria-label="Fit to screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div><div id="pxToast" role="status"></div></div><div class="px-bottom"><div class="px-sheet" id="pxSheet"><div class="px-sv" id="pxSV"><canvas id="pxSVcv" width="240" height="140"></canvas><span class="px-th" id="pxSVth"></span></div><div class="px-hue" id="pxHue"><span class="px-th" id="pxHueTh"></span></div><div class="px-hexrow"><span class="sw" id="pxPrevSw"></span><input id="pxHexIn" type="text" inputmode="text" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Hex color" oninput="pxHexType(this.value)"></div><span class="px-lbl">Palette (first one erases)</span><div class="px-pal" id="pxPal"></div><span class="px-lbl">Recent</span><div class="px-rec" id="pxRec"></div></div><button class="px-colbtn" id="pxColBtn" type="button" onclick="pxSheetToggle()" aria-label="Pick a color"><span class="sw" id="pxColSw"></span><span id="pxColHex">#D97757</span></button><button class="px-eye" id="pxEyeBtn" type="button" onclick="pxEye()" aria-label="Copy a color from the canvas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5l4 4M4 20l1-4 9.5-9.5 3 3L8 19z"/><path d="M16 4a2.1 2.1 0 0 1 3 0l1 1a2.1 2.1 0 0 1 0 3l-1.5 1.5-4-4z"/></svg></button><button class="px-place" id="pxPlace" type="button" onclick="pxPlace()"><span id="pxPlaceTxt">Tap a pixel to start</span></button></div></div>
 
 <div class="container">
     <!-- TAB 1: HOME -->
@@ -2186,7 +2268,7 @@ html.lite .glass-card { -webkit-backdrop-filter: none; backdrop-filter: none; ba
             <div class="hero-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
             <p class="eyebrow">Encode / Decode / Detect</p>
             <h2 class="hero-title">Secret messages, <em>in every form.</em></h2>
-            <p class="hero-sub">Thirteen ciphers, eight signal modes that turn text into sound, and a detector that guesses what you pasted.</p>
+            <p class="hero-sub">Thirteen ciphers, eight signal modes that turn text into sound, five steganography tools, and a detector that guesses what you pasted.</p>
             <div class="strip" data-ex="hero" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div>
             <div class="hero-actions">
                 <button class="btn-convert" onclick="heroDetect()">What cipher?</button>
@@ -2250,6 +2332,11 @@ html.lite .glass-card { -webkit-backdrop-filter: none; backdrop-filter: none; ba
             <div class="cipher-box" data-cat="signal" hidden onclick="openSignal('hyperdense')"><div class="strip" data-ex="sig_hyperdense" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div><div class="cb-body"><div class="cb-text"><h2><span class="tag">HD</span>HyperDense</h2><p>Two tones at once carry a byte</p></div><span class="ico cb-ico" data-ico="dual"></span></div></div>
             <div class="cipher-box" data-cat="signal" hidden onclick="openSignal('fsk')"><div class="strip" data-ex="sig_fsk" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div><div class="cb-body"><div class="cb-text"><h2><span class="tag">FSK</span>FSK</h2><p>1200 baud mark/space modem tones</p></div><span class="ico cb-ico" data-ico="sq"></span></div></div>
             <div class="cipher-box" data-cat="signal" hidden onclick="openSignal('dtmf')"><div class="strip" data-ex="sig_dtmf" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div><div class="cb-body"><div class="cb-text"><h2><span class="tag">DTMF</span>DTMF</h2><p>Telephone keypad dual tones</p></div><span class="ico cb-ico" data-ico="t9"></span></div></div>
+            <div class="cipher-box" data-cat="stego" hidden onclick="openStego('image')"><div class="strip" data-ex="st_image" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div><div class="cb-body"><div class="cb-text"><h2><span class="tag">IMG</span>Image Stego</h2><p>Hide a secret inside a picture</p></div><span class="ico cb-ico" data-ico="stimg"></span></div></div>
+            <div class="cipher-box" data-cat="stego" hidden onclick="openStego('audio')"><div class="strip" data-ex="st_audio" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div><div class="cb-body"><div class="cb-text"><h2><span class="tag">WAV</span>Audio Stego</h2><p>Hide a secret inside a sound</p></div><span class="ico cb-ico" data-ico="staud"></span></div></div>
+            <div class="cipher-box" data-cat="stego" hidden onclick="openStego('text')"><div class="strip" data-ex="st_text" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div><div class="cb-body"><div class="cb-text"><h2><span class="tag">TXT</span>Invisible Text</h2><p>Zero width characters inside plain text</p></div><span class="ico cb-ico" data-ico="sttxt"></span></div></div>
+            <div class="cipher-box" data-cat="stego" hidden onclick="openStego('file')"><div class="strip" data-ex="st_file" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div><div class="cb-body"><div class="cb-text"><h2><span class="tag">BIN</span>File Stego</h2><p>Add a secret to the end of any file</p></div><span class="ico cb-ico" data-ico="stfile"></span></div></div>
+            <div class="cipher-box" data-cat="stego" hidden onclick="openStego('image','analyze')"><div class="strip" data-ex="st_ana" data-p="0" aria-hidden="true"><span class="strip-text"></span><span class="caret">_</span></div><div class="cb-body"><div class="cb-text"><h2><span class="tag">LSB</span>Stego Analyzer</h2><p>Look for hidden data in an image</p></div><span class="ico cb-ico" data-ico="scan"></span></div></div>
         </div>
         </div>
         </div>
@@ -2289,9 +2376,24 @@ html.lite .glass-card { -webkit-backdrop-filter: none; backdrop-filter: none; ba
             <div class="notice"><i></i><div><b>Signal Lab is new</b><span>Eight audio modes (ABP, HZalpha, Morse, WaveSig, AcDense, HyperDense, FSK, DTMF). Type a message, play it, save it as WAV, or decode a file or microphone recording.</span></div></div>
             <div class="notice"><i></i><div><b>Cipher detector</b><span>Paste any text in the Cipher tab and it shows the most likely ciphers with a percentage. Short texts are harder to judge, so the percentage drops.</span></div></div>
             <div class="notice"><i></i><div><b>New navigation</b><span>Use the bar at the bottom. Tap a tab, or drag the glass bubble between tabs.</span></div></div>
-            <div class="notice"><i class="warn"></i><div><b>Steganography is empty for now</b><span>The folder is ready, tools will be added later. The third tab is reserved too.</span></div></div>
+            <div class="notice"><i></i><div><b>Steganography is here</b><span>Hide text or a file inside an image, a WAV sound, plain text or any file. A password is optional. The Change log shows exactly which colors were changed. The third tab is still reserved.</span></div></div>
             <div class="notice"><i class="warn"></i><div><b>Signal modes are custom</b><span>AcDense, HyperDense, WaveSig and ABP are defined by this app. Audio made here is meant to be decoded here.</span></div></div>
+        </section>
+        <section class="about-card glass-card" id="settingsCard">
+            <h3>Settings</h3>
             <div class="switch-row"><div><b>Glass blur</b>Turn off if scrolling feels heavy on your phone.</div><button class="switch" id="liteSwitch" role="switch" aria-checked="true" aria-label="Glass blur" onclick="liteToggle()"></button></div>
+            <div class="switch-row"><div><b>Reduce motion</b>Stops almost every animation. Saves battery.</div><button class="switch" data-k="reduce" role="switch" aria-checked="false" aria-label="Reduce motion" onclick="setToggle('reduce')"></button></div>
+            <div class="switch-row"><div><b>Background shapes</b>The soft circles and rings behind the page.</div><button class="switch" data-k="orbs" role="switch" aria-checked="false" aria-label="Background shapes" onclick="setToggle('orbs')"></button></div>
+            <div class="switch-row"><div><b>FPS meter</b>Shows live frames per second in the corner.</div><button class="switch" data-k="fps" role="switch" aria-checked="false" aria-label="FPS meter" onclick="setToggle('fps')"></button></div>
+            <div class="set-block"><b>Accent color</b><div class="swatches" id="accentRow"></div></div>
+            <div class="set-block"><b>Text size</b><div class="chips" id="sizeRow"><button class="chip" data-v="0" type="button" onclick="setPick('size',0)">Small</button><button class="chip" data-v="1" type="button" onclick="setPick('size',1)">Normal</button><button class="chip" data-v="2" type="button" onclick="setPick('size',2)">Large</button></div></div>
+            <button class="btn-ghost set-reset" id="setResetBtn" type="button" onclick="setReset()">Reset settings</button>
+        </section>
+        <section class="about-card glass-card" id="pixelCard">
+            <h3>Pixel Wall</h3>
+            <p>One shared canvas of 100 x 100 pixels. Everyone paints on the same wall, and each person gets 25 pixels per minute. The wall is wiped every day at 00:00 WIB (Jakarta time), so it starts empty again.</p>
+            <div class="px-row"><button class="px-thumb" type="button" onclick="pxOpen()" aria-label="Open Pixel Wall"><canvas id="pxThumb" width="100" height="100"></canvas></button><div class="px-stats"><span class="px-live" id="pxLive"><i></i><b>Saved here</b></span><span id="pxCount">0 pixels painted</span><span id="pxLeftTxt">25 of 25 left</span><span id="pxResetTxt"></span></div></div>
+            <button class="btn-ghost" type="button" onclick="pxOpen()">Open Pixel Wall</button>
         </section>
         <section class="about-card glass-card">
             <h3>Credits</h3>
@@ -2400,6 +2502,136 @@ html.lite .glass-card { -webkit-backdrop-filter: none; backdrop-filter: none; ba
             </div>
         </div>
 
+    </div>
+
+    <!-- Steganography -->
+    <div id="stegoPage" class="cipher-page" data-c="image">
+        <div class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="goToHome()"><i class="chev"></i>Back</button>
+                <h1>Steganography</h1>
+            </div>
+            <button class="tools-btn" onclick="openTools()"><span class="ico" data-ico="tools"></span><span class="lbl">Tools</span></button>
+        </div>
+        <div class="seg n3" id="stTabs" role="tablist">
+            <i class="seg-ind"></i>
+            <button class="seg-btn active" data-t="hide" onclick="stTab('hide')">Hide</button>
+            <button class="seg-btn" data-t="reveal" onclick="stTab('reveal')">Reveal</button>
+            <button class="seg-btn" data-t="analyze" onclick="stTab('analyze')">Analyze</button>
+        </div>
+        <div class="chips" id="stChips">
+            <button class="chip active" data-c="image" type="button" onclick="stCarrier('image')"><span class="tg">IMG</span>Image</button>
+            <button class="chip" data-c="audio" type="button" onclick="stCarrier('audio')"><span class="tg">WAV</span>Audio</button>
+            <button class="chip" data-c="text" type="button" onclick="stCarrier('text')"><span class="tg">TXT</span>Text</button>
+            <button class="chip" data-c="file" type="button" onclick="stCarrier('file')"><span class="tg">BIN</span>File</button>
+        </div>
+
+        <!-- HIDE -->
+        <div id="stHide" class="encoder-box sig-pane show">
+            <h3>1. Cover <span class="st-opt" id="stCovKind"></span></h3>
+            <p class="sig-sub" id="stCoverSub"></p>
+
+            <div class="st-sec" data-c="image">
+                <label class="drop"><input type="file" id="stImgIn" accept="image/*" onchange="stLoadCover('image', this.files[0]); this.value=''"><span class="ico" data-ico="stimg"></span><span><b>Choose cover image</b><small id="stImgName">Any picture. The result is saved as PNG.</small></span></label>
+                <button class="btn-ghost st-mini" type="button" onclick="stSample('image')">Use a sample cover</button>
+                <canvas id="stPrev" class="st-prev" hidden></canvas>
+            </div>
+            <div class="st-sec" data-c="audio" hidden>
+                <label class="drop"><input type="file" id="stAudIn" accept="audio/*,.wav" onchange="stLoadCover('audio', this.files[0]); this.value=''"><span class="ico" data-ico="staud"></span><span><b>Choose cover audio</b><small id="stAudName">WAV works best. Other formats are converted to WAV.</small></span></label>
+                <button class="btn-ghost st-mini" type="button" onclick="stSample('audio')">Use a sample cover</button>
+                <audio id="stAudPrev" class="st-audio" controls hidden></audio>
+            </div>
+            <div class="st-sec" data-c="text" hidden>
+                <div class="input-wrapper"><textarea id="stCoverText" maxlength="4000" placeholder="Write a normal looking sentence. The secret will hide inside it without changing how it looks." oninput="stCapRefresh()"></textarea><button class="clear-btn" type="button" onclick="stClearTxt('stCoverText')" title="Clear">&times;</button></div>
+            </div>
+            <div class="st-sec" data-c="file" hidden>
+                <label class="drop"><input type="file" id="stFileIn" onchange="stLoadCover('file', this.files[0]); this.value=''"><span class="ico" data-ico="stfile"></span><span><b>Choose cover file</b><small id="stFileName">PNG, JPG, PDF, ZIP... it still opens normally afterwards.</small></span></label>
+            </div>
+
+            <div class="st-bpc" id="stBpcRow" hidden><label>Hiding strength</label><div class="chips" id="stBpc"></div></div>
+
+            <h3>2. Secret</h3>
+            <div class="chips st-kind" id="stKind">
+                <button class="chip active" data-k="text" type="button" onclick="stKind('text')">Text</button>
+                <button class="chip" data-k="file" type="button" onclick="stKind('file')">File</button>
+            </div>
+            <div id="stSecText"><div class="input-wrapper"><textarea id="stSecret" maxlength="20000" placeholder="Type the secret message..." oninput="stCapRefresh()"></textarea><button class="clear-btn" type="button" onclick="stClearTxt('stSecret')" title="Clear">&times;</button></div></div>
+            <div id="stSecFile" hidden><label class="drop"><input type="file" id="stSecIn" onchange="stLoadSecret(this.files[0]); this.value=''"><span class="ico" data-ico="stfile"></span><span><b>Choose file to hide</b><small id="stSecName">Any file type.</small></span></label></div>
+
+            <h3>3. Password <span class="st-opt">optional</span></h3>
+            <div class="st-pw"><input type="password" id="stPw" autocomplete="new-password" placeholder="Leave empty for no password" oninput="stCapRefresh()"><button type="button" class="st-eye" onclick="stEye('stPw', this)" aria-label="Show password"><svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+            <p class="st-hint" id="stPwHint">With a password the secret is encrypted (ChaCha20) and, in image and audio, scattered at secret positions.</p>
+
+            <div class="st-cap" id="stCap"><div class="st-cap-top"><span id="stCapLbl">Capacity</span><b id="stCapVal">-</b></div><div class="st-cap-bar"><i id="stCapFill"></i></div></div>
+            <div class="sig-note" id="stNote"></div>
+            <div class="btn-group">
+                <button class="btn-convert" id="stGo" type="button" onclick="stHide()"><span>Hide secret</span></button>
+                <button class="btn-clear-all" type="button" onclick="stClearAll()">Remove All</button>
+            </div>
+
+            <div id="stOut" class="result st-out">
+                <div class="result-header"><h4 id="stOutTitle">Done</h4><button class="copy-btn" id="stOutCopy" type="button" onclick="stCopyOut(this)" hidden>Copy</button></div>
+                <div class="st-media" id="stOutMedia"><i class="st-sweep"></i></div>
+                <div class="sig-actions"><button type="button" onclick="stDownload()"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 11 12 15.5 16.5 11M5 19.5h14"/></svg>Download</button></div>
+                <div class="stats" id="stStats"></div>
+                <div class="st-verify" id="stVerify"></div>
+                <div class="st-logtop"><h3>Change log</h3><div class="st-vt" id="stVT" hidden><button class="active" type="button" onclick="stLogView('log')">Log</button><button type="button" onclick="stLogView('map')">Map</button></div></div>
+                <div class="st-sum" id="stSum"></div>
+                <div class="st-log" id="stLog"></div>
+                <div class="st-mapwrap" id="stMapWrap" hidden><canvas id="stHeat" class="st-heat"></canvas><div class="st-legend"><span><i class="lo"></i>untouched</span><span><i class="hi"></i>changed</span></div></div>
+                <button class="btn-ghost st-more" id="stMore" type="button" onclick="stMore()" hidden>Show more</button>
+            </div>
+        </div>
+
+        <!-- REVEAL -->
+        <div id="stReveal" class="encoder-box sig-pane">
+            <h3>Find the hidden secret</h3>
+            <p class="sig-sub" id="stRevSub"></p>
+            <div class="st-sec" data-c="image">
+                <label class="drop"><input type="file" id="stRImgIn" accept="image/*" onchange="stLoadRev('image', this.files[0]); this.value=''"><span class="ico" data-ico="stimg"></span><span><b>Choose image</b><small id="stRImgName">Use the PNG file, not a screenshot or a re-sent copy.</small></span></label>
+            </div>
+            <div class="st-sec" data-c="audio" hidden>
+                <label class="drop"><input type="file" id="stRAudIn" accept="audio/*,.wav" onchange="stLoadRev('audio', this.files[0]); this.value=''"><span class="ico" data-ico="staud"></span><span><b>Choose WAV audio</b><small id="stRAudName">The WAV made by Hide.</small></span></label>
+            </div>
+            <div class="st-sec" data-c="text" hidden>
+                <div class="input-wrapper"><textarea id="stRText" maxlength="60000" placeholder="Paste the text that contains the hidden secret..."></textarea><button class="clear-btn" type="button" onclick="stClearTxt('stRText')" title="Clear">&times;</button></div>
+            </div>
+            <div class="st-sec" data-c="file" hidden>
+                <label class="drop"><input type="file" id="stRFileIn" onchange="stLoadRev('file', this.files[0]); this.value=''"><span class="ico" data-ico="stfile"></span><span><b>Choose file</b><small id="stRFileName">The file made by Hide.</small></span></label>
+            </div>
+            <div class="st-pw"><input type="password" id="stRPw" autocomplete="off" placeholder="Password (if one was used)"><button type="button" class="st-eye" onclick="stEye('stRPw', this)" aria-label="Show password"><svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+            <div class="btn-group">
+                <button class="btn-convert" type="button" onclick="stReveal()"><span>Reveal</span></button>
+                <button class="btn-clear-all" type="button" onclick="stRevClear()">Remove All</button>
+            </div>
+            <div class="sig-note" id="stRevMsg"></div>
+            <div id="stRevOut" class="result">
+                <div class="result-header"><h4 id="stRevTitle">Hidden text:</h4><button class="copy-btn" id="stRevCopy" type="button" onclick="copyText('stRevText', this)">Copy</button></div>
+                <div class="result-text" id="stRevText"></div>
+                <div class="sig-actions" id="stRevFileAct" hidden><button type="button" onclick="stRevDownload()"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 11 12 15.5 16.5 11M5 19.5h14"/></svg>Download file</button></div>
+                <div class="dec-meta" id="stRevMeta"></div>
+            </div>
+        </div>
+
+        <!-- ANALYZE -->
+        <div id="stAnalyze" class="encoder-box sig-pane">
+            <h3>Image analyzer</h3>
+            <p class="sig-sub">Look at the least significant bits of an image. A natural photo has soft, patterned LSBs. Hidden data looks like colored static.</p>
+            <label class="drop"><input type="file" id="stAImgIn" accept="image/*" onchange="stAnalyze(this.files[0]); this.value=''"><span class="ico" data-ico="scan"></span><span><b>Choose image to inspect</b><small id="stAName">PNG gives the most accurate result.</small></span></label>
+            <div id="stARes" class="st-ares">
+                <div class="st-verdict" id="stAVerdict"></div>
+                <div class="st-planes" id="stAPlanes"><canvas id="stALsb"></canvas></div>
+                <div class="chips st-pl" id="stAChips">
+                    <button class="chip active" data-p="rgb" type="button" onclick="stPlane('rgb')">All</button>
+                    <button class="chip" data-p="r" type="button" onclick="stPlane('r')">Red</button>
+                    <button class="chip" data-p="g" type="button" onclick="stPlane('g')">Green</button>
+                    <button class="chip" data-p="b" type="button" onclick="stPlane('b')">Blue</button>
+                    <button class="chip" data-p="x2" type="button" onclick="stPlane('x2')">2nd bit</button>
+                </div>
+                <div class="stats" id="stAStats"></div>
+                <div class="dec-meta" id="stAMeta"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Binary Page -->
@@ -3330,24 +3562,6 @@ html.lite .glass-card { -webkit-backdrop-filter: none; backdrop-filter: none; ba
 
         <div class="tool-section-title">Games</div>
 
-        <div class="tool-item" onclick="toggleTool('triviaGame')">
-            <span class="ico" data-ico="trivia"></span>
-            <div><h3>Trivia Quiz</h3><p>Test your knowledge with fun questions</p></div>
-        </div>
-        <div id="triviaGameTool" class="tool-content-box">
-            <div class="game-container">
-                <div class="game-display" id="triviaQuestion">Loading question...</div>
-                <div class="quiz-options" id="triviaOptions"></div>
-                <div class="quiz-stats">
-                    <div><p style="color: var(--muted);">Score</p><span id="triviaScore" style="color: var(--accent); font-weight: bold;">0</span></div>
-                    <div><p style="color: var(--muted);">Question</p><span id="triviaProgress" style="color: var(--warn); font-weight: bold;">0/10</span></div>
-                    <div><p style="color: var(--muted);">Best</p><span id="triviaBest" style="color: var(--good); font-weight: bold;">0</span></div>
-                </div>
-                <button class="tool-btn" onclick="nextTriviaQuestion()">Next Question</button>
-                <button class="tool-btn" onclick="resetTriviaGame()">Reset Game</button>
-            </div>
-        </div>
-
         <div class="tool-item" onclick="toggleTool('memoryGame')">
             <span class="ico" data-ico="memory"></span>
             <div><h3>Memory Cards</h3><p>Test your memory with matching cards</p></div>
@@ -3380,48 +3594,6 @@ html.lite .glass-card { -webkit-backdrop-filter: none; backdrop-filter: none; ba
             </div>
         </div>
 
-        <div class="tool-item" onclick="toggleTool('moleGame')">
-            <span class="ico" data-ico="mole"></span>
-            <div><h3>Whack-a-Mole</h3><p>Click the targets as they appear!</p></div>
-        </div>
-        <div id="moleGameTool" class="tool-content-box">
-            <div class="game-container">
-                <div class="game-display" id="moleDisplay">Click the targets! Score as many as you can in 30 seconds!</div>
-                <div class="mole-timer"><div class="mole-timer-bar" id="moleTimerBar"></div></div>
-                <div class="mole-grid" id="moleGrid">
-                    <div class="mole-hole" onclick="whackMole(0)"></div>
-                    <div class="mole-hole" onclick="whackMole(1)"></div>
-                    <div class="mole-hole" onclick="whackMole(2)"></div>
-                    <div class="mole-hole" onclick="whackMole(3)"></div>
-                    <div class="mole-hole" onclick="whackMole(4)"></div>
-                    <div class="mole-hole" onclick="whackMole(5)"></div>
-                    <div class="mole-hole" onclick="whackMole(6)"></div>
-                    <div class="mole-hole" onclick="whackMole(7)"></div>
-                    <div class="mole-hole" onclick="whackMole(8)"></div>
-                </div>
-                <div class="memory-stats">
-                    <div><p style="color: var(--muted);">Score</p><span id="moleScore" style="color: var(--accent); font-weight: bold;">0</span></div>
-                    <div><p style="color: var(--muted);">Time Left</p><span id="moleTime" style="color: var(--warn); font-weight: bold;">30s</span></div>
-                    <div><p style="color: var(--muted);">Best</p><span id="moleBest" style="color: var(--good); font-weight: bold;">0</span></div>
-                </div>
-                <button class="tool-btn" onclick="startMoleGame()">Start Game</button>
-                <button class="tool-btn" onclick="stopMoleGame()">Stop</button>
-            </div>
-        </div>
-
-        <div class="tool-item" onclick="toggleTool('reactionGame')">
-            <span class="ico" data-ico="bolt"></span>
-            <div><h3>Reaction Time</h3><p>Test your reaction speed</p></div>
-        </div>
-        <div id="reactionGameTool" class="tool-content-box">
-            <div class="game-container">
-                <div class="reaction-box waiting" id="reactionBox" onclick="handleReactionClick()">Wait for green...</div>
-                <div class="game-display" id="reactionDisplay">Click "Start" then wait for the box to turn green!</div>
-                <p style="color: var(--muted); margin-bottom: 15px;">Best Time: <span id="bestReaction" style="color: var(--good); font-weight: bold;">-- ms</span></p>
-                <button class="tool-btn" onclick="startReaction()">Start</button>
-                <button class="tool-btn" onclick="resetReaction()">Reset Best</button>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -4401,6 +4573,551 @@ html.lite .glass-card { -webkit-backdrop-filter: none; backdrop-filter: none; ba
 
 </script>
 <script>
+/* StegoEngine - hide text or files inside images, WAV audio, plain text and files.
+ * Pure JS, no DOM. Runs in Node and in the browser.
+ *
+ * Container ("blob"), identical for every carrier:
+ *   'S' 'C' ver(1) flags(1: bit0 = encrypted) salt(8) len(4, big endian) body(len)
+ *   body = inner + crc32(inner)              (ChaCha20 encrypted when flags.bit0)
+ *   inner = kind(1: 0 text, 1 file) nameLen(1) name(utf8) data
+ * Password: key = iterated SHA-256 (salt, password) -> ChaCha20. A wrong password fails the CRC.
+ *
+ * Carriers:
+ *   image  LSB of R,G,B (1..3 bits per channel); alpha is never touched
+ *   audio  LSB of 16-bit PCM WAV samples (1..2 bits)
+ *   text   invisible Unicode characters inserted into a cover text
+ *   file   blob appended after the end of any file (png, jpg, pdf, zip...)
+ * With a password the image/audio payload is also scattered over the carrier.
+ */
+(function (root, factory) {
+    if (typeof module === 'object' && module.exports) module.exports = factory();
+    else root.StegoEngine = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+    'use strict';
+
+    // ------------------------------------------------------------ helpers
+    var enc = new TextEncoder(), dec = new TextDecoder('utf-8');
+    function utf8(s) { return enc.encode(s); }
+    function fromUtf8(b) { return dec.decode(b); }
+    function concat() {
+        var n = 0, i, o, p = 0;
+        for (i = 0; i < arguments.length; i++) n += arguments[i].length;
+        o = new Uint8Array(n);
+        for (i = 0; i < arguments.length; i++) { o.set(arguments[i], p); p += arguments[i].length; }
+        return o;
+    }
+    function hex(b, n) {
+        var s = '', k = n == null ? b.length : Math.min(n, b.length);
+        for (var i = 0; i < k; i++) s += (b[i] < 16 ? '0' : '') + b[i].toString(16);
+        return s;
+    }
+    function randomBytes(n) {
+        var o = new Uint8Array(n);
+        if (typeof crypto !== 'undefined' && crypto.getRandomValues) crypto.getRandomValues(o);
+        else for (var i = 0; i < n; i++) o[i] = Math.floor(Math.random() * 256);
+        return o;
+    }
+
+    var CRC_T = (function () {
+        var t = new Uint32Array(256);
+        for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+        return t;
+    })();
+    function crc32(b) {
+        var c = 0xFFFFFFFF;
+        for (var i = 0; i < b.length; i++) c = CRC_T[(c ^ b[i]) & 255] ^ (c >>> 8);
+        return (c ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    // ------------------------------------------------------------ SHA-256
+    var K256 = new Uint32Array([
+        0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+        0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+        0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+        0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+        0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+        0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+        0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+        0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2]);
+    var W256 = new Uint32Array(64);
+    function sha256(msg) {
+        var h0 = 0x6a09e667, h1 = 0xbb67ae85, h2 = 0x3c6ef372, h3 = 0xa54ff53a, h4 = 0x510e527f, h5 = 0x9b05688c, h6 = 0x1f83d9ab, h7 = 0x5be0cd19;
+        var l = msg.length, nb = ((l + 9 + 63) >> 6) << 6, p = new Uint8Array(nb), i, j, w = W256;
+        p.set(msg); p[l] = 0x80;
+        var bits = l * 8;
+        p[nb - 4] = (bits >>> 24) & 255; p[nb - 3] = (bits >>> 16) & 255; p[nb - 2] = (bits >>> 8) & 255; p[nb - 1] = bits & 255;
+        p[nb - 8] = Math.floor(l / 0x20000000) & 255;
+        for (var off = 0; off < nb; off += 64) {
+            for (i = 0; i < 16; i++) w[i] = (p[off + i * 4] << 24) | (p[off + i * 4 + 1] << 16) | (p[off + i * 4 + 2] << 8) | p[off + i * 4 + 3];
+            for (i = 16; i < 64; i++) {
+                var x = w[i - 15], y = w[i - 2];
+                var s0 = ((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3);
+                var s1 = ((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10);
+                w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+            }
+            var a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
+            for (i = 0; i < 64; i++) {
+                var S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+                var ch = (e & f) ^ (~e & g);
+                var t1 = (h + S1 + ch + K256[i] + w[i]) | 0;
+                var S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+                var mj = (a & b) ^ (a & c) ^ (b & c);
+                var t2 = (S0 + mj) | 0;
+                h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+            }
+            h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0;
+            h4 = (h4 + e) | 0; h5 = (h5 + f) | 0; h6 = (h6 + g) | 0; h7 = (h7 + h) | 0;
+        }
+        var out = new Uint8Array(32), hs = [h0, h1, h2, h3, h4, h5, h6, h7];
+        for (j = 0; j < 8; j++) { out[j * 4] = hs[j] >>> 24; out[j * 4 + 1] = (hs[j] >>> 16) & 255; out[j * 4 + 2] = (hs[j] >>> 8) & 255; out[j * 4 + 3] = hs[j] & 255; }
+        return out;
+    }
+
+    // ------------------------------------------------------------ ChaCha20 (RFC 8439)
+    function chachaBlock(key, nonce, counter, out) {
+        var st = new Uint32Array(16), x = new Uint32Array(16), i;
+        st[0] = 0x61707865; st[1] = 0x3320646e; st[2] = 0x79622d32; st[3] = 0x6b206574;
+        for (i = 0; i < 8; i++) st[4 + i] = key[i * 4] | (key[i * 4 + 1] << 8) | (key[i * 4 + 2] << 16) | (key[i * 4 + 3] << 24);
+        st[12] = counter;
+        for (i = 0; i < 3; i++) st[13 + i] = nonce[i * 4] | (nonce[i * 4 + 1] << 8) | (nonce[i * 4 + 2] << 16) | (nonce[i * 4 + 3] << 24);
+        x.set(st);
+        function qr(a, b, c, d) {
+            x[a] = (x[a] + x[b]) | 0; x[d] ^= x[a]; x[d] = (x[d] << 16) | (x[d] >>> 16);
+            x[c] = (x[c] + x[d]) | 0; x[b] ^= x[c]; x[b] = (x[b] << 12) | (x[b] >>> 20);
+            x[a] = (x[a] + x[b]) | 0; x[d] ^= x[a]; x[d] = (x[d] << 8) | (x[d] >>> 24);
+            x[c] = (x[c] + x[d]) | 0; x[b] ^= x[c]; x[b] = (x[b] << 7) | (x[b] >>> 25);
+        }
+        for (i = 0; i < 10; i++) {
+            qr(0, 4, 8, 12); qr(1, 5, 9, 13); qr(2, 6, 10, 14); qr(3, 7, 11, 15);
+            qr(0, 5, 10, 15); qr(1, 6, 11, 12); qr(2, 7, 8, 13); qr(3, 4, 9, 14);
+        }
+        for (i = 0; i < 16; i++) {
+            var v = (x[i] + st[i]) | 0;
+            out[i * 4] = v & 255; out[i * 4 + 1] = (v >>> 8) & 255; out[i * 4 + 2] = (v >>> 16) & 255; out[i * 4 + 3] = (v >>> 24) & 255;
+        }
+    }
+    function chacha20(key, nonce, data, counter0) {
+        var out = new Uint8Array(data.length), blk = new Uint8Array(64), c = counter0 == null ? 0 : counter0;
+        for (var p = 0; p < data.length; p += 64, c++) {
+            chachaBlock(key, nonce, c >>> 0, blk);
+            var n = Math.min(64, data.length - p);
+            for (var i = 0; i < n; i++) out[p + i] = data[p + i] ^ blk[i];
+        }
+        return out;
+    }
+    var KDF_ROUNDS = 20000;
+    function deriveKey(password, salt) {
+        var pw = utf8(password), k = sha256(concat(salt, pw));
+        for (var i = 0; i < KDF_ROUNDS; i++) k = sha256(concat(k, salt, pw));
+        return k;
+    }
+    var NONCE0 = new Uint8Array(12);
+
+    // ------------------------------------------------------------ container
+    var HEADER = 16;
+    function u32be(b, o) { return ((b[o] << 24) | (b[o + 1] << 16) | (b[o + 2] << 8) | b[o + 3]) >>> 0; }
+    function putU32(b, o, v) { b[o] = (v >>> 24) & 255; b[o + 1] = (v >>> 16) & 255; b[o + 2] = (v >>> 8) & 255; b[o + 3] = v & 255; }
+
+    function pack(kind, name, data, password) {
+        var nm = utf8(name || '');
+        if (nm.length > 255) nm = nm.subarray(0, 255);
+        var inner = concat(new Uint8Array([kind === 'file' ? 1 : 0, nm.length]), nm, data);
+        var c = crc32(inner), tail = new Uint8Array(4);
+        putU32(tail, 0, c);
+        var body = concat(inner, tail), salt = new Uint8Array(8), flags = 0;
+        if (password) {
+            salt = randomBytes(8); flags = 1;
+            body = chacha20(deriveKey(password, salt), NONCE0, body, 0);
+        }
+        var head = new Uint8Array(HEADER);
+        head[0] = 0x53; head[1] = 0x43; head[2] = 1; head[3] = flags;
+        head.set(salt, 4); putU32(head, 12, body.length);
+        return concat(head, body);
+    }
+    // -> { status: 'ok'|'none'|'need_password'|'bad_password'|'corrupt', kind, name, data, encrypted }
+    function unpack(blob, password) {
+        if (!blob || blob.length < HEADER + 6 || blob[0] !== 0x53 || blob[1] !== 0x43 || blob[2] !== 1) return { status: 'none' };
+        var flags = blob[3], len = u32be(blob, 12), encd = (flags & 1) === 1;
+        if (len < 6 || HEADER + len > blob.length) return { status: 'corrupt' };
+        var body = blob.subarray(HEADER, HEADER + len);
+        if (encd) {
+            if (!password) return { status: 'need_password', encrypted: true };
+            body = chacha20(deriveKey(password, blob.subarray(4, 12)), NONCE0, body, 0);
+        }
+        var inner = body.subarray(0, body.length - 4), crc = u32be(body, body.length - 4);
+        if (crc32(inner) !== crc) return { status: encd ? 'bad_password' : 'corrupt', encrypted: encd };
+        var nl = inner[1];
+        if (2 + nl > inner.length) return { status: 'corrupt' };
+        return {
+            status: 'ok', encrypted: encd, kind: inner[0] === 1 ? 'file' : 'text',
+            name: fromUtf8(inner.subarray(2, 2 + nl)), data: inner.slice(2 + nl)
+        };
+    }
+    function blobInfo(blob) {
+        if (!blob || blob.length < HEADER || blob[0] !== 0x53 || blob[1] !== 0x43) return null;
+        return { encrypted: (blob[3] & 1) === 1, bodyLength: u32be(blob, 12) };
+    }
+
+    // ------------------------------------------------------------ LSB core (units = channels or samples)
+    var BOOT = 32; // first 32 units hold: tag(2) bpc(1) flags(1) at 1 bit each
+    function gcd(a, b) { while (b) { var t = a % b; a = b; b = t; } return a; }
+    // affine permutation i -> (a*i + b) mod m ; keyed by the password. No memory needed.
+    function makePerm(m, password) {
+        if (!password) return function (i) { return i; };
+        var h = sha256(utf8('SCscatter|' + password));
+        var r1 = u32be(h, 0), r2 = u32be(h, 4), b = r2 % m;
+        var a = Math.floor(m * 0.15) + (r1 % Math.max(1, Math.floor(m * 0.7)));
+        if (a < 1) a = 1;
+        while (gcd(a, m) !== 1) a++;
+        return function (i) { return (a * i + b) % m; };
+    }
+    function capacityUnits(units, bpc) { return Math.max(0, Math.floor(((units - BOOT) * bpc) / 8) - HEADER); }
+
+    // read/write(u, v) work on units 0..units-1
+    function embedCore(read, write, units, blob, bpc, scatterPw, tag) {
+        var M = units - BOOT, need = Math.ceil((blob.length * 8) / bpc);
+        if (need > M) throw new Error('too_big');
+        var boot = [tag.charCodeAt(0), tag.charCodeAt(1), bpc, scatterPw ? 1 : 0], u, k;
+        for (u = 0; u < BOOT; u++) {
+            var bit = (boot[u >> 3] >> (7 - (u & 7))) & 1;
+            write(u, (read(u) & ~1) | bit);
+        }
+        var perm = makePerm(M, scatterPw), mask = (1 << bpc) - 1, bp = 0, total = blob.length * 8;
+        for (var i = 0; i < need; i++) {
+            var chunk = 0;
+            for (k = 0; k < bpc; k++) {
+                var bb = bp < total ? (blob[bp >> 3] >> (7 - (bp & 7))) & 1 : 0;
+                chunk = (chunk << 1) | bb; bp++;
+            }
+            var uu = BOOT + perm(i);
+            write(uu, (read(uu) & ~mask) | chunk);
+        }
+        return { units: need, bpc: bpc };
+    }
+    // -> { status: 'none'|'need_password'|'ok', blob, bpc, scattered }
+    function extractCore(read, units, password, tag) {
+        var b = [0, 0, 0, 0], u;
+        for (u = 0; u < BOOT; u++) b[u >> 3] = (b[u >> 3] << 1) | (read(u) & 1);
+        if (b[0] !== tag.charCodeAt(0) || b[1] !== tag.charCodeAt(1)) return { status: 'none' };
+        var bpc = b[2], scattered = (b[3] & 1) === 1;
+        if (bpc < 1 || bpc > 4) return { status: 'none' };
+        if (scattered && !password) return { status: 'need_password', scattered: true, bpc: bpc };
+        var M = units - BOOT, perm = makePerm(M, scattered ? password : null), mask = (1 << bpc) - 1;
+        var i = 0, acc = 0, nacc = 0;
+        function nextByte() {
+            while (nacc < 8) {
+                if (i >= M) return -1;
+                acc = (acc << bpc) | (read(BOOT + perm(i)) & mask); i++; nacc += bpc;
+            }
+            var v = (acc >> (nacc - 8)) & 255;
+            nacc -= 8; acc &= (1 << nacc) - 1;
+            return v;
+        }
+        var head = new Uint8Array(HEADER), k, v;
+        for (k = 0; k < HEADER; k++) { v = nextByte(); if (v < 0) return { status: 'none' }; head[k] = v; }
+        if (head[0] !== 0x53 || head[1] !== 0x43 || head[2] !== 1) return { status: 'none', scattered: scattered };
+        var len = u32be(head, 12);
+        if (len > Math.floor((M * bpc) / 8) - HEADER) return { status: 'none', scattered: scattered };
+        var blob = new Uint8Array(HEADER + len);
+        blob.set(head);
+        for (k = HEADER; k < blob.length; k++) { v = nextByte(); if (v < 0) return { status: 'none' }; blob[k] = v; }
+        return { status: 'ok', blob: blob, bpc: bpc, scattered: scattered };
+    }
+
+    // ------------------------------------------------------------ image carrier
+    var LOG_MAX = 300;
+    var image = {
+        capacity: function (w, h, bpc) { return capacityUnits(w * h * 3, bpc || 1); },
+        // rgba: Uint8ClampedArray|Uint8Array (opaque pixels). Returns a modified copy + change log.
+        embed: function (rgba, w, h, blob, opts) {
+            opts = opts || {};
+            var bpc = Math.max(1, Math.min(3, opts.bpc || 1)), units = w * h * 3;
+            if (blob.length > capacityUnits(units, bpc) + HEADER) throw new Error('too_big');
+            var out = new rgba.constructor(rgba.length); out.set(rgba);
+            var idx = function (u) { return ((u / 3) | 0) * 4 + (u % 3); };
+            var info = embedCore(function (u) { return out[idx(u)]; }, function (u, v) { out[idx(u)] = v; },
+                units, blob, bpc, opts.password || null, 'SI');
+            return { rgba: out, bpc: bpc, log: image.diff(rgba, out, w, h), usedBytes: blob.length, capacity: image.capacity(w, h, bpc) + HEADER, unitsUsed: info.units };
+        },
+        extract: function (rgba, w, h, password) {
+            var idx = function (u) { return ((u / 3) | 0) * 4 + (u % 3); };
+            return extractCore(function (u) { return rgba[idx(u)]; }, w * h * 3, password || null, 'SI');
+        },
+        // Compare two RGBA buffers: per-pixel change mask, entries for the log, error metrics.
+        diff: function (a, b, w, h) {
+            var n = w * h, mask = new Uint8Array(n), entries = [], px = 0, ch = 0, se = 0, maxd = 0, perCh = [0, 0, 0];
+            for (var p = 0; p < n; p++) {
+                var o = p * 4, c = 0;
+                for (var k = 0; k < 3; k++) {
+                    var d = a[o + k] - b[o + k];
+                    if (d) { c++; perCh[k]++; se += d * d; if (d < 0) d = -d; if (d > maxd) maxd = d; }
+                }
+                if (c) {
+                    mask[p] = 1; px++; ch += c;
+                    if (entries.length < LOG_MAX) entries.push({
+                        x: p % w, y: (p / w) | 0, i: p,
+                        before: [a[o], a[o + 1], a[o + 2]], after: [b[o], b[o + 1], b[o + 2]]
+                    });
+                }
+            }
+            var mse = se / (n * 3);
+            return {
+                mask: mask, entries: entries, pixels: px, channels: ch, totalPixels: n, perChannel: perCh,
+                percent: n ? (px / n) * 100 : 0, mse: mse, maxDiff: maxd,
+                psnr: mse === 0 ? Infinity : 10 * Math.log(255 * 255 / mse) / Math.LN10
+            };
+        },
+        // Heuristics for the Analyzer: what does the LSB plane look like, is there one of our payloads?
+        analyze: function (rgba, w, h) {
+            var n = w * h, ones = [0, 0, 0], k, p;
+            for (p = 0; p < n; p++) for (k = 0; k < 3; k++) ones[k] += rgba[p * 4 + k] & 1;
+            var ratio = ones.map(function (v) { return n ? v / n : 0; });
+            // pair-of-values test over the first 1/2 of pixels, red channel (Westfeld-style, simplified)
+            var hist = new Uint32Array(256);
+            for (p = 0; p < n; p++) hist[rgba[p * 4 + 1]]++;
+            var chi = 0, df = 0;
+            for (var v = 0; v < 256; v += 2) {
+                var s = hist[v] + hist[v + 1];
+                if (s > 4) { var e = s / 2, d = hist[v] - e; chi += (d * d) / e; df++; }
+            }
+            var ex = image.extract(rgba, w, h, null);
+            return { onesRatio: ratio, chi: chi, df: df, probe: ex };
+        }
+    };
+
+    // ------------------------------------------------------------ audio carrier (PCM16 WAV)
+    function rd32(b, o) { return (b[o] | (b[o + 1] << 8) | (b[o + 2] << 16) | (b[o + 3] << 24)) >>> 0; }
+    function rd16(b, o) { return b[o] | (b[o + 1] << 8); }
+    function tag4(b, o) { return String.fromCharCode(b[o], b[o + 1], b[o + 2], b[o + 3]); }
+    function parseWav(b) {
+        if (b.length < 44 || tag4(b, 0) !== 'RIFF' || tag4(b, 8) !== 'WAVE') throw new Error('not_wav');
+        var p = 12, fmt = null, data = null;
+        while (p + 8 <= b.length) {
+            var id = tag4(b, p), sz = rd32(b, p + 4);
+            if (id === 'fmt ') fmt = { format: rd16(b, p + 8), channels: rd16(b, p + 10), sampleRate: rd32(b, p + 12), bits: rd16(b, p + 22) };
+            if (id === 'data') { data = { offset: p + 8, length: Math.min(sz, b.length - p - 8) }; break; }
+            p += 8 + sz + (sz & 1);
+        }
+        if (!fmt || !data) throw new Error('not_wav');
+        if (fmt.format !== 1 || fmt.bits !== 16) throw new Error('wav_format');
+        fmt.samples = data.length >> 1; fmt.dataOffset = data.offset; fmt.dataLength = data.length;
+        return fmt;
+    }
+    var audio = {
+        parse: parseWav,
+        capacity: function (wavBytes, bpc) { var i = parseWav(wavBytes); return capacityUnits(i.samples, bpc || 1); },
+        embed: function (wav, blob, opts) {
+            opts = opts || {};
+            var info = parseWav(wav), bpc = Math.max(1, Math.min(2, opts.bpc || 1)), n = info.samples;
+            if (blob.length > capacityUnits(n, bpc) + HEADER) throw new Error('too_big');
+            var s = new Int16Array(n), orig = new Int16Array(n), o = info.dataOffset, i;
+            for (i = 0; i < n; i++) { var v = wav[o + i * 2] | (wav[o + i * 2 + 1] << 8); s[i] = v << 16 >> 16; }
+            orig.set(s);
+            var used = embedCore(function (u) { return s[u]; }, function (u, v) { s[u] = v; }, n, blob, bpc, opts.password || null, 'SA');
+            var out = new Uint8Array(wav.length); out.set(wav);
+            var entries = [], changed = 0, se = 0, maxd = 0;
+            for (i = 0; i < n; i++) {
+                out[o + i * 2] = s[i] & 255; out[o + i * 2 + 1] = (s[i] >> 8) & 255;
+                var d = s[i] - orig[i];
+                if (d) {
+                    changed++; se += d * d; if (Math.abs(d) > maxd) maxd = Math.abs(d);
+                    if (entries.length < LOG_MAX) entries.push({ index: i, time: i / info.channels / info.sampleRate, before: orig[i], after: s[i] });
+                }
+            }
+            var mse = se / n;
+            return {
+                wav: out, bpc: bpc, usedBytes: blob.length, capacity: capacityUnits(n, bpc) + HEADER, unitsUsed: used.units,
+                log: { entries: entries, samples: n, changed: changed, percent: n ? changed / n * 100 : 0, maxDiff: maxd, mse: mse, psnr: mse === 0 ? Infinity : 10 * Math.log(32767 * 32767 / mse) / Math.LN10 }
+            };
+        },
+        extract: function (wav, password) {
+            var info = parseWav(wav), n = info.samples, o = info.dataOffset;
+            return extractCore(function (u) { var v = wav[o + u * 2] | (wav[o + u * 2 + 1] << 8); return v << 16 >> 16; }, n, password || null, 'SA');
+        },
+        // small ambient cover: filtered noise + a slow tone so LSBs look natural
+        makeCover: function (seconds, rate) {
+            rate = rate || 22050; seconds = seconds || 8;
+            var n = Math.floor(seconds * rate), out = new Uint8Array(44 + n * 2), dv = new DataView(out.buffer);
+            function w4(o, s) { for (var i = 0; i < 4; i++) out[o + i] = s.charCodeAt(i); }
+            w4(0, 'RIFF'); dv.setUint32(4, 36 + n * 2, true); w4(8, 'WAVE'); w4(12, 'fmt ');
+            dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+            dv.setUint32(24, rate, true); dv.setUint32(28, rate * 2, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
+            w4(36, 'data'); dv.setUint32(40, n * 2, true);
+            var seed = 1234567, lp = 0;
+            for (var i = 0; i < n; i++) {
+                seed = (seed * 1664525 + 1013904223) >>> 0;
+                var r = (seed / 4294967296) * 2 - 1;
+                lp += (r - lp) * 0.08;
+                var t = i / rate, v = lp * 2600 + Math.sin(2 * Math.PI * 196 * t) * 1400 * (0.6 + 0.4 * Math.sin(t * 0.7)) + Math.sin(2 * Math.PI * 293.7 * t) * 700;
+                dv.setInt16(44 + i * 2, Math.max(-32768, Math.min(32767, Math.round(v))), true);
+            }
+            return out;
+        }
+    };
+
+    // ------------------------------------------------------------ text carrier (invisible characters)
+    var ZW = ['​', '‌', '⁠', '⁢'], ZMARK = '⁣';
+    var ZW_MAP = { '​': 0, '‌': 1, '⁠': 2, '⁢': 3 };
+    var text = {
+        MAX_BYTES: 24000,
+        embed: function (cover, blob) {
+            if (blob.length > text.MAX_BYTES) throw new Error('too_big');
+            var run = ZMARK, i;
+            for (i = 0; i < blob.length; i++) {
+                var b = blob[i];
+                run += ZW[(b >> 6) & 3] + ZW[(b >> 4) & 3] + ZW[(b >> 2) & 3] + ZW[b & 3];
+            }
+            run += ZMARK;
+            cover = cover.replace(/[​‌⁠⁢⁣]/g, '');
+            var pos = 0;
+            if (cover.length) { var cp = cover.codePointAt(0); pos = cp > 0xFFFF ? 2 : 1; }
+            var out = cover.slice(0, pos) + run + cover.slice(pos);
+            return { text: out, invisible: run.length, position: pos, visible: cover.length };
+        },
+        extract: function (str) {
+            var a = str.indexOf(ZMARK);
+            if (a < 0) return { status: 'none' };
+            var e = str.indexOf(ZMARK, a + 1);
+            if (e < 0) return { status: 'none' };
+            var seg = str.slice(a + 1, e), bytes = [], cur = 0, k = 0;
+            for (var i = 0; i < seg.length; i++) {
+                var v = ZW_MAP[seg[i]];
+                if (v === undefined) continue;
+                cur = (cur << 2) | v; k++;
+                if (k === 4) { bytes.push(cur); cur = 0; k = 0; }
+            }
+            return { status: 'ok', blob: new Uint8Array(bytes), start: a, end: e };
+        },
+        strip: function (str) { return str.replace(/[​‌⁠⁢⁣]/g, ''); }
+    };
+
+    // ------------------------------------------------------------ file carrier (append)
+    var FOOT = [0x53, 0x43, 0x46, 0x54]; // 'SCFT'
+    var file = {
+        embed: function (cover, blob) {
+            var foot = new Uint8Array(8); foot.set(FOOT); putU32(foot, 4, blob.length);
+            return { bytes: concat(cover, blob, foot), offset: cover.length, coverSize: cover.length };
+        },
+        extract: function (bytes) {
+            var n = bytes.length;
+            if (n < 8 + HEADER) return { status: 'none' };
+            for (var i = 0; i < 4; i++) if (bytes[n - 8 + i] !== FOOT[i]) return { status: 'none' };
+            var len = u32be(bytes, n - 4);
+            if (len < HEADER || len > n - 8) return { status: 'none' };
+            return { status: 'ok', blob: bytes.slice(n - 8 - len, n - 8), offset: n - 8 - len };
+        }
+    };
+
+    return {
+        sha256: sha256, chacha20: chacha20, crc32: crc32, utf8: utf8, fromUtf8: fromUtf8, hex: hex, concat: concat,
+        pack: pack, unpack: unpack, blobInfo: blobInfo, HEADER: HEADER, LOG_MAX: LOG_MAX,
+        image: image, audio: audio, text: text, file: file
+    };
+});
+
+</script>
+<script>
+/* PixelCore - logic for the shared 100x100 Pixel Wall. No DOM, runs in Node and the browser.
+ *
+ * Wire format (one chat message, plain text):   "1|<uid>|<index>.<rrggbb>,<index>.<rrggbb>,..."
+ *   index = y * 100 + x   (0..9999)
+ * Rule: every person (uid) may place LIMIT pixels in any WINDOW milliseconds.
+ *   Limiter   enforces it for the local player (sliding window, survives reloads when persisted by the caller).
+ *   Gate      enforces it again on every incoming message, so honest clients agree on the same canvas.
+ */
+(function (root, factory) {
+    if (typeof module === 'object' && module.exports) module.exports = factory();
+    else root.PixelCore = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+    'use strict';
+    var SIZE = 100, CELLS = SIZE * SIZE, LIMIT = 25, WINDOW = 60000, MAX_BATCH = 40;
+
+    function hex2(n) { return (n < 16 ? '0' : '') + n.toString(16); }
+    function rgbToHex(r, g, b) { return hex2(r) + hex2(g) + hex2(b); }
+    function hexToRgb(h) {
+        h = String(h || '').replace('#', '').toLowerCase();
+        if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+        if (!/^[0-9a-f]{6}$/.test(h)) return null;
+        return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+    }
+    function hsvToRgb(h, s, v) {
+        h = ((h % 360) + 360) % 360; s = Math.max(0, Math.min(1, s)); v = Math.max(0, Math.min(1, v));
+        var c = v * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = v - c, r = 0, g = 0, b = 0;
+        if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; } else if (h < 180) { g = c; b = x; }
+        else if (h < 240) { g = x; b = c; } else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+        return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+    }
+    function rgbToHsv(r, g, b) {
+        r /= 255; g /= 255; b /= 255;
+        var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, h = 0;
+        if (d) {
+            if (mx === r) h = ((g - b) / d) % 6; else if (mx === g) h = (b - r) / d + 2; else h = (r - g) / d + 4;
+            h *= 60; if (h < 0) h += 360;
+        }
+        return [h, mx ? d / mx : 0, mx];
+    }
+
+    // pixels: [{i: index, c: 'rrggbb'}]
+    function encode(uid, pixels) {
+        var parts = [];
+        for (var k = 0; k < pixels.length && k < MAX_BATCH; k++) parts.push(pixels[k].i + '.' + pixels[k].c);
+        return '1|' + uid + '|' + parts.join(',');
+    }
+    function decode(msg) {
+        if (typeof msg !== 'string' || msg.length > 4000) return null;
+        var p = msg.split('|');
+        if (p.length !== 3 || p[0] !== '1' || !/^[a-z0-9]{4,16}$/.test(p[1])) return null;
+        var out = [], items = p[2].split(',');
+        for (var k = 0; k < items.length && k < MAX_BATCH; k++) {
+            var m = /^(\d{1,4})\.([0-9a-f]{6})$/.exec(items[k]);
+            if (!m) continue;
+            var i = parseInt(m[1], 10);
+            if (i >= 0 && i < CELLS) out.push({ i: i, c: m[2] });
+        }
+        return out.length ? { uid: p[1], pixels: out } : null;
+    }
+
+    // Local player's allowance: LIMIT placements in any rolling WINDOW.
+    function Limiter(limit, windowMs, stamps) {
+        this.limit = limit || LIMIT; this.win = windowMs || WINDOW; this.stamps = (stamps || []).slice();
+    }
+    Limiter.prototype.prune = function (now) {
+        var w = this.win; this.stamps = this.stamps.filter(function (t) { return now - t < w && t <= now + 5000; });
+    };
+    Limiter.prototype.left = function (now) { this.prune(now); return Math.max(0, this.limit - this.stamps.length); };
+    Limiter.prototype.take = function (now) {
+        if (this.left(now) <= 0) return false;
+        this.stamps.push(now); return true;
+    };
+    // ms until one more placement is available (0 if available now)
+    Limiter.prototype.nextIn = function (now) {
+        this.prune(now);
+        if (this.stamps.length < this.limit) return 0;
+        return Math.max(0, this.stamps[0] + this.win - now);
+    };
+
+    // Receiving side: accept at most LIMIT pixels per uid per WINDOW of message time.
+    function Gate(limit, windowMs) { this.limit = limit || LIMIT; this.win = windowMs || WINDOW; this.by = {}; this.n = 0; }
+    Gate.prototype.accept = function (uid, t, count) {
+        var a = this.by[uid] || (this.by[uid] = []), w = this.win, i = 0;
+        while (i < a.length && t - a[i][0] >= w) i++;
+        if (i) a.splice(0, i);
+        var used = 0; for (var k = 0; k < a.length; k++) used += a[k][1];
+        var ok = Math.max(0, Math.min(count, this.limit - used));
+        if (ok) a.push([t, ok]);
+        if (++this.n > 4000) { this.n = 0; for (var u in this.by) if (!this.by[u].length || t - this.by[u][this.by[u].length - 1][0] > w) delete this.by[u]; }
+        return ok;
+    };
+
+    return {
+        SIZE: SIZE, CELLS: CELLS, LIMIT: LIMIT, WINDOW: WINDOW, MAX_BATCH: MAX_BATCH,
+        encode: encode, decode: decode, Limiter: Limiter, Gate: Gate,
+        hexToRgb: hexToRgb, rgbToHex: rgbToHex, hsvToRgb: hsvToRgb, rgbToHsv: rgbToHsv
+    };
+});
+
+</script>
+<script>
 // ============================================================
 // ANIMATED ICON LIBRARY (SVG motion graphics, replaces all emoji)
 // ============================================================
@@ -4431,10 +5148,8 @@ const ICONS = {
     txt: `<svg viewBox="0 0 48 48"><path class="a-grow" d="M7 13h34"/><path class="a-grow d3" d="M7 24h24"/><path class="a-grow d6" d="M7 35h30"/></svg>`,
     color: `<svg viewBox="0 0 48 48"><circle class="a-spin-fast" cx="24" cy="24" r="17" stroke-dasharray="26 8"/><circle class="fill a-pulse" cx="24" cy="24" r="6"/></svg>`,
     arrow: `<svg viewBox="0 0 24 24"><path class="a-slideR" d="M4 12h14M13 7l5 5-5 5"/></svg>`,
-    trivia: `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18"/><circle class="a-ring" cx="24" cy="24" r="18"/><text class="a-float" x="24" y="32" text-anchor="middle" font-size="24" font-weight="700" font-family="sans-serif" fill="currentColor" stroke="none">?</text></svg>`,
     memory: `<svg viewBox="0 0 48 48"><rect class="a-flip" x="6" y="12" width="16" height="24" rx="4"/><rect class="a-flip d4" x="26" y="12" width="16" height="24" rx="4"/></svg>`,
     guess: `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" opacity=".5"/><circle class="a-ring" cx="24" cy="24" r="19"/><circle class="a-ring d4" cx="24" cy="24" r="19"/><circle class="fill a-pulse" cx="24" cy="24" r="4"/></svg>`,
-    mole: `<svg viewBox="0 0 48 48"><path d="M6 38h36" opacity=".45"/><circle class="fill a-rise" cx="24" cy="26" r="8"/><circle class="a-ring" cx="24" cy="30" r="14"/></svg>`,
     bolt: `<svg viewBox="0 0 48 48"><path class="a-bolt" d="M27 5L11 27h12l-2 16 16-22H25z"/></svg>`
 ,
     scan: `<svg viewBox="0 0 48 48"><circle cx="21" cy="21" r="13"/><path d="M31 31l11 11"/><circle class="a-ring" cx="21" cy="21" r="13"/><circle class="fill a-pulse" cx="21" cy="21" r="3"/></svg>`,
@@ -4448,6 +5163,11 @@ const ICONS = {
         for (let r = 0; r < 4; r++) for (let c = 0; c < 6; c++) s += `<circle class="a-pulse" style="animation-delay:${(((r * 6 + c) % 8) * 0.2).toFixed(2)}s" cx="${7 + c * 6.8}" cy="${9 + r * 10}" r="2"/>`;
         return s + '</g></svg>';
     })()
+,
+    stimg: `<svg viewBox="0 0 48 48"><rect x="6" y="9" width="36" height="30" rx="5"/><circle class="fill a-pulse" cx="17" cy="19" r="3.2"/><path class="a-draw" d="M8 35l10-10 8 8 6-6 10 10"/><circle class="a-ring" cx="36" cy="17" r="5"/></svg>`,
+    staud: `<svg viewBox="0 0 48 48"><path d="M3 24h42" opacity=".25"/><path class="a-draw" d="M4 24h6l3-10 5 22 5-26 5 22 3-8h13"/><circle class="a-ring" cx="38" cy="24" r="6"/></svg>`,
+    sttxt: `<svg viewBox="0 0 48 48"><path d="M8 14h32M8 24h14"/><path class="a-draw" d="M26 24h14" stroke-dasharray="2 4"/><path d="M8 34h24"/><circle class="fill a-pulse" cx="38" cy="34" r="2.4"/></svg>`,
+    stfile: `<svg viewBox="0 0 48 48"><path d="M12 5h17l9 9v29H12z"/><path d="M29 5v9h9"/><rect class="a-rise" x="18" y="24" width="14" height="10" rx="2"/><path d="M21 29h8" opacity=".6"/></svg>`
 };
 // Animate an icon only while it is actually on screen (big win on phones)
 const iconIO = ('IntersectionObserver' in window)
@@ -4572,51 +5292,6 @@ function convertTemperature(value, from, to) {
     if (to==='c') return c; else if (to==='f') return c*9/5+32; else return c+273.15;
 }
 
-// Trivia Quiz
-let triviaScore=0, triviaCurrentQuestion=0, triviaQuestions=[];
-let triviaBestScore = parseInt(localStorage.getItem('triviaBestScore')||'0');
-const triviaData = [
-    { question:"What is the capital of France?", options:["London","Berlin","Paris","Madrid"], correct:2 },
-    { question:"Which planet is known as the Red Planet?", options:["Venus","Mars","Jupiter","Saturn"], correct:1 },
-    { question:"What is the largest mammal in the world?", options:["Elephant","Blue Whale","Giraffe","Polar Bear"], correct:1 },
-    { question:"How many continents are there?", options:["5","6","7","8"], correct:2 },
-    { question:"What is the chemical symbol for Gold?", options:["Go","Gd","Au","Ag"], correct:2 }
-];
-function initTriviaGame() {
-    triviaQuestions = [...triviaData]; shuffleArray(triviaQuestions);
-    triviaCurrentQuestion=0; triviaScore=0;
-    document.getElementById('triviaScore').textContent=triviaScore;
-    document.getElementById('triviaProgress').textContent='0/5';
-    document.getElementById('triviaBest').textContent=triviaBestScore;
-    loadTriviaQuestion();
-}
-function loadTriviaQuestion() {
-    if (triviaCurrentQuestion >= triviaQuestions.length) { endTriviaGame(); return; }
-    const q = triviaQuestions[triviaCurrentQuestion];
-    document.getElementById('triviaQuestion').textContent = q.question;
-    const optDiv = document.getElementById('triviaOptions'); optDiv.innerHTML='';
-    q.options.forEach((opt, i) => {
-        const btn = document.createElement('button'); btn.className='quiz-option';
-        btn.textContent=`${i+1}. ${opt}`; btn.onclick=()=>checkTriviaAnswer(i); optDiv.appendChild(btn);
-    });
-    document.getElementById('triviaProgress').textContent=`${triviaCurrentQuestion+1}/5`;
-}
-function checkTriviaAnswer(sel) {
-    const q = triviaQuestions[triviaCurrentQuestion];
-    document.querySelectorAll('.quiz-option').forEach((o,i) => {
-        o.disabled=true;
-        if (i===q.correct) o.classList.add('correct');
-        else if (i===sel) o.classList.add('wrong');
-    });
-    if (sel===q.correct) { triviaScore+=10; document.getElementById('triviaScore').textContent=triviaScore; }
-}
-function nextTriviaQuestion() { triviaCurrentQuestion++; triviaCurrentQuestion<triviaQuestions.length ? loadTriviaQuestion() : endTriviaGame(); }
-function endTriviaGame() {
-    if (triviaScore>triviaBestScore) { triviaBestScore=triviaScore; localStorage.setItem('triviaBestScore',triviaBestScore); document.getElementById('triviaBest').textContent=triviaBestScore; }
-    document.getElementById('triviaQuestion').textContent=`Game Over! Final Score: ${triviaScore}`;
-    document.getElementById('triviaOptions').innerHTML=''; document.getElementById('triviaProgress').textContent='5/5';
-}
-function resetTriviaGame() { initTriviaGame(); }
 function shuffleArray(arr) { for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
 
 // Memory Card Game (animated geometric shapes instead of emoji)
@@ -4679,68 +5354,6 @@ function makeGuess() {
     document.getElementById('guessInput').value='';
 }
 function resetGuessGame() { secretNumber=Math.floor(Math.random()*100)+1; guessAttempts=0; document.getElementById('guessAttempts').textContent='0'; document.getElementById('guessDisplay').textContent="I'm thinking of a number between 1-100. Can you guess it?"; document.getElementById('guessDisplay').style.color='var(--text)'; document.getElementById('guessInput').value=''; }
-
-// Whack-a-Mole (animated orbs instead of emoji)
-const MOLE_ORB = '<svg class="mole-orb" viewBox="0 0 48 48"><circle class="orb-ring" cx="24" cy="24" r="14" fill="none" stroke="currentColor" stroke-width="2"/><circle class="orb-core" cx="24" cy="24" r="10" fill="currentColor"/></svg>';
-const MOLE_BURST = '<svg class="mole-burst" viewBox="0 0 48 48"><g stroke="currentColor" stroke-width="3" stroke-linecap="round"><path class="ray" d="M24 4v10"/><path class="ray" d="M24 34v10"/><path class="ray" d="M4 24h10"/><path class="ray" d="M34 24h10"/><path class="ray" d="M10 10l7 7"/><path class="ray" d="M31 31l7 7"/><path class="ray" d="M38 10l-7 7"/><path class="ray" d="M17 31l-7 7"/></g></svg>';
-let moleScore=0,moleTimeLeft=30,moleGameInterval=null,moleTimerInterval=null,activeMoles=[];
-let moleBestScore=parseInt(localStorage.getItem('moleBestScore')||'0');
-function startMoleGame() {
-    if (moleGameInterval) return;
-    moleScore=0; moleTimeLeft=30; activeMoles=[];
-    document.getElementById('moleScore').textContent='0'; document.getElementById('moleTime').textContent='30s'; document.getElementById('moleBest').textContent=moleBestScore;
-    document.getElementById('moleDisplay').textContent='Game started! Click the targets!'; document.getElementById('moleTimerBar').style.transform='scaleX(1)';
-    document.querySelectorAll('.mole-hole').forEach(h=>{h.className='mole-hole';h.innerHTML='';});
-    moleTimerInterval=setInterval(()=>{
-        moleTimeLeft--; document.getElementById('moleTime').textContent=moleTimeLeft+'s'; document.getElementById('moleTimerBar').style.transform='scaleX('+Math.max(0,moleTimeLeft/30)+')';
-        if(moleTimeLeft<=0){stopMoleGame();document.getElementById('moleDisplay').textContent=`Game Over! Final Score: ${moleScore}. Best: ${moleBestScore}`;}
-    },1000);
-    moleGameInterval=setInterval(spawnMole,800);
-}
-function spawnMole() {
-    if (activeMoles.length>=3) return;
-    const holes=document.querySelectorAll('.mole-hole');
-    const avail=Array.from(holes).filter((_,i)=>!activeMoles.includes(i));
-    if (!avail.length) return;
-    const randIdx=Math.floor(Math.random()*avail.length);
-    const hIdx=Array.from(holes).indexOf(avail[randIdx]);
-    activeMoles.push(hIdx); holes[hIdx].classList.add('active'); holes[hIdx].innerHTML=MOLE_ORB;
-    setTimeout(()=>{ if(holes[hIdx].classList.contains('active')){holes[hIdx].classList.remove('active');holes[hIdx].innerHTML='';activeMoles=activeMoles.filter(i=>i!==hIdx);} },Math.random()*1000+800);
-}
-function whackMole(index) {
-    const hole=document.querySelectorAll('.mole-hole')[index];
-    if (hole.classList.contains('active')) {
-        hole.classList.remove('active'); hole.classList.add('hit'); hole.innerHTML=MOLE_BURST; moleScore++;
-        document.getElementById('moleScore').textContent=moleScore;
-        if(moleScore>moleBestScore){moleBestScore=moleScore;localStorage.setItem('moleBestScore',moleBestScore);document.getElementById('moleBest').textContent=moleBestScore;}
-        activeMoles=activeMoles.filter(i=>i!==index);
-        setTimeout(()=>{hole.classList.remove('hit');hole.innerHTML='';},300);
-    }
-}
-function stopMoleGame() {
-    clearInterval(moleGameInterval); clearInterval(moleTimerInterval); moleGameInterval=null; moleTimerInterval=null;
-    document.querySelectorAll('.mole-hole').forEach(h=>{h.className='mole-hole';h.innerHTML='';});
-    activeMoles=[];
-}
-
-// Reaction Time
-let reactionTimeout, reactionStartTime, reactionState='idle', bestReactionTime=Infinity;
-function startReaction() {
-    if (reactionState==='waiting') return;
-    reactionState='waiting';
-    const box=document.getElementById('reactionBox'); box.className='reaction-box waiting'; box.textContent='Wait for green...';
-    document.getElementById('reactionDisplay').textContent='Wait...';
-    reactionTimeout=setTimeout(()=>{ reactionState='ready'; box.className='reaction-box ready'; box.textContent='CLICK NOW!'; document.getElementById('reactionDisplay').textContent='GO! Click as fast as you can!'; reactionStartTime=Date.now(); },Math.random()*3000+1000);
-}
-function handleReactionClick() {
-    const box=document.getElementById('reactionBox'), display=document.getElementById('reactionDisplay');
-    if (reactionState==='waiting') { clearTimeout(reactionTimeout); reactionState='idle'; box.className='reaction-box result'; box.textContent='Too early!'; display.textContent='You clicked too soon! Click Start to try again.'; }
-    else if (reactionState==='ready') {
-        const t=Date.now()-reactionStartTime; reactionState='idle'; box.className='reaction-box result'; box.textContent=`${t} ms`; display.textContent=`Your reaction time: ${t}ms`;
-        if(t<bestReactionTime){bestReactionTime=t;document.getElementById('bestReaction').textContent=`${t} ms`;}
-    }
-}
-function resetReaction() { bestReactionTime=Infinity; document.getElementById('bestReaction').textContent='-- ms'; document.getElementById('reactionBox').className='reaction-box waiting'; document.getElementById('reactionBox').textContent='Wait for green...'; document.getElementById('reactionDisplay').textContent='Click "Start" then wait for the box to turn green!'; reactionState='idle'; }
 
 // ============================================================
 // SHARED CLEAR UTILITIES
@@ -5991,8 +6604,9 @@ function dockSet(i, flow) {
 function showTab(name) {
     const ni = TAB_IDS.indexOf(name), ci = TAB_IDS.indexOf(curTab);
     const inSub = !!document.querySelector('.cipher-page.active');
-    stopBarcodeScan(); stopQRCamera(); sigLeave();
+    stopBarcodeScan(); stopQRCamera(); sigLeave(); if (typeof stLeave === 'function') stLeave();
     curTab = name;
+    if (typeof pxOnTab === 'function') pxOnTab(name);
     dockSet(ni, ni !== ci);
     if (!inSub && ni === ci) return;
     swapTo(byId(TAB_EL[name]), inSub ? -1 : (ni >= ci ? 1 : -1));
@@ -6035,7 +6649,7 @@ function goToPage(page) {
     else if (page === 'qr') { ensureQRCodeLoaded(); ensureJsQRLoaded(); }
 }
 function goToHome() {
-    stopBarcodeScan(); stopQRCamera(); sigLeave();
+    stopBarcodeScan(); stopQRCamera(); sigLeave(); if (typeof stLeave === 'function') stLeave();
     swapTo(byId(TAB_EL[curTab]), -1);
 }
 function heroDetect() { showTab('tools'); setTimeout(() => { const t = byId('detectInput'); if (t) t.focus(); }, 520); }
@@ -6782,11 +7396,1058 @@ function initSignalLab() {
 }
 
 // ============================================================
+// TURN 6: steganography, settings, live
+// ============================================================
+// ============================================================
+// STEGANOGRAPHY (UI). The engine lives in the StegoEngine module.
+// ============================================================
+const ST = {
+    tab: 'hide', c: 'image', kind: 'text', bpc: 1,
+    cover: { image: null, audio: null, file: null }, secret: null,
+    rev: { image: null, audio: null, file: null },
+    out: null, revOut: null, log: null, shown: 0, ana: null, urls: []
+};
+const ST_MAXPX = 2400000, ST_MAXBYTES = 40 * 1048576;
+const ST_SUB = {
+    image: ['Pick a picture. The secret is written into the lowest bits of its colors, so the picture looks the same.', 'Choose the PNG that holds a secret. Do not use a screenshot or a re-sent copy, the pixels must be unchanged.', 'PNG output'],
+    audio: ['Pick a WAV file. The secret is written into the lowest bit of each sample, which you cannot hear.', 'Choose the WAV made here. An MP3 or a re-recorded copy loses the secret.', 'WAV output'],
+    text: ['Write a normal looking text. The secret is added as invisible characters inside it.', 'Paste the text exactly as you got it. Some apps strip invisible characters.', 'Invisible characters'],
+    file: ['Pick any file. The secret is added to its end and the file still opens normally.', 'Choose the file made here. Re-saving it in another app may drop the secret.', 'Same file type']
+};
+function stFmt(n) { return n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : (n / 1048576).toFixed(2) + ' MB'; }
+function stBase(name) { return (name || 'file').replace(/\.[^.]*$/, '') || 'file'; }
+function stExt(name) { const m = /\.[^.]{1,8}$/.exec(name || ''); return m ? m[0] : ''; }
+function stStat(label, val) { return '<div class="stat"><label>' + label + '</label><b>' + val + '</b></div>'; }
+function stEsc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+// ---------- tabs / carriers ----------
+function stTab(t) {
+    ST.tab = t;
+    const bar = byId('stTabs');
+    bar.querySelector('.seg-ind').style.setProperty('--i', ['hide', 'reveal', 'analyze'].indexOf(t));
+    bar.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+    byId('stHide').classList.toggle('show', t === 'hide');
+    byId('stReveal').classList.toggle('show', t === 'reveal');
+    byId('stAnalyze').classList.toggle('show', t === 'analyze');
+    byId('stChips').hidden = t === 'analyze';
+}
+function stBuildBpc() {
+    const opts = ST.c === 'image' ? [[1, 'Invisible'], [2, 'Balanced'], [3, 'Max space']] : [[1, 'Inaudible'], [2, 'More space']];
+    if (ST.bpc > opts.length) ST.bpc = 1;
+    byId('stBpc').innerHTML = opts.map(o => '<button class="chip' + (o[0] === ST.bpc ? ' active' : '') + '" type="button" onclick="stSetBpc(' + o[0] + ')"><span class="tg">' + o[0] + ' BIT</span>' + o[1] + '</button>').join('');
+}
+function stSetBpc(n) { ST.bpc = n; stBuildBpc(); stCapRefresh(); }
+function stCarrier(c) {
+    ST.c = c; byId('stegoPage').dataset.c = c;
+    byId('stChips').querySelectorAll('.chip').forEach(b => b.classList.toggle('active', b.dataset.c === c));
+    document.querySelectorAll('#stegoPage .st-sec').forEach(e => { e.hidden = e.dataset.c !== c; });
+    byId('stBpcRow').hidden = !(c === 'image' || c === 'audio');
+    stBuildBpc();
+    byId('stCoverSub').textContent = ST_SUB[c][0];
+    byId('stRevSub').textContent = ST_SUB[c][1];
+    byId('stCovKind').textContent = ST_SUB[c][2];
+    byId('stOut').classList.remove('show'); byId('stNote').textContent = ''; ST.out = null;
+    byId('stRevOut').classList.remove('show'); byId('stRevMsg').textContent = '';
+    byId('stPwHint').textContent = (c === 'image' || c === 'audio')
+        ? 'With a password the secret is encrypted (ChaCha20) and scattered over secret positions.'
+        : 'With a password the secret is encrypted (ChaCha20). Without it the data is only hidden, not locked.';
+    stCapRefresh();
+}
+function stKind(k) {
+    ST.kind = k;
+    byId('stKind').querySelectorAll('.chip').forEach(b => b.classList.toggle('active', b.dataset.k === k));
+    byId('stSecText').hidden = k !== 'text'; byId('stSecFile').hidden = k !== 'file';
+    stCapRefresh();
+}
+function stEye(id, btn) {
+    const i = byId(id), show = i.type === 'password';
+    i.type = show ? 'text' : 'password'; btn.classList.toggle('on', show);
+}
+function stClearTxt(id) { byId(id).value = ''; stCapRefresh(); }
+
+// ---------- loading ----------
+async function stDecodeImage(file, maxPx) {
+    let bmp = null, src, w, h;
+    try { bmp = await createImageBitmap(file, { colorSpaceConversion: 'none' }); } catch (e) { try { bmp = await createImageBitmap(file); } catch (e2) { bmp = null; } }
+    if (bmp) { src = bmp; w = bmp.width; h = bmp.height; }
+    else {
+        const url = URL.createObjectURL(file);
+        try { src = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = url; }); }
+        finally { setTimeout(() => URL.revokeObjectURL(url), 5000); }
+        w = src.naturalWidth; h = src.naturalHeight;
+    }
+    let resized = false;
+    if (maxPx && w * h > maxPx) { const k = Math.sqrt(maxPx / (w * h)); w = Math.max(1, Math.floor(w * k)); h = Math.max(1, Math.floor(h * k)); resized = true; }
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const cx = cv.getContext('2d', { willReadFrequently: true });
+    cx.fillStyle = '#000'; cx.fillRect(0, 0, w, h);
+    cx.imageSmoothingQuality = 'high';
+    cx.drawImage(src, 0, 0, w, h);
+    if (bmp && bmp.close) bmp.close();
+    return { rgba: cx.getImageData(0, 0, w, h).data, w: w, h: h, resized: resized, canvas: cv };
+}
+async function stToWav(file) {
+    const buf = await file.arrayBuffer(), u8 = new Uint8Array(buf);
+    try { StegoEngine.audio.parse(u8); return { bytes: u8, converted: false }; } catch (e) { /* not a PCM16 WAV: decode it */ }
+    const AC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    const oc = new AC(1, 1, 44100);
+    const ab = await new Promise((res, rej) => { const p = oc.decodeAudioData(buf.slice(0), res, rej); if (p && p.then) p.then(res, rej); });
+    const n = Math.min(ab.length, ab.sampleRate * 90), mono = new Float32Array(n), ch = ab.numberOfChannels;
+    for (let c = 0; c < ch; c++) { const d = ab.getChannelData(c); for (let i = 0; i < n; i++) mono[i] += d[i] / ch; }
+    return { bytes: SignalEngine.toWav(mono, ab.sampleRate), converted: true };
+}
+async function stReadBytes(file) {
+    if (file.size > ST_MAXBYTES) throw new Error('That file is bigger than ' + stFmt(ST_MAXBYTES) + '.');
+    return new Uint8Array(await file.arrayBuffer());
+}
+function stUrl(blob) { const u = URL.createObjectURL(blob); ST.urls.push(u); return u; }
+function stSetAudioPrev(bytes) {
+    const el = byId('stAudPrev');
+    el.src = stUrl(new Blob([bytes], { type: 'audio/wav' })); el.hidden = false;
+}
+function stDrawPrev(img) {
+    const pv = byId('stPrev'), k = Math.min(1, 640 / img.w);
+    pv.width = Math.round(img.w * k); pv.height = Math.round(img.h * k);
+    pv.getContext('2d').drawImage(img.canvas, 0, 0, pv.width, pv.height);
+    pv.hidden = false;
+}
+async function stLoadCover(kind, file) {
+    if (!file) return;
+    const note = byId('stNote'); note.textContent = '';
+    try {
+        if (kind === 'image') {
+            byId('stImgName').textContent = 'Reading ' + file.name + '...';
+            const im = await stDecodeImage(file, ST_MAXPX);
+            im.name = file.name; ST.cover.image = im; stDrawPrev(im);
+            byId('stImgName').textContent = file.name + ' - ' + im.w + ' x ' + im.h + (im.resized ? ' (resized to fit)' : '');
+        } else if (kind === 'audio') {
+            byId('stAudName').textContent = 'Reading ' + file.name + '...';
+            const r = await stToWav(file);
+            const info = StegoEngine.audio.parse(r.bytes);
+            ST.cover.audio = { bytes: r.bytes, name: file.name };
+            stSetAudioPrev(r.bytes);
+            byId('stAudName').textContent = file.name + ' - ' + (info.samples / info.channels / info.sampleRate).toFixed(1) + ' s' + (r.converted ? ' (converted to WAV)' : '');
+        } else {
+            const bytes = await stReadBytes(file);
+            ST.cover.file = { bytes: bytes, name: file.name, type: file.type };
+            byId('stFileName').textContent = file.name + ' - ' + stFmt(bytes.length);
+        }
+    } catch (e) {
+        ST.cover[kind] = null;
+        const msg = e && e.message && !/decode|source|load/i.test(e.message) ? e.message : 'Could not read that file.';
+        note.textContent = msg;
+        if (kind === 'image') byId('stImgName').textContent = 'Try a PNG or JPG.';
+        if (kind === 'audio') byId('stAudName').textContent = 'Try a WAV file.';
+    }
+    stCapRefresh();
+}
+async function stLoadSecret(file) {
+    if (!file) return;
+    try {
+        const bytes = await stReadBytes(file);
+        ST.secret = { bytes: bytes, name: file.name };
+        byId('stSecName').textContent = file.name + ' - ' + stFmt(bytes.length);
+    } catch (e) { ST.secret = null; byId('stNote').textContent = e.message || 'Could not read that file.'; }
+    stCapRefresh();
+}
+function stSampleImage() {
+    const w = 720, h = 480, cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const cx = cv.getContext('2d', { willReadFrequently: true }), cool = document.documentElement.dataset.theme === 'cool';
+    const P = cool ? ['#0b1a26', '#134763', '#38bdf8', '#bfe9fb'] : ['#2b1d14', '#7a4a30', '#d97757', '#f0c9a8'];
+    const g = cx.createLinearGradient(0, 0, w, h); g.addColorStop(0, P[0]); g.addColorStop(0.55, P[1]); g.addColorStop(1, P[0]);
+    cx.fillStyle = g; cx.fillRect(0, 0, w, h);
+    [[0.78, 0.28, 220, P[2], 0.55], [0.22, 0.78, 260, P[1], 0.7], [0.5, 0.5, 120, P[3], 0.18]].forEach(c => {
+        const r = cx.createRadialGradient(c[0] * w, c[1] * h, 0, c[0] * w, c[1] * h, c[2]);
+        r.addColorStop(0, c[3]); r.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.globalAlpha = c[4]; cx.fillStyle = r; cx.fillRect(0, 0, w, h); cx.globalAlpha = 1;
+    });
+    cx.lineWidth = 2;
+    for (let k = 0; k < 7; k++) {
+        cx.strokeStyle = P[3]; cx.globalAlpha = 0.07 + k * 0.025; cx.beginPath();
+        for (let x = 0; x <= w; x += 8) { const y = h * (0.3 + k * 0.07) + Math.sin(x / 70 + k) * 26 + Math.sin(x / 23 + k * 2) * 5; x ? cx.lineTo(x, y) : cx.moveTo(x, y); }
+        cx.stroke();
+    }
+    cx.globalAlpha = 1;
+    const id = cx.getImageData(0, 0, w, h), d = id.data;
+    let s = 2463534242;
+    for (let i = 0; i < d.length; i += 4) {
+        s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0;
+        const n = (s % 5) - 2;
+        d[i] = Math.max(0, Math.min(255, d[i] + n)); d[i + 1] = Math.max(0, Math.min(255, d[i + 1] + ((s >>> 8) % 5) - 2)); d[i + 2] = Math.max(0, Math.min(255, d[i + 2] + ((s >>> 16) % 5) - 2)); d[i + 3] = 255;
+    }
+    cx.putImageData(id, 0, 0);
+    return { rgba: cx.getImageData(0, 0, w, h).data, w: w, h: h, canvas: cv, name: 'sample-cover.png' };
+}
+function stSample(kind) {
+    byId('stNote').textContent = '';
+    if (kind === 'image') {
+        const im = stSampleImage(); ST.cover.image = im; stDrawPrev(im);
+        byId('stImgName').textContent = 'Sample cover - ' + im.w + ' x ' + im.h;
+    } else {
+        const wav = StegoEngine.audio.makeCover(8, 22050);
+        ST.cover.audio = { bytes: wav, name: 'sample-cover.wav' }; stSetAudioPrev(wav);
+        byId('stAudName').textContent = 'Sample cover - 8.0 s';
+    }
+    stCapRefresh();
+}
+
+// ---------- capacity ----------
+function stSecret() {
+    if (ST.kind === 'text') { const t = byId('stSecret').value; return { kind: 'text', name: '', data: StegoEngine.utf8(t), empty: !t.length }; }
+    const f = ST.secret;
+    return f ? { kind: 'file', name: f.name, data: f.bytes, empty: false } : { kind: 'file', name: '', data: new Uint8Array(0), empty: true };
+}
+function stBlobSize(s) { return StegoEngine.HEADER + 2 + Math.min(255, StegoEngine.utf8(s.name).length) + s.data.length + 4; }
+function stCapacity() {
+    const c = ST.c;
+    if (c === 'image') { const i = ST.cover.image; return i ? StegoEngine.image.capacity(i.w, i.h, ST.bpc) + StegoEngine.HEADER : 0; }
+    if (c === 'audio') { const a = ST.cover.audio; return a ? StegoEngine.audio.capacity(a.bytes, ST.bpc) + StegoEngine.HEADER : 0; }
+    if (c === 'text') return StegoEngine.text.MAX_BYTES;
+    return 0;
+}
+function stCapRefresh() {
+    const size = stBlobSize(stSecret()), cap = stCapacity(), box = byId('stCap');
+    const need = ST.c === 'file' ? false : cap === 0;
+    let over = false, frac = 0, txt;
+    if (ST.c === 'file') { txt = stFmt(size) + ' to hide - no limit'; }
+    else if (need) { txt = 'choose a cover first'; }
+    else { over = size > cap; frac = Math.min(1, size / cap); txt = stFmt(size) + ' / ' + stFmt(cap); }
+    byId('stCapVal').textContent = txt;
+    byId('stCapFill').style.transform = 'scaleX(' + frac.toFixed(4) + ')';
+    box.classList.toggle('over', over);
+    byId('stCapLbl').textContent = over ? 'Too big for this cover' : 'Capacity';
+}
+
+// ---------- hide ----------
+function stRevokeOut() { if (ST.out && ST.out.url) { URL.revokeObjectURL(ST.out.url); ST.out.url = null; } }
+async function stHide() {
+    const note = byId('stNote'), c = ST.c, sec = stSecret(), btn = byId('stGo');
+    note.textContent = '';
+    if (sec.empty) { note.textContent = ST.kind === 'text' ? 'Type a secret message first.' : 'Choose a file to hide.'; return; }
+    const cov = c === 'text' ? byId('stCoverText').value : ST.cover[c];
+    if (c === 'text' ? !cov.trim() : !cov) { note.textContent = c === 'text' ? 'Write a cover text first.' : 'Choose a cover first, or use the sample cover.'; return; }
+    const pw = byId('stPw').value;
+    btn.disabled = true; btn.classList.add('busy');
+    await new Promise(r => requestAnimationFrame(() => setTimeout(r, 40)));
+    try {
+        const blob = StegoEngine.pack(sec.kind, sec.name, sec.data, pw);
+        const o = { carrier: c, encrypted: !!pw, secretKind: sec.kind, secretSize: sec.data.length, blobSize: blob.length, pw: pw, secret: sec };
+        if (c === 'image') {
+            const r = StegoEngine.image.embed(cov.rgba, cov.w, cov.h, blob, { bpc: ST.bpc, password: pw });
+            const cv = document.createElement('canvas'); cv.width = cov.w; cv.height = cov.h;
+            cv.getContext('2d').putImageData(new ImageData(r.rgba, cov.w, cov.h), 0, 0);
+            const png = await new Promise(res => cv.toBlob(res, 'image/png'));
+            if (!png) throw new Error('Could not build the PNG.');
+            o.blob = png; o.name = stBase(cov.name) + '-stego.png'; o.mime = 'image/png';
+            o.log = { type: 'image', r: r, w: cov.w, h: cov.h, orig: cov.rgba, entries: r.log.entries };
+            o.stats = [['PIXELS CHANGED', r.log.pixels.toLocaleString()], ['OF IMAGE', r.log.percent.toFixed(r.log.percent < 1 ? 3 : 2) + '%'],
+                ['MAX SHIFT', r.log.maxDiff + ' / 255'], ['PSNR', isFinite(r.log.psnr) ? r.log.psnr.toFixed(1) + ' dB' : 'perfect'],
+                ['USED', stFmt(blob.length) + ' / ' + stFmt(r.capacity)], ['LOCK', pw ? 'ChaCha20 + scatter' : 'none']];
+        } else if (c === 'audio') {
+            const r = StegoEngine.audio.embed(cov.bytes, blob, { bpc: ST.bpc, password: pw });
+            o.blob = new Blob([r.wav], { type: 'audio/wav' }); o.name = stBase(cov.name) + '-stego.wav'; o.mime = 'audio/wav';
+            o.log = { type: 'audio', r: r, entries: r.log.entries };
+            o.stats = [['SAMPLES CHANGED', r.log.changed.toLocaleString()], ['OF AUDIO', r.log.percent.toFixed(2) + '%'],
+                ['MAX SHIFT', r.log.maxDiff + ' / 32767'], ['SNR', isFinite(r.log.psnr) ? r.log.psnr.toFixed(1) + ' dB' : 'perfect'],
+                ['USED', stFmt(blob.length) + ' / ' + stFmt(r.capacity)], ['LOCK', pw ? 'ChaCha20 + scatter' : 'none']];
+        } else if (c === 'text') {
+            const r = StegoEngine.text.embed(cov, blob);
+            o.blob = new Blob([r.text], { type: 'text/plain;charset=utf-8' }); o.name = 'hidden-message.txt'; o.mime = 'text/plain'; o.text = r.text;
+            o.log = { type: 'text', r: r, cover: StegoEngine.text.strip(cov), blob: blob };
+            o.stats = [['INVISIBLE CHARS', r.invisible.toLocaleString()], ['VISIBLE CHARS', r.visible.toLocaleString()], ['INSERTED AT', 'char ' + r.position],
+                ['PAYLOAD', stFmt(blob.length)], ['LOOKS', 'unchanged'], ['LOCK', pw ? 'ChaCha20' : 'none']];
+        } else {
+            const r = StegoEngine.file.embed(cov.bytes, blob);
+            o.blob = new Blob([r.bytes], { type: cov.type || 'application/octet-stream' }); o.name = stBase(cov.name) + '-stego' + stExt(cov.name); o.mime = cov.type;
+            o.log = { type: 'file', r: r, cover: cov, blob: blob };
+            o.stats = [['COVER SIZE', stFmt(r.coverSize)], ['HIDDEN AT', 'byte ' + r.offset.toLocaleString()], ['PAYLOAD', stFmt(blob.length)],
+                ['NEW SIZE', stFmt(r.bytes.length)], ['COVER BYTES', 'untouched'], ['LOCK', pw ? 'ChaCha20' : 'none']];
+        }
+        stRevokeOut();
+        o.url = URL.createObjectURL(o.blob); ST.out = o;
+        stShowOut(o);
+        stVerify(o);
+    } catch (e) {
+        note.textContent = e && e.message === 'too_big' ? 'The secret is too big for this cover. Pick a bigger cover or a stronger setting.' : 'Could not hide it: ' + (e && e.message ? e.message : 'unknown error');
+    } finally { btn.disabled = false; btn.classList.remove('busy'); }
+}
+function stShowOut(o) {
+    const out = byId('stOut'), media = byId('stOutMedia'), c = o.carrier;
+    byId('stOutTitle').textContent = { image: 'Image ready', audio: 'Audio ready', text: 'Text ready', file: 'File ready' }[c];
+    byId('stOutCopy').hidden = c !== 'text';
+    media.innerHTML = '<i class="st-sweep"></i>';
+    if (c === 'image') { const im = document.createElement('img'); im.alt = 'Result'; im.src = o.url; media.appendChild(im); }
+    else if (c === 'audio') { const a = document.createElement('audio'); a.controls = true; a.src = o.url; media.appendChild(a); }
+    else if (c === 'text') { const t = document.createElement('textarea'); t.readOnly = true; t.id = 'stOutText'; t.value = o.text; media.appendChild(t); }
+    else media.appendChild(stHexView(o.log));
+    byId('stStats').innerHTML = o.stats.map(s => stStat(s[0], s[1])).join('');
+    byId('stVerify').className = 'st-verify'; byId('stVerify').textContent = 'Checking that it reads back...';
+    ST.log = o.log; ST.shown = 0;
+    byId('stVT').hidden = c !== 'image';
+    stLogView('log');
+    stLogBuild(o);
+    out.classList.add('show');
+    media.classList.remove('scan'); void media.offsetWidth; media.classList.add('scan');
+    setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+async function stVerify(o) {
+    const el = byId('stVerify'), pw = o.pw;
+    let ok = false, why = '';
+    try {
+        let ex;
+        if (o.carrier === 'image') { const im = await stDecodeImage(o.blob, 0); ex = StegoEngine.image.extract(im.rgba, im.w, im.h, pw); }
+        else if (o.carrier === 'audio') ex = StegoEngine.audio.extract(new Uint8Array(await o.blob.arrayBuffer()), pw);
+        else if (o.carrier === 'text') ex = StegoEngine.text.extract(o.text);
+        else ex = StegoEngine.file.extract(new Uint8Array(await o.blob.arrayBuffer()));
+        if (ex.status === 'ok') {
+            const u = StegoEngine.unpack(ex.blob, pw);
+            ok = u.status === 'ok' && u.data.length === o.secretSize && u.kind === o.secretKind;
+            if (!ok) why = u.status;
+        } else why = ex.status;
+    } catch (e) { why = e.message; }
+    if (ST.out !== o) return;
+    el.className = 'st-verify ' + (ok ? 'ok' : 'bad');
+    el.textContent = ok ? 'Verified: the secret reads back correctly from the saved ' + (o.carrier === 'image' ? 'PNG.' : o.carrier === 'audio' ? 'WAV.' : o.carrier === 'text' ? 'text.' : 'file.')
+        : 'Warning: the secret did not read back (' + why + '). Your browser may alter image pixels. Try another browser.';
+}
+function stDownload() {
+    const o = ST.out; if (!o) return;
+    const a = document.createElement('a'); a.href = o.url; a.download = o.name; document.body.appendChild(a); a.click(); a.remove();
+}
+function stCopyOut(btn) {
+    const t = byId('stOutText'); if (!t) return;
+    navigator.clipboard.writeText(t.value).then(() => { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000); }).catch(() => { t.select(); });
+}
+
+// ---------- change log ----------
+function stHexView(L) {
+    const d = document.createElement('div'); d.className = 'st-hex';
+    const cov = L.cover.bytes, tail = cov.subarray(Math.max(0, cov.length - 16)), b = L.blob, foot = L.r.bytes.subarray(L.r.bytes.length - 8);
+    const hx = (a, n) => StegoEngine.hex(a, n).replace(/(..)/g, '$1 ');
+    d.innerHTML = '<span class="c">...' + hx(tail) + '</span><br><span class="h">' + hx(b, 40) + (b.length > 40 ? '... (' + (b.length - 40) + ' more bytes)' : '') + '</span><br><span class="f">' + hx(foot) + '</span>';
+    return d;
+}
+function stLogView(v) {
+    const map = v === 'map';
+    byId('stVT').querySelectorAll('button').forEach((b, i) => b.classList.toggle('active', (i === 1) === map));
+    byId('stLog').hidden = map; byId('stMapWrap').hidden = !map;
+    byId('stMore').hidden = map || !ST.log || !ST.log.entries || ST.shown >= ST.log.entries.length;
+    if (map && ST.log && ST.log.type === 'image') stDrawHeat(ST.log);
+}
+function stRow(i, html) { return '<div class="st-row" style="--r:' + Math.min(i, 24) + '"><span class="n">' + html[0] + '</span><span class="v">' + html[1] + '</span></div>'; }
+function stRgb(a) { return 'rgb(' + a[0] + ',' + a[1] + ',' + a[2] + ')'; }
+function stDelta(n) { return (n > 0 ? '+' : '') + n; }
+function stLogBuild(o) {
+    const L = o.log, sum = byId('stSum'), log = byId('stLog');
+    log.innerHTML = ''; ST.shown = 0;
+    if (L.type === 'image') {
+        const g = L.r.log;
+        sum.innerHTML = 'Changed <b>' + g.pixels.toLocaleString() + '</b> of <b>' + g.totalPixels.toLocaleString() + '</b> pixels (<b>' + g.channels.toLocaleString() + '</b> color values). Red <b>' + g.perChannel[0].toLocaleString() + '</b>, green <b>' + g.perChannel[1].toLocaleString() + '</b>, blue <b>' + g.perChannel[2].toLocaleString() + '</b>. Each value moved by at most <b>' + g.maxDiff + '</b>.';
+        stMore(40);
+    } else if (L.type === 'audio') {
+        const g = L.r.log;
+        sum.innerHTML = 'Changed <b>' + g.changed.toLocaleString() + '</b> of <b>' + g.samples.toLocaleString() + '</b> samples. Each sample moved by at most <b>' + g.maxDiff + '</b> step.';
+        stMore(40);
+    } else if (L.type === 'text') {
+        const r = L.r;
+        sum.innerHTML = 'Inserted <b>' + r.invisible.toLocaleString() + '</b> invisible characters after character <b>' + r.position + '</b>. Four kinds of invisible character stand for 2 bits each.';
+        const syms = ['​', '‌', '⁠', '⁢'], run = r.text.slice(r.position, r.position + r.invisible), show = Math.min(run.length - 2, 240);
+        let dots = '';
+        for (let i = 1; i <= show; i++) dots += '<i class="z' + Math.max(0, syms.indexOf(run[i])) + '"></i>';
+        const first = StegoEngine.text.strip(r.text);
+        log.innerHTML = stRow(0, ['1', '<span class="st-vis" style="width:100%">' + stEsc(first.slice(0, r.position)) + '<mark>' + r.invisible + ' hidden</mark>' + stEsc(first.slice(r.position, r.position + 80)) + (first.length > r.position + 80 ? '...' : '') + '</span>']) +
+            stRow(1, ['2', '<span class="st-dots">' + dots + '</span>']);
+        ST.shown = 2;
+    } else {
+        const r = L.r, b = L.blob;
+        sum.innerHTML = 'The cover file is untouched. The secret was appended at byte <b>' + r.offset.toLocaleString() + '</b> and closed with an 8 byte footer.';
+        const rows = [['Cover', stFmt(r.coverSize) + ' (' + r.coverSize.toLocaleString() + ' bytes)'], ['Header', 'SC 01, flags ' + b[3].toString(16).padStart(2, '0') + ', ' + (b[3] & 1 ? 'encrypted' : 'plain')], ['Body', stFmt(b.length - StegoEngine.HEADER) + ' (' + (b[3] & 1 ? 'random looking' : 'readable with a hex viewer') + ')'], ['Footer', 'SCFT + length']];
+        log.innerHTML = rows.map((x, i) => stRow(i, [String(i + 1), '<span class="pos">' + x[0] + '</span><span>' + x[1] + '</span>'])).join('');
+        ST.shown = rows.length;
+        L.entries = [];
+    }
+    byId('stMore').hidden = !L.entries || ST.shown >= L.entries.length;
+}
+function stMore(n) {
+    const L = ST.log; if (!L || !L.entries) return;
+    const log = byId('stLog'), from = ST.shown, to = Math.min(L.entries.length, from + (typeof n === 'number' ? n : 60));
+    let html = '';
+    for (let i = from; i < to; i++) {
+        const e = L.entries[i];
+        if (L.type === 'image') {
+            html += stRow(i - from, ['#' + (i + 1), '<span class="pos">x ' + e.x + ' y ' + e.y + '</span><i class="st-sw" style="background:' + stRgb(e.before) + '"></i><span>' + e.before.join(',') + '</span><span class="st-arrow">&rarr;</span><i class="st-sw" style="background:' + stRgb(e.after) + '"></i><span>' + e.after.join(',') + '</span><span class="st-d">' + e.after.map((v, k) => stDelta(v - e.before[k])).join(' ') + '</span>']);
+        } else {
+            html += stRow(i - from, ['#' + (i + 1), '<span class="pos">sample ' + e.index.toLocaleString() + ' &middot; ' + e.time.toFixed(4) + ' s</span><span>' + e.before + '</span><span class="st-arrow">&rarr;</span><span>' + e.after + '</span><span class="st-d">' + stDelta(e.after - e.before) + '</span>']);
+        }
+    }
+    log.insertAdjacentHTML('beforeend', html); ST.shown = to;
+    byId('stMore').hidden = to >= L.entries.length;
+    byId('stMore').textContent = 'Show more (' + (L.entries.length - to) + ' left)';
+}
+let stAccent = null;
+function stAccentRGB() {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim().split(/[ ,]+/).map(Number);
+    return v.length >= 3 && v.every(x => x >= 0) ? v : [217, 119, 87];
+}
+function stDrawHeat(L) {
+    const cv = byId('stHeat'), w = L.w, h = L.h, W = Math.min(w, 480), s = W / w, H = Math.max(1, Math.round(h * s));
+    cv.width = W; cv.height = H;
+    const cx = cv.getContext('2d'), id = cx.createImageData(W, H), d = id.data, cnt = new Uint16Array(W * H), tot = new Uint16Array(W * H), mask = L.r.log.mask;
+    for (let y = 0; y < h; y++) {
+        const ty = Math.min(H - 1, (y * s) | 0) * W;
+        for (let x = 0; x < w; x++) { const ti = ty + Math.min(W - 1, (x * s) | 0); tot[ti]++; if (mask[y * w + x]) cnt[ti]++; }
+    }
+    const ac = stAccentRGB(), o = L.orig, kk = new Float32Array(W * H);
+    for (let i = 0; i < kk.length; i++) if (cnt[i]) kk[i] = 0.55 + 0.45 * Math.min(1, (cnt[i] / tot[i]) * 1.6);
+    const kd = new Float32Array(kk);   // soften: each changed tile glows into its neighbours so single pixels stay visible
+    for (let ty = 0; ty < H; ty++) for (let tx = 0; tx < W; tx++) {
+        const v = kk[ty * W + tx]; if (!v) continue;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+            const y2 = ty + dy, x2 = tx + dx; if (y2 < 0 || x2 < 0 || y2 >= H || x2 >= W) continue;
+            const q = v * (dx || dy ? 0.5 : 1), j = y2 * W + x2; if (q > kd[j]) kd[j] = q;
+        }
+    }
+    for (let ty = 0; ty < H; ty++) for (let tx = 0; tx < W; tx++) {
+        const ti = ty * W + tx, oi = ((Math.min(h - 1, (ty / s) | 0)) * w + Math.min(w - 1, (tx / s) | 0)) * 4, k = kd[ti], di = ti * 4, b = 0.42 * (1 - k);
+        d[di] = o[oi] * b + ac[0] * k; d[di + 1] = o[oi + 1] * b + ac[1] * k; d[di + 2] = o[oi + 2] * b + ac[2] * k; d[di + 3] = 255;
+    }
+    cx.putImageData(id, 0, 0);
+}
+function stClearAll() {
+    ST.cover = { image: null, audio: null, file: null }; ST.secret = null;
+    ['stSecret', 'stCoverText', 'stPw'].forEach(i => { byId(i).value = ''; });
+    byId('stPrev').hidden = true; byId('stAudPrev').hidden = true; byId('stAudPrev').removeAttribute('src');
+    byId('stImgName').textContent = 'Any picture. The result is saved as PNG.';
+    byId('stAudName').textContent = 'WAV works best. Other formats are converted to WAV.';
+    byId('stFileName').textContent = 'PNG, JPG, PDF, ZIP... it still opens normally afterwards.';
+    byId('stSecName').textContent = 'Any file type.';
+    byId('stOut').classList.remove('show'); byId('stNote').textContent = '';
+    stRevokeOut(); ST.out = null; ST.log = null;
+    stCapRefresh();
+}
+
+// ---------- reveal ----------
+async function stLoadRev(kind, file) {
+    if (!file) return;
+    const msg = byId('stRevMsg'); msg.textContent = ''; byId('stRevOut').classList.remove('show');
+    const nm = { image: 'stRImgName', audio: 'stRAudName', file: 'stRFileName' }[kind];
+    try {
+        if (kind === 'image') {
+            byId(nm).textContent = 'Reading ' + file.name + '...';
+            const im = await stDecodeImage(file, 0); ST.rev.image = im;
+            byId(nm).textContent = file.name + ' - ' + im.w + ' x ' + im.h;
+        } else if (kind === 'audio') {
+            const bytes = await stReadBytes(file);
+            StegoEngine.audio.parse(bytes);
+            ST.rev.audio = { bytes: bytes }; byId(nm).textContent = file.name + ' - ' + stFmt(bytes.length);
+        } else {
+            const bytes = await stReadBytes(file);
+            ST.rev.file = { bytes: bytes }; byId(nm).textContent = file.name + ' - ' + stFmt(bytes.length);
+        }
+    } catch (e) {
+        ST.rev[kind] = null;
+        msg.textContent = kind === 'audio' ? 'That is not a 16-bit PCM WAV file. Use the WAV made by Hide.' : (e && e.message && /bigger/.test(e.message) ? e.message : 'Could not read that file.');
+    }
+}
+async function stReveal() {
+    const msg = byId('stRevMsg'), c = ST.c, pw = byId('stRPw').value;
+    msg.textContent = ''; byId('stRevOut').classList.remove('show');
+    let ex, label;
+    try {
+        if (c === 'image') { const im = ST.rev.image; if (!im) { msg.textContent = 'Choose an image first.'; return; } ex = StegoEngine.image.extract(im.rgba, im.w, im.h, pw); label = 'image'; }
+        else if (c === 'audio') { const a = ST.rev.audio; if (!a) { msg.textContent = 'Choose a WAV file first.'; return; } ex = StegoEngine.audio.extract(a.bytes, pw); label = 'audio'; }
+        else if (c === 'text') { const t = byId('stRText').value; if (!t) { msg.textContent = 'Paste a text first.'; return; } ex = StegoEngine.text.extract(t); label = 'text'; }
+        else { const f = ST.rev.file; if (!f) { msg.textContent = 'Choose a file first.'; return; } ex = StegoEngine.file.extract(f.bytes); label = 'file'; }
+    } catch (e) { msg.textContent = 'Could not read it: ' + (e && e.message ? e.message : 'unknown error'); return; }
+    if (ex.status === 'need_password') { msg.textContent = 'A password is needed. Type it and try again.'; return; }
+    if (ex.status !== 'ok') { msg.textContent = pw ? 'Nothing found. Check the password, and that the ' + label + ' was not edited or re-saved after hiding.' : 'Nothing hidden here. If a password was used, type it. The ' + label + ' must also be unedited since hiding.'; return; }
+    await new Promise(r => setTimeout(r, 30));
+    const u = StegoEngine.unpack(ex.blob, pw);
+    if (u.status === 'need_password') { msg.textContent = 'This secret is locked with a password. Type it and try again.'; return; }
+    if (u.status === 'bad_password') { msg.textContent = 'Wrong password, or the data is damaged.'; return; }
+    if (u.status !== 'ok') { msg.textContent = 'Found something, but it is damaged.'; return; }
+    const isText = u.kind === 'text';
+    byId('stRevTitle').textContent = isText ? 'Hidden text:' : 'Hidden file:';
+    byId('stRevText').textContent = isText ? StegoEngine.fromUtf8(u.data) : (u.name || 'hidden.bin') + ' (' + stFmt(u.data.length) + ')';
+    byId('stRevCopy').hidden = !isText; byId('stRevFileAct').hidden = isText;
+    ST.revOut = isText ? null : { bytes: u.data, name: u.name || 'hidden.bin' };
+    byId('stRevMeta').textContent = 'Found in ' + label + (ex.bpc ? ' - ' + ex.bpc + ' bit' + (ex.bpc > 1 ? 's' : '') + ' per ' + (c === 'image' ? 'color' : 'sample') : '') + ' - ' + (u.encrypted ? 'password protected' : 'no password') + (ex.scattered ? ' - scattered' : '') + ' - ' + stFmt(u.data.length);
+    byId('stRevOut').classList.add('show');
+    setTimeout(() => byId('stRevOut').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+}
+function stRevDownload() {
+    const o = ST.revOut; if (!o) return;
+    const url = URL.createObjectURL(new Blob([o.bytes], { type: 'application/octet-stream' }));
+    const a = document.createElement('a'); a.href = url; a.download = o.name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+function stRevClear() {
+    ST.rev = { image: null, audio: null, file: null }; ST.revOut = null;
+    byId('stRText').value = ''; byId('stRPw').value = '';
+    byId('stRImgName').textContent = 'Use the PNG file, not a screenshot or a re-sent copy.';
+    byId('stRAudName').textContent = 'The WAV made by Hide.'; byId('stRFileName').textContent = 'The file made by Hide.';
+    byId('stRevMsg').textContent = ''; byId('stRevOut').classList.remove('show');
+}
+
+// ---------- analyze ----------
+async function stAnalyze(file) {
+    if (!file) return;
+    const nm = byId('stAName'), res = byId('stARes');
+    nm.textContent = 'Reading ' + file.name + '...'; res.classList.remove('show');
+    try {
+        const im = await stDecodeImage(file, 0);
+        if (im.w * im.h > 16000000) throw new Error('That image is too large to inspect here.');
+        const an = StegoEngine.image.analyze(im.rgba, im.w, im.h);
+        ST.ana = { im: im, an: an, plane: 'rgb' };
+        nm.textContent = file.name + ' - ' + im.w + ' x ' + im.h;
+        const v = byId('stAVerdict'), p = an.probe;
+        if (p.status === 'ok') {
+            const info = StegoEngine.blobInfo(p.blob);
+            v.className = 'st-verdict hit'; v.innerHTML = 'A hidden secret was found.<small>' + (info && info.encrypted ? 'It is password protected. Open Reveal and enter the password.' : 'It has no password. Open Reveal to read it.') + '</small>';
+        } else if (p.status === 'need_password') {
+            v.className = 'st-verdict hit'; v.innerHTML = 'A hidden secret was found.<small>Its positions are scrambled with a password. Open Reveal and enter it.</small>';
+        } else {
+            const noisy = an.onesRatio.every(r => Math.abs(r - 0.5) < 0.012);
+            v.className = 'st-verdict clean';
+            v.innerHTML = 'No Secret Cipher payload found.<small>' + (noisy ? 'The lowest bits look random, which is normal for a noisy photo but could also be data hidden by another tool.' : 'The lowest bits are structured like a natural picture.') + '</small>';
+        }
+        byId('stAStats').innerHTML = stStat('LSB ONES R', (an.onesRatio[0] * 100).toFixed(2) + '%') + stStat('LSB ONES G', (an.onesRatio[1] * 100).toFixed(2) + '%') + stStat('LSB ONES B', (an.onesRatio[2] * 100).toFixed(2) + '%') + stStat('PIXELS', (im.w * im.h).toLocaleString());
+        byId('stAMeta').textContent = 'A natural image usually has uneven LSB ratios. Values very close to 50.00% on all three channels suggest the low bits were overwritten with random-looking data.';
+        stPlane('rgb');
+        res.classList.add('show');
+    } catch (e) {
+        ST.ana = null; nm.textContent = (e && e.message && /large/.test(e.message)) ? e.message : 'Could not read that image.';
+    }
+}
+function stPlane(p) {
+    const A = ST.ana; if (!A) return;
+    ST.ana.plane = p;
+    byId('stAChips').querySelectorAll('.chip').forEach(b => b.classList.toggle('active', b.dataset.p === p));
+    const im = A.im, cv = byId('stALsb'), W = Math.min(im.w, 640), s = W / im.w, H = Math.max(1, Math.round(im.h * s));
+    cv.width = W; cv.height = H;
+    const cx = cv.getContext('2d'), id = cx.createImageData(W, H), d = id.data, src = im.rgba, w = im.w, h = im.h;
+    const sh = p === 'x2' ? 1 : 0;
+    for (let y = 0; y < H; y++) {
+        const sy = Math.min(h - 1, (y / s) | 0);
+        for (let x = 0; x < W; x++) {
+            const o = (sy * w + Math.min(w - 1, (x / s) | 0)) * 4, di = (y * W + x) * 4;
+            if (p === 'rgb' || p === 'x2') { d[di] = ((src[o] >> sh) & 1) * 255; d[di + 1] = ((src[o + 1] >> sh) & 1) * 255; d[di + 2] = ((src[o + 2] >> sh) & 1) * 255; }
+            else { const v = (src[o + 'rgb'.indexOf(p)] & 1) * 255; d[di] = d[di + 1] = d[di + 2] = v; }
+            d[di + 3] = 255;
+        }
+    }
+    cx.putImageData(id, 0, 0);
+}
+
+// ---------- navigation ----------
+function stLeave() {
+    ['stAudPrev'].forEach(i => { const a = byId(i); if (a && !a.paused) a.pause(); });
+    const o = document.querySelector('#stOutMedia audio'); if (o && !o.paused) o.pause();
+}
+function openStego(c, tab) {
+    stCarrier(c || 'image'); stTab(tab || 'hide');
+    goToPage('stego');
+}
+function initStego() {
+    stCarrier('image'); stKind('text');
+    STRIP_EX.st_image = ['HELLO', 'px 12,4 120>121'];
+    STRIP_EX.st_audio = ['HELLO', 'smp 412 -310>-309'];
+    STRIP_EX.st_text = ['hello', 'hel[24 hidden]lo'];
+    STRIP_EX.st_file = ['cat.png', 'cat.png + 1.2 KB'];
+    STRIP_EX.st_ana = ['photo.png', 'LSB 50.0 / 49.9 %'];
+}
+
+// ============================================================
+// SETTINGS (About tab): saved in localStorage 'sc_set'
+// ============================================================
+const SET_DEF = { reduce: false, orbs: true, fps: false, accent: 'theme', size: 1 };
+const SET_ACCENT = {
+    ember: ['#d97757', '217, 119, 87'], sand: ['#e2b56a', '226, 181, 106'], moss: ['#a3b88c', '163, 184, 140'],
+    sky: ['#38bdf8', '56, 189, 248'], rose: ['#e5736f', '229, 115, 111']
+};
+const SET_SIZE = [0.92, 1, 1.1];
+let SET = Object.assign({}, SET_DEF);
+function setLoad() {
+    try { const j = JSON.parse(localStorage.getItem('sc_set') || '{}'); if (j && typeof j === 'object') Object.keys(SET_DEF).forEach(k => { if (typeof j[k] === typeof SET_DEF[k]) SET[k] = j[k]; }); } catch (e) { /* defaults */ }
+    if (SET.size < 0 || SET.size > 2) SET.size = 1;
+    if (SET.accent !== 'theme' && !SET_ACCENT[SET.accent]) SET.accent = 'theme';
+}
+function setSave() { try { localStorage.setItem('sc_set', JSON.stringify(SET)); } catch (e) { /* private mode */ } }
+function setToggle(k) { SET[k] = !SET[k]; setSave(); setApply(); }
+function setPick(k, v) { SET[k] = v; setSave(); setApply(); }
+function setReset() {
+    SET = Object.assign({}, SET_DEF); setSave(); setApply();
+    const b = byId('setResetBtn'); if (b) { b.textContent = 'Done'; setTimeout(() => { b.textContent = 'Reset settings'; }, 1500); }
+}
+function setBuildUI() {
+    const row = byId('accentRow');
+    if (row && !row.children.length) {
+        row.innerHTML = '<button type="button" class="sw-dot theme" data-a="theme" onclick="setPick(\'accent\',\'theme\')" aria-label="Theme color"><i></i></button>' +
+            Object.keys(SET_ACCENT).map(k => '<button type="button" class="sw-dot" data-a="' + k + '" style="--c:' + SET_ACCENT[k][0] + '" onclick="setPick(\'accent\',\'' + k + '\')" aria-label="' + k + '"><i></i></button>').join('');
+    }
+}
+function setApply() {
+    const r = document.documentElement, c = r.classList;
+    c.toggle('no-motion', SET.reduce); c.toggle('no-orbs', !SET.orbs);
+    // accent
+    if (SET.accent === 'theme') { r.style.removeProperty('--accent'); r.style.removeProperty('--accent-rgb'); r.style.removeProperty('--glow1-rgb'); }
+    else { const a = SET_ACCENT[SET.accent]; r.style.setProperty('--accent', a[0]); r.style.setProperty('--accent-rgb', a[1]); r.style.setProperty('--glow1-rgb', a[1]); }
+    // text size
+    const ct = document.querySelector('.container'); if (ct) ct.style.zoom = SET.size === 1 ? '' : SET_SIZE[SET.size];
+    // UI state
+    document.querySelectorAll('.switch[data-k]').forEach(s => { const on = !!SET[s.dataset.k]; s.classList.toggle('on', on); s.setAttribute('aria-checked', on); });
+    document.querySelectorAll('#sizeRow .chip').forEach(b => b.classList.toggle('active', +b.dataset.v === SET.size));
+    document.querySelectorAll('#accentRow .sw-dot').forEach(b => b.classList.toggle('active', b.dataset.a === SET.accent));
+    SET.fps ? fpsStart() : fpsStop();
+    if (typeof vzThemeChanged === 'function') { try { vzThemeChanged(); } catch (e) { /* visualizer not ready */ } }
+}
+
+// ---------- fps meter ----------
+let fpsRaf = 0;
+function fpsStart() {
+    if (fpsRaf) return;
+    const el = byId('fpsMeter'); if (!el) return;
+    el.hidden = false;
+    let last = performance.now(), n = 0;
+    const loop = t => {
+        n++;
+        if (t - last >= 500) { const f = Math.round(n * 1000 / (t - last)); el.textContent = f + ' fps'; el.dataset.q = f >= 50 ? 'good' : f >= 30 ? 'mid' : 'low'; n = 0; last = t; }
+        fpsRaf = requestAnimationFrame(loop);
+    };
+    fpsRaf = requestAnimationFrame(loop);
+}
+function fpsStop() {
+    if (!fpsRaf) return;
+    cancelAnimationFrame(fpsRaf); fpsRaf = 0;
+    const el = byId('fpsMeter'); if (el) el.hidden = true;
+}
+
+function initSettings() {
+    setLoad(); setBuildUI(); setApply();
+}
+
+// ============================================================
+// PIXEL WALL: a 100x100 canvas shared with everyone. 25 pixels per person per minute.
+// Rules and wire format live in PixelCore. Sync goes through one ntfy.sh topic
+// (publish = POST, listen = Server-Sent Events). Without a connection the wall still
+// works and is saved on this device; pixels are sent once you are online again.
+// ============================================================
+const PX_URL = 'https://ntfy.sh/secretcipher-pixelwall-v1-k7x2qd';
+const PX_BG = [246, 241, 233];
+const PX_PAL = ['f6f1e9', 'ffffff', 'd9d4cc', '9a948b', '5c5650', '2a2622', '000000', '7a4a30',
+    'a0673a', 'e8c39e', 'e5383b', 'ff6b6b', 'ff7a45', 'd97757', 'ffb347', 'ffd447',
+    'e9f5a1', 'a3e635', '4ade80', '22a06b', '0f766e', '2dd4bf', '7dd3fc', '38bdf8',
+    '3b82f6', '1d4ed8', '1e3a8a', 'a5b4fc', 'a78bfa', '7c3aed', 'c026d3', 'f472b6'];
+// The wall is wiped once a day, at 00:00 Jakarta time (WIB, UTC+7), at the same moment for everyone.
+const PX_TZ = 7 * 3600000, PX_DAY = 86400000;
+function pxDay(t) { return Math.floor((t + PX_TZ) / PX_DAY); }
+function pxResetIn(t) { return (pxDay(t) + 1) * PX_DAY - PX_TZ - t; }
+function pxFmtLeft(ms) {
+    const s = Math.ceil(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+    return h > 0 ? h + 'h ' + String(m).padStart(2, '0') + 'm' : m > 0 ? m + 'm ' + String(s % 60).padStart(2, '0') + 's' : s + 's';
+}
+const PX = {
+    day: 0,
+    S: 100, img: null, lim: null, uid: '', color: 'd97757', hsv: [18, 0.6, 0.85], recent: [], sel: null, open: false,
+    v: { x: 0, y: 0, s: 4, w: 0, h: 0 }, minS: 2, queue: [], seen: new Set(), gate: null, es: null, conn: false,
+    lastId: '', pick: false, raf: 0, draw: 0, save: 0, fl: 0, sending: false, backoff: 0, tick: 0, ptr: new Map(),
+    tap: false, vel: { x: 0, y: 0 }, inert: 0, pin: null, gridT: 0, hist: false, rc: 0, toastT: 0, painted: 0
+};
+function pxLS(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { /* storage blocked */ } return null; }
+function pxHex() { return PX.color; }
+
+// ---------- canvas buffer ----------
+function pxLoadCanvas() {
+    PX.img = new ImageData(PX.S, PX.S);
+    const d = PX.img.data;
+    for (let i = 0; i < PX.S * PX.S; i++) { d[i * 4] = PX_BG[0]; d[i * 4 + 1] = PX_BG[1]; d[i * 4 + 2] = PX_BG[2]; d[i * 4 + 3] = 255; }
+    const b = pxLS('sc_px');
+    if (b) {
+        try {
+            const raw = atob(b);
+            if (raw.length === PX.S * PX.S * 3) for (let i = 0; i < PX.S * PX.S; i++) { d[i * 4] = raw.charCodeAt(i * 3); d[i * 4 + 1] = raw.charCodeAt(i * 3 + 1); d[i * 4 + 2] = raw.charCodeAt(i * 3 + 2); }
+        } catch (e) { /* ignore a damaged cache */ }
+    }
+    pxCount();
+}
+function pxSaveCanvasSoon() {
+    if (PX.save) return;
+    PX.save = setTimeout(() => {
+        PX.save = 0;
+        const d = PX.img.data, n = PX.S * PX.S;
+        let s = '';
+        for (let i = 0; i < n; i += 2000) {
+            const part = []; for (let k = i; k < Math.min(n, i + 2000); k++) part.push(String.fromCharCode(d[k * 4], d[k * 4 + 1], d[k * 4 + 2]));
+            s += part.join('');
+        }
+        pxLS('sc_px', btoa(s));
+    }, 900);
+}
+function pxCount() {
+    const d = PX.img.data; let c = 0;
+    for (let i = 0; i < PX.S * PX.S; i++) if (d[i * 4] !== PX_BG[0] || d[i * 4 + 1] !== PX_BG[1] || d[i * 4 + 2] !== PX_BG[2]) c++;
+    PX.painted = c;
+    const el = byId('pxCount'); if (el) el.textContent = c.toLocaleString() + (c === 1 ? ' pixel painted' : ' pixels painted');
+}
+function pxSetCell(i, hex) {
+    const rgb = PixelCore.hexToRgb(hex); if (!rgb) return;
+    const d = PX.img.data, o = i * 4;
+    d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = 255;
+}
+function pxCell(i) { const d = PX.img.data, o = i * 4; return PixelCore.rgbToHex(d[o], d[o + 1], d[o + 2]); }
+function pxDrawSoon() {
+    if (PX.draw) return;
+    PX.draw = requestAnimationFrame(() => {
+        PX.draw = 0;
+        ['pxCv', 'pxThumb'].forEach(id => { const c = byId(id); if (c) c.getContext('2d').putImageData(PX.img, 0, 0); });
+    });
+}
+
+// ---------- viewport (pan and zoom) ----------
+function pxMeasure() { const r = byId('pxView').getBoundingClientRect(); PX.v.w = r.width; PX.v.h = r.height; }
+function pxFit() {
+    pxMeasure();
+    const s = Math.min(PX.v.w, PX.v.h) / PX.S * 0.94;
+    PX.minS = s * 0.55; PX.v.s = s; PX.v.x = (PX.v.w - PX.S * s) / 2; PX.v.y = (PX.v.h - PX.S * s) / 2;
+    pxApply();
+}
+function pxClamp() {
+    const v = PX.v, W = PX.S * v.s;
+    v.s = Math.max(PX.minS, Math.min(60, v.s));
+    v.x = Math.min(v.w * 0.5, Math.max(v.w * 0.5 - PX.S * v.s, v.x));
+    v.y = Math.min(v.h * 0.5, Math.max(v.h * 0.5 - PX.S * v.s, v.y));
+}
+function pxApply() { if (!PX.raf) PX.raf = requestAnimationFrame(pxRender); }
+let pxSelSize = 0;
+function pxRender() {
+    PX.raf = 0;
+    pxClamp();
+    const v = PX.v;
+    byId('pxWorld').style.transform = 'translate3d(' + v.x.toFixed(2) + 'px,' + v.y.toFixed(2) + 'px,0) scale(' + v.s.toFixed(4) + ')';
+    pxSelPlace();
+    const g = byId('pxGrid'); g.classList.remove('on');
+    clearTimeout(PX.gridT); PX.gridT = setTimeout(pxGridDraw, 110);
+}
+function pxSelPlace() {
+    const el = byId('pxSel');
+    if (!PX.sel) { el.hidden = true; return; }
+    const v = PX.v, s = v.s;
+    el.hidden = false;
+    if (Math.abs(pxSelSize - s) > 0.01) { el.style.width = el.style.height = s + 'px'; pxSelSize = s; }
+    el.style.transform = 'translate3d(' + (v.x + PX.sel.x * s).toFixed(2) + 'px,' + (v.y + PX.sel.y * s).toFixed(2) + 'px,0)';
+}
+function pxGridDraw() {
+    const v = PX.v, g = byId('pxGrid'); if (!PX.open) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1), W = Math.round(v.w * dpr), H = Math.round(v.h * dpr);
+    if (g.width !== W || g.height !== H) { g.width = W; g.height = H; }
+    const cx = g.getContext('2d'); cx.clearRect(0, 0, W, H);
+    if (v.s < 9) return;
+    const a = Math.min(0.28, 0.05 + (v.s - 9) * 0.012);
+    cx.strokeStyle = 'rgba(30,24,20,' + a.toFixed(3) + ')'; cx.lineWidth = Math.max(1, dpr * 0.8);
+    cx.beginPath();
+    const x0 = Math.max(0, Math.floor(-v.x / v.s)), x1 = Math.min(PX.S, Math.ceil((v.w - v.x) / v.s));
+    const y0 = Math.max(0, Math.floor(-v.y / v.s)), y1 = Math.min(PX.S, Math.ceil((v.h - v.y) / v.s));
+    for (let x = x0; x <= x1; x++) { const sx = Math.round((v.x + x * v.s) * dpr) + 0.5; cx.moveTo(sx, Math.max(0, (v.y + y0 * v.s) * dpr)); cx.lineTo(sx, Math.min(H, (v.y + y1 * v.s) * dpr)); }
+    for (let y = y0; y <= y1; y++) { const sy = Math.round((v.y + y * v.s) * dpr) + 0.5; cx.moveTo(Math.max(0, (v.x + x0 * v.s) * dpr), sy); cx.lineTo(Math.min(W, (v.x + x1 * v.s) * dpr), sy); }
+    cx.stroke();
+    g.classList.add('on');
+}
+function pxZoomAt(cx, cy, f) {
+    const v = PX.v, wx = (cx - v.x) / v.s, wy = (cy - v.y) / v.s, s = Math.max(PX.minS, Math.min(60, v.s * f));
+    v.s = s; v.x = cx - wx * s; v.y = cy - wy * s; pxApply();
+}
+function pxZoomBy(f) { pxMeasure(); pxZoomAt(PX.v.w / 2, PX.v.h / 2, f); }
+function pxInertia() {
+    cancelAnimationFrame(PX.inert);
+    let last = performance.now();
+    const step = t => {
+        const dt = Math.min(40, t - last); last = t;
+        PX.v.x += PX.vel.x * dt; PX.v.y += PX.vel.y * dt;
+        const k = Math.exp(-dt / 220); PX.vel.x *= k; PX.vel.y *= k;
+        pxApply();
+        if (Math.hypot(PX.vel.x, PX.vel.y) > 0.015) PX.inert = requestAnimationFrame(step); else PX.inert = 0;
+    };
+    PX.inert = requestAnimationFrame(step);
+}
+function pxBind() {
+    const el = byId('pxView'), P = PX.ptr;
+    const rel = e => { const r = el.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    const pinStart = () => {
+        const pts = [...P.values()]; if (pts.length < 2) return;
+        const r = el.getBoundingClientRect(), a = pts[0], b = pts[1];
+        const cx = (a.x + b.x) / 2 - r.left, cy = (a.y + b.y) / 2 - r.top;
+        PX.pin = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, s0: PX.v.s, wx: (cx - PX.v.x) / PX.v.s, wy: (cy - PX.v.y) / PX.v.s };
+    };
+    el.addEventListener('pointerdown', e => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        if (e.target.closest && e.target.closest('.px-zoom, .px-coord')) return;
+        cancelAnimationFrame(PX.inert); PX.inert = 0; PX.vel.x = PX.vel.y = 0;
+        try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+        P.set(e.pointerId, { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, t: performance.now() });
+        if (P.size === 1) PX.tap = true; else { PX.tap = false; pinStart(); }
+    });
+    el.addEventListener('pointermove', e => {
+        const p = P.get(e.pointerId);
+        if (!p) { if (e.pointerType === 'mouse') pxCoordAt(...rel(e)); return; }
+        const dx = e.clientX - p.x, dy = e.clientY - p.y, now = performance.now(), dt = Math.max(1, now - p.t);
+        p.x = e.clientX; p.y = e.clientY; p.t = now;
+        if (P.size === 1) {
+            if (PX.tap && Math.hypot(p.x - p.sx, p.y - p.sy) > 8) PX.tap = false;
+            if (!PX.tap) {
+                PX.v.x += dx; PX.v.y += dy;
+                PX.vel.x = 0.7 * (dx / dt) + 0.3 * PX.vel.x; PX.vel.y = 0.7 * (dy / dt) + 0.3 * PX.vel.y;
+                pxApply();
+            }
+        } else if (P.size >= 2 && PX.pin) {
+            const pts = [...P.values()], a = pts[0], b = pts[1], r = el.getBoundingClientRect();
+            const cx = (a.x + b.x) / 2 - r.left, cy = (a.y + b.y) / 2 - r.top, d = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+            const s = Math.max(PX.minS, Math.min(60, PX.pin.s0 * d / PX.pin.d0));
+            PX.v.s = s; PX.v.x = cx - PX.pin.wx * s; PX.v.y = cy - PX.pin.wy * s; pxApply();
+        }
+    });
+    const up = e => {
+        const p = P.get(e.pointerId); if (!p) return;
+        P.delete(e.pointerId);
+        if (P.size === 0) {
+            if (PX.tap && e.type === 'pointerup') { const [x, y] = rel(e); pxTapAt(x, y); }
+            else if (Math.hypot(PX.vel.x, PX.vel.y) > 0.08 && performance.now() - p.t < 90) pxInertia();
+            PX.pin = null;
+        } else if (P.size === 1) { PX.pin = null; PX.tap = false; }
+        else pinStart();
+    };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    el.addEventListener('wheel', e => { e.preventDefault(); const [x, y] = rel(e); pxZoomAt(x, y, Math.exp(-e.deltaY * 0.0018)); }, { passive: false });
+    window.addEventListener('resize', () => { if (PX.open) { pxMeasure(); pxApply(); } });
+    document.addEventListener('fullscreenchange', () => { if (PX.open) setTimeout(() => { pxMeasure(); pxApply(); }, 120); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && PX.open) { if (byId('pxSheet').classList.contains('show')) pxSheetToggle(false); else pxClose(); } });
+    window.addEventListener('popstate', () => { if (PX.open && PX.hist) { PX.hist = false; pxClose(true); } });
+}
+function pxCellAt(x, y) { const v = PX.v, cx = Math.floor((x - v.x) / v.s), cy = Math.floor((y - v.y) / v.s); return cx >= 0 && cy >= 0 && cx < PX.S && cy < PX.S ? { x: cx, y: cy } : null; }
+function pxCoordAt(x, y) { const c = pxCellAt(x, y); byId('pxCoord').textContent = c ? 'x ' + c.x + '  y ' + c.y : 'outside'; }
+function pxTapAt(x, y) {
+    const c = pxCellAt(x, y);
+    if (!c) { PX.sel = null; pxSelPlace(); pxPlaceUI(); return; }
+    if (PX.pick) { pxSetColor(pxCell(c.y * PX.S + c.x)); pxEye(false); return; }
+    PX.sel = c; pxSelPlace(); pxCoordAt(x, y); pxPlaceUI();
+}
+
+// ---------- color ----------
+function pxSetColor(hex, keepInput) {
+    const rgb = PixelCore.hexToRgb(hex); if (!rgb) return;
+    hex = PixelCore.rgbToHex(rgb[0], rgb[1], rgb[2]);
+    const hsv = PixelCore.rgbToHsv(rgb[0], rgb[1], rgb[2]);
+    const hueChanged = Math.abs(hsv[0] - PX.hsv[0]) > 0.5 && hsv[1] > 0.02 && hsv[2] > 0.02;
+    PX.color = hex; if (hsv[1] > 0.02 && hsv[2] > 0.02) PX.hsv = hsv; else PX.hsv = [PX.hsv[0], hsv[1], hsv[2]];
+    pxColorUI(keepInput, hueChanged);
+    pxLS('sc_px_c', hex);
+}
+function pxColorUI(keepInput, redrawSV) {
+    const c = '#' + PX.color;
+    byId('pxColSw').style.background = c; byId('pxColHex').textContent = c.toUpperCase();
+    byId('pxPrevSw').style.background = c;
+    const hi = byId('pxHexIn'); if (!keepInput) hi.value = c.toUpperCase();
+    byId('pxSel').style.setProperty('--c', c);
+    document.querySelectorAll('#pxPal button').forEach(b => b.classList.toggle('on', b.dataset.c === PX.color));
+    const h = PX.hsv;
+    byId('pxSVth').style.left = (h[1] * 100) + '%'; byId('pxSVth').style.top = ((1 - h[2]) * 100) + '%';
+    byId('pxHueTh').style.left = (h[0] / 360 * 100) + '%';
+    if (redrawSV !== false) pxDrawSV();
+}
+function pxDrawSV() {
+    const c = byId('pxSVcv'), g = c.getContext('2d'), w = c.width, h = c.height;
+    g.fillStyle = 'hsl(' + PX.hsv[0] + ',100%,50%)'; g.fillRect(0, 0, w, h);
+    let gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#fff'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, '#000'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+}
+function pxFromHSV(keepInput) {
+    const rgb = PixelCore.hsvToRgb(PX.hsv[0], PX.hsv[1], PX.hsv[2]);
+    PX.color = PixelCore.rgbToHex(rgb[0], rgb[1], rgb[2]);
+    pxColorUI(keepInput, false); pxLS('sc_px_c', PX.color);
+}
+function pxBindPicker() {
+    const drag = (el, fn) => {
+        const move = e => { const r = el.getBoundingClientRect(); fn(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), Math.max(0, Math.min(1, (e.clientY - r.top) / r.height))); };
+        el.addEventListener('pointerdown', e => { e.preventDefault(); try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ } el._d = true; move(e); });
+        el.addEventListener('pointermove', e => { if (el._d) move(e); });
+        const end = () => { el._d = false; };
+        el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    };
+    drag(byId('pxSV'), (x, y) => { PX.hsv[1] = x; PX.hsv[2] = 1 - y; pxFromHSV(false); });
+    drag(byId('pxHue'), x => { PX.hsv[0] = x * 359.99; pxFromHSV(false); pxDrawSV(); });
+    byId('pxPal').innerHTML = PX_PAL.map(h => '<button type="button" data-c="' + h + '" style="--c:#' + h + '" onclick="pxSetColor(\'' + h + '\')" aria-label="#' + h + '"><i></i></button>').join('');
+}
+function pxHexType(v) {
+    v = v.trim();
+    if (/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v)) pxSetColor(v, true);
+}
+function pxRecentAdd(hex) {
+    PX.recent = [hex].concat(PX.recent.filter(h => h !== hex)).slice(0, 10);
+    pxLS('sc_px_rc', JSON.stringify(PX.recent)); pxRecentUI();
+}
+function pxRecentUI() {
+    const el = byId('pxRec');
+    el.innerHTML = PX.recent.length ? PX.recent.map(h => '<button type="button" data-c="' + h + '" style="--c:#' + h + '" onclick="pxSetColor(\'' + h + '\')" aria-label="#' + h + '"><i></i></button>').join('') : '<span class="px-none">Colors you place show up here.</span>';
+}
+function pxSheetToggle(force) {
+    const s = byId('pxSheet'), on = typeof force === 'boolean' ? force : !s.classList.contains('show');
+    s.classList.toggle('show', on); byId('pxColBtn').classList.toggle('on', on);
+    if (on) pxDrawSV();
+}
+function pxEye(force) {
+    PX.pick = typeof force === 'boolean' ? force : !PX.pick;
+    byId('pxEyeBtn').classList.toggle('on', PX.pick);
+    byId('pxView').classList.toggle('picking', PX.pick);
+    if (PX.pick) pxToast('Tap a pixel to copy its color');
+}
+
+// ---------- placing, with the 25 per minute rule ----------
+function pxToast(t) {
+    const el = byId('pxToast'); el.textContent = t; el.classList.add('on');
+    clearTimeout(PX.toastT); PX.toastT = setTimeout(() => el.classList.remove('on'), 1800);
+}
+function pxLimiterSave() { pxLS('sc_px_t', JSON.stringify(PX.lim.stamps)); }
+function pxQueueSave() { pxLS('sc_px_q', JSON.stringify(PX.queue.slice(-300))); }
+function pxPlace() {
+    if (!PX.sel) { pxToast('Tap a pixel on the canvas first'); return; }
+    const i = PX.sel.y * PX.S + PX.sel.x, hex = PX.color, now = Date.now();
+    if (pxCell(i) === hex) { pxToast('That pixel already has this color'); return; }
+    if (!PX.lim.take(now)) { pxToast('No pixels left. Next one in ' + Math.ceil(PX.lim.nextIn(now) / 1000) + ' s'); pxTick(); return; }
+    pxSetCell(i, hex); pxDrawSoon(); pxCount(); pxSaveCanvasSoon();
+    PX.queue.push({ i: i, c: hex }); pxQueueSave(); pxLimiterSave(); pxFlushSoon();
+    pxRecentAdd(hex); pxRipple(PX.sel.x, PX.sel.y, hex); pxTick();
+}
+function pxRipple(cx, cy, hex) {
+    const v = PX.v, r = document.createElement('i');
+    r.className = 'px-rip'; r.style.left = (v.x + (cx + 0.5) * v.s) + 'px'; r.style.top = (v.y + (cy + 0.5) * v.s) + 'px'; r.style.setProperty('--c', '#' + hex);
+    byId('pxView').appendChild(r); r.addEventListener('animationend', () => r.remove());
+}
+function pxPlaceUI() {
+    const b = byId('pxPlace'), t = byId('pxPlaceTxt'), now = Date.now(), left = PX.lim.left(now);
+    if (left <= 0) { b.classList.add('dead'); t.textContent = 'Next pixel in ' + Math.ceil(PX.lim.nextIn(now) / 1000) + ' s'; }
+    else { b.classList.remove('dead'); t.textContent = PX.sel ? 'Place at ' + PX.sel.x + ', ' + PX.sel.y : 'Tap a pixel to start'; }
+}
+function pxTick() {
+    const now = Date.now(), left = PX.lim.left(now), n = PixelCore.LIMIT;
+    if (pxDay(now) !== PX.day) pxNewDay();
+    const rt = 'resets in ' + pxFmtLeft(pxResetIn(now));
+    const r1 = byId('pxReset'); if (r1 && r1.textContent !== rt) r1.textContent = rt;
+    const r2 = byId('pxResetTxt'); if (r2) r2.textContent = 'Wiped in ' + pxFmtLeft(pxResetIn(now));
+    byId('pxRingN').textContent = left;
+    byId('pxRingFg').style.strokeDashoffset = String(100 - (left / n) * 100);
+    byId('pxRing').classList.toggle('empty', left === 0);
+    const t = byId('pxLeftTxt');
+    if (t) t.textContent = left + ' of ' + n + ' left' + (left < n ? ' - +1 in ' + Math.ceil(PX.lim.nextIn(now) / 1000 || 0) + ' s' : '');
+    if (PX.open) pxPlaceUI();
+}
+
+// ---------- online sync ----------
+function pxNetUI() {
+    const on = PX.conn;
+    const n = byId('pxNet'); if (n) { n.classList.toggle('on', on); n.lastChild.textContent = on ? 'Live' : (navigator.onLine === false ? 'Offline' : 'Connecting'); }
+    const l = byId('pxLive'); if (l) { l.classList.toggle('on', on); l.querySelector('b').textContent = on ? 'Live' : (navigator.onLine === false ? 'Offline' : 'Saved here'); }
+}
+function pxIncoming(data) {
+    let j; try { j = JSON.parse(data); } catch (e) { return; }
+    if (!j || j.event !== 'message' || !j.id || PX.seen.has(j.id)) return;
+    PX.seen.add(j.id); PX.lastId = j.id;
+    if (pxDay((j.time || 0) * 1000) !== PX.day) return;     // yesterday's pixels are gone
+    const d = PixelCore.decode(j.message); if (!d) return;
+    const n = PX.gate.accept(d.uid, (j.time || 0) * 1000, d.pixels.length);
+    if (!n) return;
+    for (let k = 0; k < n; k++) pxSetCell(d.pixels[k].i, d.pixels[k].c);
+    for (const q of PX.queue) pxSetCell(q.i, q.c);     // my not-yet-sent pixels stay on top
+    PX.incomingDirty = true;
+    if (!PX.incT) PX.incT = setTimeout(() => { PX.incT = 0; pxDrawSoon(); pxCount(); pxSaveCanvasSoon(); }, 120);
+}
+function pxConnect() {
+    if (PX.es || navigator.onLine === false || typeof EventSource === 'undefined') { pxNetUI(); return; }
+    try {
+        const es = new EventSource(PX_URL + '/sse?since=' + (PX.lastId && PX.once ? encodeURIComponent(PX.lastId) : 'all'));
+        PX.es = es; PX.once = true;
+        es.onopen = () => { PX.conn = true; pxNetUI(); };
+        es.onmessage = ev => pxIncoming(ev.data);
+        es.onerror = () => { PX.conn = false; pxNetUI(); if (es.readyState === 2) { PX.es = null; clearTimeout(PX.rc); PX.rc = setTimeout(() => { if (pxWanted()) pxConnect(); }, 9000); } };
+    } catch (e) { PX.es = null; PX.conn = false; pxNetUI(); }
+}
+function pxDisconnect() { clearTimeout(PX.rc); if (PX.es) { PX.es.close(); PX.es = null; } PX.conn = false; pxNetUI(); }
+function pxWanted() { return document.visibilityState === 'visible' && (PX.open || curTab === 'about'); }
+function pxSync() { pxWanted() ? pxConnect() : pxDisconnect(); }
+function pxOnTab() { pxSync(); pxTick(); }
+function pxFlushSoon(ms) { if (PX.fl) return; PX.fl = setTimeout(pxFlush, ms || 1200); }
+async function pxFlush() {
+    PX.fl = 0;
+    if (PX.sending || !PX.queue.length) return;
+    if (navigator.onLine === false) { pxFlushSoon(8000); return; }
+    PX.sending = true;
+    const batch = PX.queue.slice(0, PixelCore.MAX_BATCH);
+    let ok = false;
+    try {
+        const ac = new AbortController(), t = setTimeout(() => ac.abort(), 8000);
+        const r = await fetch(PX_URL, { method: 'POST', body: PixelCore.encode(PX.uid, batch), signal: ac.signal });
+        clearTimeout(t); ok = r.ok;
+    } catch (e) { ok = false; }
+    PX.sending = false;
+    if (ok) { PX.queue.splice(0, batch.length); PX.backoff = 0; pxQueueSave(); if (PX.queue.length) pxFlushSoon(600); }
+    else { PX.backoff = Math.min(60000, (PX.backoff || 2000) * 2); pxFlushSoon(PX.backoff); }
+}
+
+// ---------- open / close ----------
+function pxOpen() {
+    const el = byId('pxFull');
+    el.hidden = false; PX.open = true; document.body.classList.add('modal-open');
+    requestAnimationFrame(() => { el.classList.add('show'); pxFit(); pxTick(); pxPlaceUI(); });
+    try { const f = el.requestFullscreen || el.webkitRequestFullscreen; if (f) { const p = f.call(el, { navigationUI: 'hide' }); if (p && p.catch) p.catch(() => {}); } } catch (e) { /* fullscreen not allowed */ }
+    try { if (!PX.hist) { history.pushState({ px: 1 }, ''); PX.hist = true; } } catch (e) { PX.hist = false; }
+    pxSync(); pxDrawSoon();
+}
+function pxClose(fromPop) {
+    const el = byId('pxFull');
+    PX.open = false; el.classList.remove('show'); pxSheetToggle(false); pxEye(false);
+    try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {}); else if (document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen(); } catch (e) { /* ignore */ }
+    if (PX.hist && !fromPop) { PX.hist = false; try { history.back(); } catch (e) { /* ignore */ } }
+    document.body.classList.remove('modal-open');
+    setTimeout(() => { if (!PX.open) el.hidden = true; }, 260);
+    pxSync();
+}
+function pxDayCheck() {
+    PX.day = pxDay(Date.now());
+    if (pxLS('sc_px_d') !== String(PX.day)) { pxLS('sc_px_d', String(PX.day)); try { localStorage.removeItem('sc_px'); localStorage.removeItem('sc_px_q'); } catch (e) { /* ignore */ } }
+}
+function pxNewDay() {
+    pxDayCheck();
+    const d = PX.img.data;
+    for (let i = 0; i < PX.S * PX.S; i++) { d[i * 4] = PX_BG[0]; d[i * 4 + 1] = PX_BG[1]; d[i * 4 + 2] = PX_BG[2]; d[i * 4 + 3] = 255; }
+    PX.queue = []; PX.sel = PX.open ? PX.sel : null; PX.gate = new PixelCore.Gate();
+    pxCount(); pxDrawSoon(); pxSelPlace();
+    if (PX.open) pxToast('New day. The wall is empty again');
+}
+function initPixel() {
+    pxDayCheck();
+    PX.gate = new PixelCore.Gate();
+    PX.uid = pxLS('sc_px_u');
+    if (!PX.uid || !/^[a-z0-9]{4,16}$/.test(PX.uid)) { PX.uid = Math.random().toString(36).slice(2, 10).padEnd(8, 'x'); pxLS('sc_px_u', PX.uid); }
+    let st = []; try { st = JSON.parse(pxLS('sc_px_t') || '[]'); } catch (e) { st = []; }
+    PX.lim = new PixelCore.Limiter(PixelCore.LIMIT, PixelCore.WINDOW, Array.isArray(st) ? st.filter(x => typeof x === 'number') : []);
+    try { const q = JSON.parse(pxLS('sc_px_q') || '[]'); if (Array.isArray(q)) PX.queue = q.filter(x => x && Number.isInteger(x.i) && /^[0-9a-f]{6}$/.test(x.c)); } catch (e) { PX.queue = []; }
+    try { const r = JSON.parse(pxLS('sc_px_rc') || '[]'); if (Array.isArray(r)) PX.recent = r.filter(h => /^[0-9a-f]{6}$/.test(h)).slice(0, 10); } catch (e) { PX.recent = []; }
+    const c = pxLS('sc_px_c'); if (c && /^[0-9a-f]{6}$/.test(c)) { const rgb = PixelCore.hexToRgb(c); PX.color = c; PX.hsv = PixelCore.rgbToHsv(rgb[0], rgb[1], rgb[2]); }
+    pxLoadCanvas(); pxBindPicker(); pxRecentUI(); pxColorUI(false, true); pxBind(); pxDrawSoon(); pxNetUI(); pxTick();
+    setInterval(() => { if (PX.open || curTab === 'about') pxTick(); }, 500);
+    document.addEventListener('visibilitychange', pxSync);
+    window.addEventListener('online', () => { pxSync(); if (PX.queue.length) pxFlushSoon(500); });
+    window.addEventListener('offline', pxNetUI);
+    if (PX.queue.length) pxFlushSoon(2500);
+}
+
+// ============================================================
 // INIT
 // ============================================================
 window.addEventListener('DOMContentLoaded', () => {
     fillIcons();
     mountThemeButtons();
+    initSettings();
+    initStego();
+    initPixel();
     buildSignalStrips();
     initStrips();
     initDock();
@@ -6794,7 +8455,6 @@ window.addEventListener('DOMContentLoaded', () => {
     initSignalLab();
     detectRun();
     updateVisitorCount();
-    initTriviaGame();
     generatePigpenPalette();
     setCaesarShift(3, true);
     setQRUploadState('idle');
