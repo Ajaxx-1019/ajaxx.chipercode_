@@ -2339,19 +2339,25 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
 #gmStage { position: absolute; inset: 0; touch-action: none; }
 #gmCv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
 .gm-hud { position: absolute; z-index: 4; left: calc(12px + env(safe-area-inset-left, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); top: calc(10px + env(safe-area-inset-top, 0px)); display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; pointer-events: none; }
-.gm-hud-l { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 12px; background: rgba(var(--ink-rgb), 0.55); border: 1px solid rgba(var(--paper-rgb), 0.1); }
-.gm-hud-l b { font-family: var(--mono); font-size: 1.15em; font-variant-numeric: tabular-nums; }
-.gm-hud-l span { font-size: 0.74em; color: var(--muted); }
-.gm-hud-r { display: flex; align-items: center; gap: 8px; pointer-events: auto; }
+.gm-hud-l { display: flex; align-items: center; gap: 8px; pointer-events: none; }
+.gm-hud-l .gm-ico { pointer-events: auto; }
+.gm-time { display: flex; flex-direction: column; gap: 2px; padding: 7px 12px; border-radius: 12px; background: rgba(var(--ink-rgb), 0.55); border: 1px solid rgba(var(--paper-rgb), 0.1); }
+.gm-time b { font-family: var(--mono); font-size: 1.1em; font-variant-numeric: tabular-nums; }
+.gm-time span { font-size: 0.72em; color: var(--muted); max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gm-hud-r { display: flex; align-items: center; gap: 6px; pointer-events: auto; }
 .gm-net { display: inline-flex; align-items: center; gap: 7px; padding: 9px 12px; border-radius: 12px; background: rgba(var(--ink-rgb), 0.55); border: 1px solid rgba(var(--paper-rgb), 0.1); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .gm-net i { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); flex: none; }
 .gm-net.on i { background: var(--good); }
 .gm-net em { font-style: normal; }
-.gm-ico { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; border: 1px solid rgba(var(--paper-rgb), 0.12); background: rgba(var(--ink-rgb), 0.55); color: var(--text); cursor: pointer; }
+.gm-ico { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: 12px; border: 1px solid rgba(var(--paper-rgb), 0.12); background: rgba(var(--ink-rgb), 0.55); color: var(--text); cursor: pointer; }
 .gm-ico .mx { display: none; }
 .gm-ico.off .w1, .gm-ico.off .w2 { display: none; }
 .gm-ico.off .mx { display: block; }
-.gm-team { position: absolute; z-index: 4; left: calc(12px + env(safe-area-inset-left, 0px)); top: calc(70px + env(safe-area-inset-top, 0px)); display: flex; flex-wrap: wrap; gap: 6px; max-width: 60%; pointer-events: none; }
+.gm-row2 { position: absolute; z-index: 4; left: calc(12px + env(safe-area-inset-left, 0px)); top: calc(62px + env(safe-area-inset-top, 0px)); display: flex; flex-wrap: wrap; gap: 6px; max-width: 78%; pointer-events: none; align-items: center; }
+#gmTeam { display: contents; }
+.gm-net { padding: 5px 10px; }
+.gm-hint { position: absolute; z-index: 4; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: min(88%, 460px); top: calc(104px + env(safe-area-inset-top, 0px)); padding: 9px 14px; border-radius: 12px; background: rgba(var(--ink-rgb), 0.78); border: 1px solid rgba(var(--accent-rgb), 0.45); font-size: 0.86em; line-height: 1.4; text-align: center; opacity: 0; transform: translateY(-6px); transition: opacity 0.25s ease, transform 0.25s ease; pointer-events: none; }
+.gm-hint.on { opacity: 1; transform: none; }
 .gm-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px 4px 6px; border-radius: 999px; font-size: 11px; font-weight: 600; background: rgba(var(--ink-rgb), 0.55); border: 1px solid rgba(var(--paper-rgb), 0.1); }
 .gm-chip i { width: 9px; height: 12px; border-radius: 2px; background: var(--c); border: 1px solid rgba(0, 0, 0, 0.5); }
 .gm-chip.hang { border-color: var(--warn); color: var(--warn); }
@@ -2390,7 +2396,21 @@ html.no-motion *, html.no-motion *::before, html.no-motion *::after { animation-
 .gm-end-box p { margin: 0 0 16px; color: var(--muted); }
 .gm-end-b { display: flex; gap: 10px; justify-content: center; }
 html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
-@media (max-height: 460px) { .gm-b { width: 62px; height: 62px; } .gm-b.big { width: 76px; height: 76px; } .gm-hang { bottom: 90px; } .gm-emotes { bottom: 84px; } .gm-team { top: 62px; } }
+@media (max-height: 460px) { .gm-b { width: 62px; height: 62px; } .gm-b.big { width: 76px; height: 76px; } .gm-hang { bottom: 90px; } .gm-emotes { bottom: 84px; } .gm-row2 { top: 58px; } .gm-hint { top: 92px; } }
+
+.gm-lvs { display: flex; gap: 8px; flex-wrap: wrap; }
+.gm-lvs button { flex: 1 1 0; min-width: 84px; padding: 10px 8px; border-radius: 12px; border: 1px solid rgba(var(--paper-rgb), 0.16); background: rgba(var(--paper-rgb), 0.05); color: var(--muted); font: inherit; font-size: 0.86em; font-weight: 600; cursor: pointer; transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease; }
+.gm-lvs button:active { transform: scale(0.97); }
+.gm-lvs button.on { background: var(--accent); color: #1b1511; border-color: transparent; }
+.gm-lvs.ro { pointer-events: none; }
+.gm-lvs.ro button:not(.on) { opacity: 0.5; }
+.gm-end-b.col { flex-direction: column; min-width: 220px; }
+.gm-end-b.col .gm-go { width: 100%; }
+.gm-end-b .gm-go[hidden] { display: none; }
+.gm-pull span { font-size: 1.05em; }
+.gm-pad { pointer-events: none; }
+.gm-b { touch-action: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.gm-lb { }
 </style>
 </head>
 <body>
@@ -2405,18 +2425,20 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         <div class="gm-wrap">
             <div class="gm-hero"><canvas id="gmHero" width="320" height="120"></canvas></div>
             <h2 class="gm-title">Chain Run</h2>
-            <p class="gm-sub">A co-op platformer. Run, jump, trigger buttons and stack up. Chain up to 3 friends together.</p>
+            <p class="gm-sub">A co-op platformer with long levels full of traps. Run, jump, trigger buttons and stack up. Chain up to 3 friends together.</p>
             <label class="gm-lbl" for="gmName">Your name</label>
             <input id="gmName" type="text" maxlength="12" autocomplete="off" spellcheck="false" placeholder="Name">
             <span class="gm-lbl">Card color</span>
             <div class="gm-cols" id="gmCols"></div>
             <div class="gm-prev"><canvas id="gmPrev" width="96" height="120"></canvas><div><b id="gmPrevName">Player</b><span>This is how others see you</span></div></div>
+            <span class="gm-lbl">Level</span>
+            <div class="gm-lvs" id="gmLvChips"></div>
             <div class="gm-modes">
                 <button type="button" class="gm-mode" onclick="gmGo('room')"><b>Private room</b><span>2 to 3 friends with a room code. Optional chain.</span></button>
                 <button type="button" class="gm-mode" onclick="gmGo('crowd')"><b>Live crowd</b><span>Jump into the open room with everyone online.</span></button>
-                <button type="button" class="gm-mode ghost" onclick="gmGo('solo')"><b>Practice</b><span>Alone, to learn the controls.</span></button>
+                <button type="button" class="gm-mode ghost" onclick="gmGo('solo')"><b>Training</b><span>Alone. Every obstacle has a tip: when to jump, when to run, what to hold.</span></button>
             </div>
-            <p class="gm-fine">Keys: A D or arrows to move, W / Up / Space to jump, 1 to 6 for emotes.</p>
+            <p class="gm-fine">Keys: A D or arrows to move, W / Up / Space to jump, 1 to 6 for emotes, R to respawn, Esc for the menu.</p>
         </div>
     </section>
 
@@ -2434,9 +2456,11 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
     <section class="gm-screen" id="gmLobby">
         <div class="gm-wrap">
             <span class="gm-lbl" id="gmLobbyKind">Room code</span>
-            <div class="gm-code"><b id="gmCodeShow">-----</b><button type="button" class="gm-copy" id="gmCopy" onclick="gmCopyCode()">Copy</button></div>
+            <div class="gm-code"><b id="gmCodeShow">-----</b><button type="button" class="gm-copy" id="gmCopy" onclick="gmCopyCode()">Copy</button><button type="button" class="gm-copy" onclick="gmInvite()">Invite</button></div>
             <p class="gm-sub" id="gmLobbyHint">Waiting for friends. Share the code.</p>
             <div class="gm-members" id="gmMembers"></div>
+            <span class="gm-lbl">Level</span>
+            <div class="gm-lvs" id="gmLobbyLv"></div>
             <div class="gm-chainrow" id="gmChainRow">
                 <div><b>Chain</b><span>Tie everyone together with a rope. Fall in a pit and your friends have to pull you out.</span></div>
                 <div class="gm-yn" id="gmYN"><button type="button" data-v="1" class="on" onclick="gmSetChain(true)">Yes</button><button type="button" data-v="0" onclick="gmSetChain(false)">No</button></div>
@@ -2449,16 +2473,21 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
     <section class="gm-screen" id="gmPlay">
         <div id="gmStage"><canvas id="gmCv"></canvas></div>
         <div class="gm-hud">
-            <div class="gm-hud-l"><b id="gmTime">0:00</b><span id="gmZone">Warm-up</span></div>
+            <div class="gm-hud-l">
+                <button type="button" class="gm-ico" id="gmPauseBtn" onclick="gmPause(true)" aria-label="Menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+                <div class="gm-time"><b id="gmTime">0:00</b><span id="gmZone">Warm-up</span></div>
+            </div>
             <div class="gm-hud-r">
-                <span class="gm-net" id="gmNet"><i></i><em>Solo</em></span>
+                <button type="button" class="gm-ico" id="gmInv" onclick="gmInvite()" aria-label="Invite friends"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.700 0l3-3a4 4 0 0 0-5.700-5.700l-1 1"/><path d="M14 10a4 4 0 0 0-5.700 0l-3 3a4 4 0 0 0 5.700 5.700l1-1"/></svg></button>
+                <button type="button" class="gm-ico" id="gmResp" onclick="gmRespawnMe()" aria-label="Respawn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.400-5.700"/><path d="M20 4v5h-5"/></svg></button>
                 <button type="button" class="gm-ico" id="gmMute" onclick="gmToggleMute()" aria-label="Sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w1" d="M16 9a4 4 0 0 1 0 6"/><path class="w2" d="M18.500 6.500a8 8 0 0 1 0 11"/><path class="mx" d="M16 9l5 6M21 9l-5 6"/></svg></button>
             </div>
         </div>
-        <div class="gm-team" id="gmTeam"></div>
+        <div class="gm-row2"><span class="gm-net" id="gmNet"><i></i><em>Solo</em></span><div id="gmTeam"></div></div>
+        <div class="gm-hint" id="gmHint"></div>
         <div class="gm-toast" id="gmToast" role="status"></div>
-        <button type="button" class="gm-pull" id="gmPull" hidden><span>PULL</span><i id="gmPullDots"></i></button>
-        <div class="gm-hang" id="gmHang" hidden><b>Hanging</b><span>Your friends are pulling you up</span><i id="gmHangDots"></i></div>
+        <button type="button" class="gm-pull" id="gmPull" hidden><span id="gmPullTxt">PULL</span><i id="gmPullDots"></i></button>
+        <div class="gm-hang" id="gmHang" hidden><b id="gmHangT">Hanging</b><span id="gmHangS">Your friends are pulling you up</span><i id="gmHangDots"></i></div>
         <div class="gm-emotes" id="gmEmotes" hidden></div>
         <div class="gm-pad" id="gmPad">
             <div class="gm-pad-l">
@@ -2471,7 +2500,10 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
             </div>
         </div>
         <div class="gm-end" id="gmEnd" hidden>
-            <div class="gm-end-box"><h3 id="gmEndTitle">Level clear</h3><p id="gmEndText"></p><div class="gm-end-b"><button type="button" class="gm-go" onclick="gmAgain()">Play again</button><button type="button" class="gm-go ghost" onclick="gmBack()">Leave</button></div></div>
+            <div class="gm-end-box"><h3 id="gmEndTitle">Level clear</h3><p id="gmEndText"></p><div class="gm-end-b col"><button type="button" class="gm-go" id="gmNext" onclick="gmNext()">Next level</button><button type="button" class="gm-go ghost" onclick="gmAgain()">Play again</button><button type="button" class="gm-go ghost" onclick="gmBack()">Leave</button></div></div>
+        </div>
+        <div class="gm-end" id="gmPause" hidden>
+            <div class="gm-end-box"><h3>Menu</h3><p>The game keeps running for your friends.</p><div class="gm-end-b col"><button type="button" class="gm-go" onclick="gmPause(false)">Resume</button><button type="button" class="gm-go ghost" onclick="gmRespawnMe(true)">Respawn at the flag</button><button type="button" class="gm-go ghost" id="gmPauseInv" onclick="gmInvite()">Invite friends</button><button type="button" class="gm-go ghost" onclick="gmBack()">Leave</button></div></div>
         </div>
     </section>
 </div>
@@ -5417,6 +5449,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
  *   k  key              d  door (needs a key)     C  checkpoint        E  exit (all tiles together form the exit)
  *   p q r  floor buttons (hold)          P Q R  gates, closed until the button of the same letter is pressed
  *   X Y Z  bridges, solid only while button p / q / r is pressed         @  start
+ *   > < belts (slow) } { belts (fast)   f flame jet (nozzle, fires 4 tiles up on a timer)   i spikes that pop up on a timer
  */
 (function (root, factory) {
     if (typeof module === 'object' && module.exports) module.exports = factory();
@@ -5424,16 +5457,18 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
 })(typeof self !== 'undefined' ? self : this, function () {
     'use strict';
     var TS = 32, PW = 20, PH = 28, DT = 1 / 60;
-    var PHYS = { grav: 1900, maxFall: 900, run: 190, accG: 1500, accA: 1000, fricG: 1800, fricA: 320, jump: 680, cut: 260, coyote: 0.09, buffer: 0.11, spring: 1000, hold: 1.8 };
+    var PHYS = { grav: 1900, maxFall: 900, run: 190, accG: 1500, accA: 1000, fricG: 1800, fricA: 320, jump: 680, coyote: 0.09, buffer: 0.11, spring: 1000, hold: 1.8 };
+    var RESCUE = 5, HANG_TIME = 10;     // taps needed to pull one hanging card up (shared between the helpers), seconds before everybody is sent back
     var CHAIN = { len: 5 * TS, k: 60, maxAcc: 3600 };
     var C = function (c) { return c.charCodeAt(0); };
-    var T = { '#': C('#'), '=': C('='), '^': C('^'), 'v': C('v'), '~': C('~'), 'w': C('w'), 'h': C('h'), 'S': C('S'), 'k': C('k'), 'd': C('d'), 'C': C('C'), 'E': C('E'), '@': C('@') };
+    var T = { '#': C('#'), '=': C('='), '^': C('^'), 'v': C('v'), '~': C('~'), 'w': C('w'), 'h': C('h'), 'S': C('S'), 'k': C('k'), 'd': C('d'), 'C': C('C'), 'E': C('E'), '@': C('@'), 'f': C('f'), 'i': C('i') };
+    var BELT = { '>': 90, '<': -90, '}': 170, '{': -170 };
     var BTN = { p: 'p', q: 'q', r: 'r' }, GATE = { P: 'p', Q: 'q', R: 'r' }, BRIDGE = { X: 'p', Y: 'q', Z: 'r' };
 
     // ------------------------------------------------------------------ level building
     function Builder(w, h) {
         this.w = w; this.h = h; this.t = new Uint8Array(w * h).fill(C('.'));
-        this.movers = []; this.saws = []; this.rescue = []; this.zones = [];
+        this.movers = []; this.saws = []; this.rescue = []; this.zones = []; this.hints = []; this.holds = {}; this.name = '';
     }
     Builder.prototype.put = function (x, y, ch) { if (x >= 0 && y >= 0 && x < this.w && y < this.h) this.t[y * this.w + x] = C(ch); return this; };
     Builder.prototype.fill = function (x0, y0, x1, y1, ch) { for (var y = y0; y <= y1; y++) for (var x = x0; x <= x1; x++) this.put(x, y, ch); return this; };
@@ -5441,10 +5476,14 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
     Builder.prototype.row = function (x0, x1, y, ch) { return this.fill(x0, y, x1, y, ch); };
     Builder.prototype.mover = function (m) { this.movers.push(m); return this; };
     Builder.prototype.saw = function (s) { this.saws.push(s); return this; };
+    Builder.prototype.hint = function (x0, x1, text) { this.hints.push({ x0: x0, x1: x1, text: text }); return this; };
+    Builder.prototype.holdFor = function (l, sec) { this.holds[l] = sec; return this; };
+    Builder.prototype.pit = function (x0, x1) { return this.fill(x0, 16, x1, this.h - 1, '.'); };
+    Builder.prototype.island = function (x0, x1, y, th) { return this.fill(x0, y, x1, y + (th || 2) - 1, '#'); };
     Builder.prototype.zone = function (x0, x1, name, taps) { this.zones.push({ x0: x0, x1: x1, name: name }); this.rescue.push({ x0: x0, x1: x1, taps: taps || 3 }); return this; };
 
     function level1() {
-        var b = new Builder(232, 20);
+        var b = new Builder(232, 20); b.name = 'Level 1: First Steps';
         // ---- zone 1: warm-up (jumps, spikes, a small pit)
         b.zone(0, 44, 'Warm-up', 3);
         b.ground(0, 26).ground(30, 62);
@@ -5501,7 +5540,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         return finish(b);
     }
     function finish(b) {
-        var lv = { w: b.w, h: b.h, t: b.t, movers: b.movers, saws: b.saws, rescue: b.rescue, zones: b.zones, spawn: null, cps: [], keys: [], doors: [], thw: [], hid: [], crumbles: [], exit: null, buttons: [], springs: [] };
+        var lv = { w: b.w, h: b.h, t: b.t, movers: b.movers, saws: b.saws, rescue: b.rescue, zones: b.zones, spawn: null, cps: [], keys: [], doors: [], thw: [], hid: [], crumbles: [], exit: null, buttons: [], springs: [], fire: [], spk: [], hints: b.hints, hold: b.holds, name: b.name };
         var ex0 = 1e9, ey0 = 1e9, ex1 = -1, ey1 = -1, doorTiles = {};
         for (var y = 0; y < b.h; y++) for (var x = 0; x < b.w; x++) {
             var ch = String.fromCharCode(b.t[y * b.w + x]);
@@ -5512,6 +5551,8 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
             else if (ch === 'h') lv.hid.push({ tx: x, ty: y });
             else if (ch === '~') lv.crumbles.push({ tx: x, ty: y });
             else if (ch === 'S') lv.springs.push({ tx: x, ty: y });
+            else if (ch === 'f') lv.fire.push({ tx: x, ty: y });
+            else if (ch === 'i') lv.spk.push({ tx: x, ty: y });
             else if (BTN[ch]) lv.buttons.push({ tx: x, ty: y, l: ch });
             else if (ch === 'E') { ex0 = Math.min(ex0, x); ey0 = Math.min(ey0, y); ex1 = Math.max(ex1, x); ey1 = Math.max(ey1, y); }
         }
@@ -5522,8 +5563,134 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         lv.floorY = b.h * TS;
         return lv;
     }
+    // ------------------------------------------------------------------ the other levels
+    function training() {
+        var b = new Builder(206, 20); b.name = 'Training';
+        b.ground(0, 205);
+        var cps = [18, 34, 52, 68, 94, 112, 126, 144, 158, 172, 188];
+        cps.forEach(function (x) { b.put(x, 15, 'C'); });
+        b.put(3, 15, '@');
+        b.zone(0, 17, 'Move', 5).hint(0, 17, 'Move with A D, the arrows or the left and right buttons. Jump with W, Space or the jump button. Every jump is the same height.');
+        b.put(11, 15, '#'); b.fill(14, 14, 15, 15, '#');
+        b.zone(18, 33, 'Spikes', 5).hint(18, 33, 'Spikes hurt. Jump over them. When you fall you appear at the last flag, instantly.');
+        b.put(23, 15, '^'); b.row(28, 29, 15, '^');
+        b.zone(34, 51, 'Gaps', 5).hint(34, 51, 'Gaps: run, then jump right at the edge. Do not stop in front of it.');
+        b.pit(40, 42); b.pit(46, 48);
+        b.zone(52, 67, 'Steps', 5).hint(52, 67, 'Ledges: jump up the steps. 3 tiles is the highest you can climb alone.');
+        b.put(56, 15, '#'); b.fill(58, 14, 58, 15, '#'); b.fill(60, 13, 61, 15, '#'); b.fill(63, 14, 63, 15, '#'); b.put(65, 15, '#');
+        b.zone(68, 93, 'Belts', 5).hint(68, 93, 'Belts push you along. Run against a belt to go slowly, or jump off it. Do not get carried into the spikes.');
+        b.row(70, 78, 16, '>'); b.row(80, 81, 15, '^'); b.row(84, 91, 16, '<'); b.row(92, 93, 15, '^');
+        b.zone(94, 111, 'Crumble', 5).hint(94, 111, 'Crumbling floor falls right after you step on it. Keep moving and do not stop.');
+        b.pit(96, 108); b.row(96, 108, 16, '~');
+        b.zone(112, 125, 'Spring', 5).hint(112, 125, 'A spring launches you high. Run onto it and keep going to cross the wide gap.');
+        b.put(114, 15, 'S'); b.pit(115, 120);
+        b.zone(126, 143, 'Button', 5).hint(126, 143, 'Stand on the button to open the gate. The gate stays open for a moment, so hurry through.');
+        b.put(130, 15, 'p'); b.fill(136, 0, 136, 10, '#'); b.fill(136, 11, 136, 15, 'P');
+        b.zone(144, 157, 'Key', 5).hint(144, 157, 'Climb up and take the key. Walk into the door with it and the door opens.');
+        b.fill(147, 14, 149, 15, '#'); b.put(148, 13, 'k'); b.fill(154, 0, 154, 12, '#'); b.fill(154, 13, 154, 15, 'd');
+        b.zone(158, 171, 'Platform', 5).hint(158, 171, 'A moving platform: wait for it to come, then jump on. Jump off on the other side.');
+        b.pit(160, 168); b.mover({ x0: 159, y0: 16, x1: 166, y1: 16, w: 3, period: 5, phase: 0 });
+        b.zone(172, 187, 'Timing', 5).hint(172, 187, 'Flames and spikes run on a timer. Wait for the right moment, then go.');
+        b.put(176, 16, 'f'); b.row(181, 182, 15, 'i'); b.put(185, 16, 'f');
+        b.zone(188, 205, 'Hazards', 5).hint(188, 205, 'Falling blocks drop when you walk under them. Saws slide on a rail. Reach the portal to finish.');
+        b.fill(192, 0, 192, 8, '#'); b.put(192, 9, 'w');
+        b.saw({ x0: 195, y0: 15, x1: 199, y1: 15, period: 2.8, phase: 0, r: 13 });
+        b.fill(203, 13, 204, 15, 'E');
+        return finish(b);
+    }
+
+    function factory() {
+        var b = new Builder(272, 20); b.name = 'Level 2: The Factory';
+        b.holdFor('p', 0.25).holdFor('q', 0.25).holdFor('r', 0.9);
+        // ---- belts
+        b.zone(0, 53, 'Belts', 5); b.ground(0, 83); b.put(3, 15, '@');
+        b.hint(0, 24, 'Belts carry you. Jump off before the spikes.');
+        b.row(10, 19, 16, '>'); b.row(21, 22, 15, '^');
+        b.row(28, 37, 16, '<'); b.row(39, 40, 15, '^');
+        b.hint(41, 53, 'Flames: wait until they go out.');
+        b.put(46, 16, 'f'); b.put(51, 16, 'f'); b.put(54, 15, 'C');
+        // ---- furnace
+        b.zone(54, 118, 'Furnace', 5);
+        b.row(59, 60, 15, 'i'); b.row(64, 65, 15, 'i'); b.row(69, 70, 15, 'i'); b.put(74, 16, 'f'); b.row(78, 80, 15, 'i');
+        b.mover({ x0: 81, y0: 16, x1: 90, y1: 16, w: 3, period: 6, phase: 0 });
+        b.ground(93, 118);
+        b.row(97, 98, 13, '='); b.row(101, 102, 10, '='); b.put(102, 9, 'k');
+        b.fill(110, 0, 110, 12, '#'); b.fill(110, 13, 110, 15, 'd');
+        b.put(114, 15, 'C');
+        // ---- lift relay: one holds the button, the other rides up and holds the second one so the first can walk through
+        b.zone(119, 176, 'The Lift', 5);
+        b.hint(119, 135, 'Hold the button, a friend rides the lift. Then your friend holds the other button to open your gate.');
+        b.ground(119, 176); b.fill(125, 16, 127, 19, '.');
+        b.put(122, 15, 'p');
+        b.mover({ x0: 125, y0: 16, x1: 125, y1: 12, w: 3, period: 1, btn: 'p', speed: 2.6 });
+        b.row(128, 134, 12, '#'); b.put(131, 11, 'q'); b.fill(134, 13, 134, 15, 'Q');
+        b.put(140, 15, '#'); b.fill(142, 0, 142, 8, '#'); b.put(142, 9, 'w'); b.fill(147, 0, 147, 8, '#'); b.put(147, 9, 'w');
+        b.put(152, 16, 'f'); b.put(157, 16, 'f'); b.row(160, 161, 15, 'i'); b.put(170, 15, 'C');
+        // ---- fast belt run (jump on time)
+        b.zone(177, 231, 'The Run', 5);
+        b.hint(177, 205, 'The belt does not stop. Jump the spikes.');
+        b.ground(177, 271); b.row(180, 199, 16, '}');
+        b.put(186, 15, '^'); b.row(191, 192, 15, '^'); b.put(197, 15, '^');
+        b.put(205, 16, 'f'); b.put(210, 16, 'f'); b.pit(213, 215); b.put(222, 15, 'C');
+        // ---- the summit: stairs for the second card
+        b.zone(232, 271, 'Summit', 5);
+        b.hint(228, 252, 'One climbs on the other. Up there a button builds the stairs.');
+        b.put(232, 15, 'Z'); b.fill(233, 14, 233, 15, 'Z'); b.fill(234, 13, 234, 15, 'Z');
+        b.fill(235, 12, 244, 15, '#'); b.put(239, 11, 'r'); b.put(243, 11, 'k');
+        b.fill(250, 0, 250, 12, '#'); b.fill(250, 13, 250, 15, 'd'); b.row(246, 247, 15, 'h');
+        b.put(252, 15, 'C');
+        b.fill(264, 13, 265, 15, 'E');
+        return finish(b);
+    }
+    function sky() {
+        var b = new Builder(330, 20); b.name = 'Level 3: Sky Run';
+        b.holdFor('p', 0.25).holdFor('q', 0.25).holdFor('r', 0.9);
+        b.zone(0, 59, 'Cloud Steps', 5);
+        b.island(0, 12, 16, 4); b.put(3, 15, '@');
+        b.hint(0, 14, 'No floor here. If you fall, a friend pulls you up. Alone you restart at the flag.');
+        b.island(15, 17, 15); b.island(21, 22, 14); b.island(26, 28, 13); b.island(32, 33, 14); b.island(37, 39, 15); b.island(43, 46, 14); b.put(44, 13, 'C');
+        b.row(48, 58, 15, '~'); b.island(60, 68, 15, 5);
+        b.zone(60, 119, 'Spring Garden', 5);
+        b.put(60, 14, 'C');
+        b.put(66, 14, 'S'); b.island(71, 74, 10, 2); b.put(73, 9, 'S'); b.island(78, 82, 7, 2);
+        b.island(86, 87, 9); b.island(91, 92, 10); b.island(96, 98, 12); b.island(101, 103, 13); b.island(106, 119, 15, 5);
+        b.put(108, 14, 'C');
+        b.zone(120, 189, 'Saw Bridge', 5);
+        b.row(120, 130, 15, '#'); b.saw({ x0: 123, y0: 14, x1: 128, y1: 14, period: 2.6, phase: 0, r: 11 });
+        b.mover({ x0: 132, y0: 15, x1: 140, y1: 15, w: 3, period: 6, phase: 0 });
+        b.island(143, 150, 15, 5); b.row(145, 146, 14, '^'); b.put(150, 14, 'C');
+        b.mover({ x0: 153, y0: 15, x1: 153, y1: 9, w: 3, period: 5, phase: 0 }); b.island(157, 164, 9, 2);
+        b.fill(160, 0, 160, 7, '#'); b.put(160, 8, 'w');
+        b.island(168, 189, 15, 5); b.put(171, 14, 'f'); b.put(177, 14, 'f'); b.row(182, 183, 14, 'i'); b.put(188, 14, 'C');
+        b.zone(190, 249, 'Crusher Clouds', 5);
+        b.ground(190, 249); b.fill(239, 16, 241, 19, '.');
+        b.fill(196, 0, 196, 8, '#'); b.put(196, 9, 'w'); b.fill(201, 0, 201, 8, '#'); b.put(201, 9, 'w');
+        b.put(206, 16, 'f'); b.put(211, 16, 'f'); b.row(215, 216, 15, 'i'); b.put(220, 15, 'i');
+        b.put(214, 15, 'C');
+        b.saw({ x0: 224, y0: 15, x1: 229, y1: 15, period: 2.4, phase: 0, r: 13 });
+        b.hint(232, 249, 'Hold the button, a friend rides the lift up and opens your gate.');
+        b.put(236, 15, 'p'); b.put(234, 15, 'C');
+        b.mover({ x0: 239, y0: 16, x1: 239, y1: 12, w: 3, period: 1, btn: 'p', speed: 2.6 });
+        b.row(242, 248, 12, '#'); b.put(245, 11, 'q'); b.fill(248, 13, 248, 15, 'Q');
+        b.zone(250, 329, 'The Run', 5);
+        b.ground(250, 329); b.row(253, 274, 16, '}');
+        b.put(259, 15, '^'); b.row(264, 265, 15, '^'); b.put(270, 15, '^');
+        b.pit(278, 281); b.put(277, 15, 'S'); b.put(290, 15, 'C');
+        b.put(296, 15, 'Z'); b.fill(297, 14, 297, 15, 'Z'); b.fill(298, 13, 298, 15, 'Z');
+        b.fill(299, 12, 308, 15, '#'); b.put(303, 11, 'r'); b.put(307, 11, 'k');
+        b.fill(314, 0, 314, 12, '#'); b.fill(314, 13, 314, 15, 'd'); b.put(316, 15, 'C');
+        b.fill(322, 13, 323, 15, 'E');
+        return finish(b);
+    }
+    var LEVELS = [
+        { id: 'training', name: 'Training', make: training, practice: true },
+        { id: 'l1', name: 'Level 1: First Steps', make: level1 },
+        { id: 'l2', name: 'Level 2: The Factory', make: factory },
+        { id: 'l3', name: 'Level 3: Sky Run', make: sky }
+    ];
+
     function zoneAt(lv, px) { var tx = px / TS; for (var i = 0; i < lv.zones.length; i++) if (tx >= lv.zones[i].x0 && tx <= lv.zones[i].x1 + 1) return i; return lv.zones.length - 1; }
-    function tapsAt(lv, px) { var z = lv.rescue[zoneAt(lv, px)]; return z ? z.taps : 3; }
+    function tapsAt() { return RESCUE; }
 
     // ------------------------------------------------------------------ world (everything except the players)
     function World(lv) { this.lv = lv; this.reset(); }
@@ -5538,7 +5705,8 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         this.hs = lv.hid.map(function () { return { on: false, t: 0 }; });
         this.crIdx = {}; for (var i = 0; i < lv.crumbles.length; i++) this.crIdx[lv.crumbles[i].ty * lv.w + lv.crumbles[i].tx] = i;
         this.doorAt = {}; for (i = 0; i < lv.doors.length; i++) for (var y = lv.doors[i].y0; y <= lv.doors[i].y1; y++) this.doorAt[y * lv.w + lv.doors[i].tx] = i;
-        this.platforms = []; this.saws = [];
+        this.platforms = []; this.saws = []; this.hazardsOff = !!this.hazardsOff;
+        this.mu = lv.movers.map(function () { return 0; });
         this.update(0, []);
     };
     World.prototype.active = function (l) { return this.t < this.hold[l]; };
@@ -5552,6 +5720,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         if (c === T['~']) return this.cr[this.crIdx[ty * lv.w + tx]].s !== 2;
         if (c === T['d']) return !this.doorOpen[this.doorAt[ty * lv.w + tx]];
         var ch = String.fromCharCode(c);
+        if (BELT[ch] !== undefined || ch === 'f') return true;
         if (GATE[ch]) return !this.active(GATE[ch]);
         if (BRIDGE[ch]) return this.active(BRIDGE[ch]);
         return false;
@@ -5569,7 +5738,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
             var bt = lv.buttons[i], bx = bt.tx * TS, bb = (bt.ty + 1) * TS;
             for (j = 0; j < players.length; j++) { p = players[j]; if (!p.alive || p.hang) continue; if (Math.abs(p.y + p.h - bb) <= 3 && p.x + p.w > bx + 4 && p.x < bx + TS - 4) { pr[bt.l] = true; break; } }
         }
-        for (var l in pr) { this.pressed[l] = pr[l]; if (pr[l]) this.hold[l] = this.t + PHYS.hold; }
+        for (var l in pr) { this.pressed[l] = pr[l]; if (pr[l]) this.hold[l] = this.t + (lv.hold && lv.hold[l] !== undefined ? lv.hold[l] : PHYS.hold); }
         // crumbling blocks
         for (i = 0; i < lv.crumbles.length; i++) {
             var c = lv.crumbles[i], st = this.cr[i], cx = c.tx * TS, cy = c.ty * TS;
@@ -5600,11 +5769,20 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         }
         // moving platforms and saws
         for (i = 0; i < lv.movers.length; i++) {
-            var m = lv.movers[i], mp = this.moverPos(m, this.t), pf = this.platforms[i] || (this.platforms[i] = { x: mp.x, y: mp.y });
+            var m = lv.movers[i], mp;
+            if (m.btn) {
+                var tg = this.active(m.btn) ? 1 : 0, ln = Math.max(0.01, Math.sqrt((m.x1 - m.x0) * (m.x1 - m.x0) + (m.y1 - m.y0) * (m.y1 - m.y0))), step = (m.speed || 2.5) * dt / ln, dd = tg - this.mu[i];
+                this.mu[i] += Math.abs(dd) <= step ? dd : (dd > 0 ? step : -step);
+                mp = { x: (m.x0 + (m.x1 - m.x0) * this.mu[i]) * TS, y: (m.y0 + (m.y1 - m.y0) * this.mu[i]) * TS };
+            } else mp = this.moverPos(m, this.t);
+            var pf = this.platforms[i] || (this.platforms[i] = { x: mp.x, y: mp.y });
             pf.dx = mp.x - pf.x; pf.dy = mp.y - pf.y; pf.x = mp.x; pf.y = mp.y; pf.w = m.w * TS; pf.h = 10;
         }
         this.saws.length = 0; for (i = 0; i < lv.saws.length; i++) this.saws.push(this.sawPos(lv.saws[i], this.t));
     };
+    // timed hazards (pure functions of the clock, so everybody sees the same)
+    World.prototype.fireState = function (tx) { var u = (this.t + tx * 1.13) % 3.4; return u < 1.8 ? 0 : (u < 2.4 ? 1 : 2); };
+    World.prototype.spikeState = function (tx) { var u = (this.t + (tx >> 1) * 0.9) % 2.4; return u < 1.3 ? 0 : (u < 1.8 ? 1 : 2); };
     World.prototype.thwRect = function (i) { var w = this.lv.thw[i], s = this.th[i]; return { x: w.tx * TS + 2, y: w.ty * TS + s.y + 2, w: TS - 4, h: TS - 4 }; };
 
     // ------------------------------------------------------------------ player
@@ -5666,10 +5844,8 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         if (pressed) p.buf = PHYS.buffer; else p.buf -= dt;
         p.coy = p.grounded ? PHYS.coyote : p.coy - dt;
         if (p.buf > 0 && p.coy > 0) { p.vy = -PHYS.jump; p.buf = 0; p.coy = 0; p.grounded = false; p.jumping = true; ev.push('jump'); }
-        // let go of the button early = short hop (springs are not affected)
-        if (p.jumping && !inp.j && p.vy < -PHYS.cut) p.vy = -PHYS.cut;
         if (p.vy >= 0 || p.grounded) p.jumping = false;
-        // gravity (stronger when the button is released: short hop)
+        // gravity (every jump is the same height, no matter how long the button is held)
         p.vy = Math.min(PHYS.maxFall, p.vy + PHYS.grav * dt);
         // chain pull (acceleration toward your neighbours)
         if (pull) { p.vx += pull.ax * dt; p.vy += pull.ay * dt; }
@@ -5682,6 +5858,10 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         var vyBefore = p.vy;
         moveY(W, p, p.vy * dt, others);
         if (p.y < 0) { p.y = 0; if (p.vy < 0) p.vy = 0; }
+        if (p.grounded && !p.ride) {
+            var by = Math.floor((p.y + p.h + 1) / TS), bx = Math.floor((p.x + p.w / 2) / TS);
+            if (by < lv.h && bx >= 0 && bx < lv.w) { var bs = BELT[String.fromCharCode(lv.t[by * lv.w + bx])]; if (bs) moveX(W, p, bs * dt); }
+        }
         if (p.grounded && !wasGround && vyBefore > 260) ev.push('land');
         // springs
         for (i = 0; i < lv.springs.length; i++) {
@@ -5712,7 +5892,9 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
                 if (c === T['^'] && rect(r, { x: tx * TS + 6, y: ty * TS + 14, w: TS - 12, h: 18 })) hz = 'spike';
                 else if (c === T['v'] && rect(r, { x: tx * TS + 6, y: ty * TS, w: TS - 12, h: 18 })) hz = 'spike';
                 else if (c === T['h'] && W.hs[hidIndex(lv, tx, ty)].on && rect(r, { x: tx * TS + 6, y: ty * TS + 14, w: TS - 12, h: 18 })) hz = 'spike';
+                else if (c === T['i'] && !W.hazardsOff && W.spikeState(tx) === 2 && rect(r, { x: tx * TS + 6, y: ty * TS + 14, w: TS - 12, h: 18 })) hz = 'spike';
             }
+            if (!W.hazardsOff) for (i = 0; i < lv.fire.length && !hz; i++) if (W.fireState(lv.fire[i].tx) === 2 && rect(p, { x: lv.fire[i].tx * TS + 8, y: (lv.fire[i].ty - 4) * TS + 4, w: TS - 16, h: 4 * TS - 4 })) hz = 'fire';
             for (i = 0; i < W.saws.length && !hz; i++) if (circleHit(p, W.saws[i])) hz = 'saw';
             for (i = 0; i < lv.thw.length && !hz; i++) if (W.th[i].s === 1 && rect(p, W.thwRect(i))) hz = 'thwomp';
             if (hz) ev.push('die:' + hz);
@@ -5740,7 +5922,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
 
     return {
         TS: TS, PW: PW, PH: PH, DT: DT, PHYS: PHYS, CHAIN: CHAIN, T: T,
-        level1: level1, World: World, makePlayer: makePlayer, stepPlayer: stepPlayer, chainPull: chainPull, kill: kill, respawn: respawn, spawnFor: spawnFor,
+        level1: level1, LEVELS: LEVELS, RESCUE: RESCUE, HANG_TIME: HANG_TIME, BELT: BELT, World: World, makePlayer: makePlayer, stepPlayer: stepPlayer, chainPull: chainPull, kill: kill, respawn: respawn, spawnFor: spawnFor,
         zoneAt: zoneAt, tapsAt: tapsAt, overlapSolid: overlapSolid, GATE: GATE, BRIDGE: BRIDGE
     };
 });
@@ -9245,6 +9427,7 @@ const GM = {
     hang: null, rescue: null, hiTimers: [], joinTimer: 0, pullPos: null, bar: false, fx: [], heroT: 0, evSeq: 0
 };
 
+Object.assign(GM, { dirT: { l: 0, r: 0 }, selLv: 1, link: {}, taps: {}, lvi: 1, flash: 0, respCd: 0, paused: false, lvCache: {}, padEls: null });
 function gmLS(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { /* storage blocked */ } return null; }
 
 // ------------------------------------------------------------ audio (made with oscillators, nothing to download)
@@ -9341,16 +9524,26 @@ function gmDrawEmote(g, k, cx, cy, r, t) {
 function gmLoadProfile() {
     try { const j = JSON.parse(gmLS('sc_gm_p') || '{}'); if (typeof j.n === 'string') GM.name = j.n.slice(0, 12); if (typeof j.c === 'string' && GM_COLORS.includes(j.c)) GM.color = j.c; } catch (e) { /* defaults */ }
     if (!GM.name || GM.name === 'Player') GM.name = 'Player' + (100 + Math.floor(Math.random() * 900));
-    GM.mute = gmLS('sc_gm_mute') === '1'; GM.dc = GM.color;
+    GM.mute = gmLS('sc_gm_mute') === '1'; GM.dc = GM.color; { const sl = +gmLS('sc_gm_lv'); GM.selLv = sl > 0 && GameCore.LEVELS[sl] ? sl : 1; }
 }
 function gmSaveProfile() { gmLS('sc_gm_p', JSON.stringify({ n: GM.name, c: GM.color })); }
 function gmCleanName() { const v = byId('gmName').value.replace(/[^\w \-.]/g, '').trim().slice(0, 12); GM.name = v || ('Player' + (100 + Math.floor(Math.random() * 900))); byId('gmName').value = GM.name; }
 function gmMenuUI() {
+    gmLvChips();
     byId('gmName').value = GM.name; byId('gmPrevName').textContent = GM.name;
     const row = byId('gmCols');
     if (!row.children.length) row.innerHTML = GM_COLORS.map(c => '<button type="button" class="gm-sw" data-c="' + c + '" style="--c:' + c + '" onclick="gmPickColor(\'' + c + '\')" aria-label="Color ' + c + '"><i></i></button>').join('');
     row.querySelectorAll('.gm-sw').forEach(b => b.classList.toggle('on', b.dataset.c === GM.color));
 }
+function gmLvChips() {
+    for (const id of ['gmLvChips', 'gmLobbyLv']) {
+        const el = byId(id); if (!el) continue;
+        if (!el.children.length) el.innerHTML = GameCore.LEVELS.map((L, i) => i === 0 ? '' : '<button type="button" data-i="' + i + '" onclick="gmPickLv(' + i + ')">' + gmEsc(L.name.split(':')[0]) + '</button>').join('');
+        el.querySelectorAll('button').forEach(b => b.classList.toggle('on', +b.dataset.i === GM.selLv));
+    }
+    byId('gmLobbyLv').classList.toggle('ro', GM.mode === 'room' && !GM.host);
+}
+function gmPickLv(i) { if (GM.screen === 'lobby' && !GM.host) return; GM.selLv = i; gmLS('sc_gm_lv', String(i)); gmLvChips(); if (GM.screen === 'lobby' && GM.host) gmCfgSend(); }
 function gmPickColor(c) { GM.color = c; GM.dc = c; gmSaveProfile(); gmMenuUI(); }
 // two people with the same card color: the one with the larger id gets the next free color, the same on every screen
 function gmColorFix() {
@@ -9430,17 +9623,17 @@ function gmBack() {
 function gmGo(mode) {
     gmCleanName(); gmSaveProfile(); gmAudio(); GM.mode = mode;
     if (mode === 'room') { byId('gmRoomMsg').textContent = ''; byId('gmCode').value = ''; gmShow('room'); return; }
-    if (mode === 'solo') { gmBeginGame([GM.id], false); return; }
+    if (mode === 'solo') { gmBeginGame([GM.id], false, 0); return; }
     if (mode === 'crowd') {
-        GM.host = false; GM.chain = false; gmNetStart(GM_LIVE_TOPIC); gmBeginGame([GM.id], false);
-        gmToast('Looking for other players...'); gmNetUI();
+        GM.host = false; GM.chain = false; gmNetStart(GM_LIVE_TOPIC); gmBeginGame([GM.id], false, GM.selLv);
+        gmNetUI();
     }
 }
 function gmLeave() {
     GM.run = false; cancelAnimationFrame(GM.raf); GM.raf = 0;
-    gmNetStop(); GM.started = false; GM.me = null; GM.W = null; GM.order = []; GM.hang = null; GM.rescue = null; GM.finished = false;
+    gmNetStop(); GM.started = false; GM.me = null; GM.W = null; GM.order = []; GM.hang = null; GM.finished = false; GM.taps = {}; GM.paused = false;
     for (const k of ['l', 'r', 'j']) GM.pad[k] = GM.key[k] = false;
-    byId('gmPull').hidden = true; byId('gmHang').hidden = true; byId('gmEnd').hidden = true; byId('gmEmotes').hidden = true; GM.bar = false;
+    for (const id of ['gmPull', 'gmHang', 'gmEnd', 'gmEmotes', 'gmPause']) byId(id).hidden = true; GM.bar = false; document.querySelectorAll('#gmPad .down').forEach(b => b.classList.remove('down'));
 }
 
 // ------------------------------------------------------------ signalling (ntfy) + peers (WebRTC)
@@ -9489,7 +9682,7 @@ function gmConnect(id, initiator, name) {
     if (GM.peers.has(id)) return GM.peers.get(id);
     const pc = new RTCPeerConnection({ iceServers: gmIce() });
     const P = { id: id, pc: pc, st: null, ev: null, open: false, name: name || '?', color: '#d97757', dc: '#d97757', host: false, snap: [], rx: 0, ry: 0, dx: 0, dy: 0, w: 20, h: 28, alive: true, hang: false, grounded: false, cp: -1, key: -1, atExit: false, vx: 0, face: 1,
-        emote: null, got: false, joined: performance.now(), gone: false, need: 0, prog: 0, t: 0 };
+        emote: null, got: false, joined: performance.now(), gone: false, need: 0, prog: 0, t: 0, lvi: -1, hx: undefined, hangAt: 0 };
     GM.peers.set(id, P);
     const bind = ch => {
         if (ch.label === 'st') { P.st = ch; ch.onmessage = e => gmOnState(P, e.data); }
@@ -9527,12 +9720,13 @@ function gmPeerGone(P) {
     if (P.gone) return; gmPeerClose(P); if (GM.peers.get(P.id) === P) GM.peers.delete(P.id);
     if (GM.W) { for (let i = 0; i < GM.W.keyHolder.length; i++) if (GM.W.keyHolder[i] === P.id) GM.W.keyHolder[i] = null; }
     if (P.hang && GM.run) gmToast(P.name + ' left');
+    if (GM.run && GM.me) gmRescueCheck();
     gmColorFix(); gmLobbyUI(); gmNetUI(); gmTeamUI(true);
 }
 function gmPeerOpen(P) {
     P.open = true; gmColorFix(); clearTimeout(P.timer); gmSfx('join');
     P.ev.send(JSON.stringify({ t: 'prof', n: GM.name, c: GM.color, h: GM.host ? 1 : 0 }));
-    if (GM.W) P.ev.send(JSON.stringify({ t: 'sync', d: GM.W.doorOpen.map(x => x ? 1 : 0), g: GM.W.keyGone.map(x => x ? 1 : 0) }));
+    if (GM.W) P.ev.send(JSON.stringify({ t: 'sync', l: GM.lvi, d: GM.W.doorOpen.map(x => x ? 1 : 0), g: GM.W.keyGone.map(x => x ? 1 : 0) }));
     if (GM.host && GM.mode === 'room') gmCfgSend();
     gmLobbyUI(); gmNetUI();
 }
@@ -9541,19 +9735,21 @@ function gmSendTo(P, o) { if (P.open && P.ev && P.ev.readyState === 'open') { tr
 function gmSendState(now) {
     const me = GM.me; if (!me || !GM.peers.size) return;
     const fl = (me.grounded ? 1 : 0) | (me.alive ? 2 : 0) | (me.hang ? 4 : 0) | (me.atExit ? 8 : 0);
-    const s = me.x.toFixed(1) + ',' + me.y.toFixed(1) + ',' + Math.round(me.vx) + ',' + Math.round(me.vy) + ',' + me.face + ',' + fl + ',' + me.key + ',' + me.cp + ',' + GM.W.t.toFixed(2);
+    const s = me.x.toFixed(1) + ',' + me.y.toFixed(1) + ',' + Math.round(me.vx) + ',' + Math.round(me.vy) + ',' + me.face + ',' + fl + ',' + me.key + ',' + me.cp + ',' + GM.W.t.toFixed(2) + ',' + GM.lvi;
     for (const P of GM.peers.values()) if (P.st && P.st.readyState === 'open') { try { P.st.send(s); } catch (e) { /* closing */ } }
 }
 function gmOnState(P, str) {
-    const a = str.split(','); if (a.length < 9) return;
+    const a = str.split(','); if (a.length < 10) return;
     const x = +a[0], y = +a[1], fl = +a[5];
     if (!isFinite(x) || !isFinite(y)) return;
+    P.lvi = +a[9] | 0;
+    if (P.got && P.snap.length) { const l = P.snap[P.snap.length - 1]; if (Math.hypot(x - l.x, y - l.y) > 200) { P.snap.length = 0; P.rx = x; P.ry = y; GM.link[P.id] = false; } }   // teleport: jump, do not slide, and the rope goes slack until you meet again
     const snap = { t: performance.now(), x: x, y: y, vx: +a[2] || 0, vy: +a[3] || 0 };
     P.snap.push(snap); if (P.snap.length > 8) P.snap.shift();
     P.face = +a[4] < 0 ? -1 : 1; P.grounded = !!(fl & 1); P.alive = !!(fl & 2); P.hang = !!(fl & 4); P.atExit = !!(fl & 8); P.key = +a[6] | 0; P.cp = +a[7] | 0; P.vx = snap.vx;
     if (!P.got) { P.got = true; P.rx = x; P.ry = y; }
     // follow the clock of the lowest id so moving platforms line up for everybody
-    if (GM.W) {
+    if (GM.W && P.lvi === GM.lvi) {
         let lead = GM.id; for (const Q of GM.peers.values()) if (Q.open && Q.id < lead) lead = Q.id;
         if (lead === P.id) { const wt = +a[8]; if (isFinite(wt)) { const d = wt - GM.W.t; if (Math.abs(d) > 1.2) GM.W.t = wt; else GM.W.t += d * 0.08; } }
     }
@@ -9563,21 +9759,23 @@ function gmOnState(P, str) {
 function gmOnEvent(P, raw) {
     let m; try { m = JSON.parse(raw); } catch (e) { return; }
     if (!m || typeof m.t !== 'string') return;
+    const same = m.l === undefined || m.l === GM.lvi;
     switch (m.t) {
         case 'prof': P.name = String(m.n || '?').slice(0, 12); P.color = GM_COLORS.includes(m.c) ? m.c : '#d97757'; P.host = !!m.h; gmColorFix(); gmLobbyUI(); gmTeamUI(true); break;
-        case 'cfg': if (!GM.host) { GM.chain = !!m.chain; gmLobbyUI(); } break;
-        case 'start': if (!GM.host && GM.mode === 'room' && Array.isArray(m.order)) { GM.chain = !!m.chain; gmBeginGame(m.order.filter(x => typeof x === 'string'), GM.chain); } break;
-        case 'again': if (GM.run) gmReset(true); break;
-        case 'sync': if (GM.W) { (m.d || []).forEach((v, i) => { if (v && i < GM.W.doorOpen.length) GM.W.doorOpen[i] = true; }); (m.g || []).forEach((v, i) => { if (v && i < GM.W.keyGone.length) GM.W.keyGone[i] = true; }); } break;
-        case 'key': if (GM.W && m.i >= 0 && m.i < GM.W.keyHolder.length && !GM.W.keyGone[m.i]) GM.W.keyHolder[m.i] = m.on ? P.id : null; break;
-        case 'door': if (GM.W && m.i >= 0 && m.i < GM.W.doorOpen.length) { GM.W.doorOpen[m.i] = true; if (m.k >= 0 && m.k < GM.W.keyGone.length) { GM.W.keyGone[m.k] = true; GM.W.keyHolder[m.k] = null; } gmSfx('door'); } break;
-        case 'em': if (GM_EMOTES.includes(m.k)) { P.emote = { k: m.k, t: 0 }; if (GM.run && performance.now() - (GM.lastEmSnd || 0) > 250) { GM.lastEmSnd = performance.now(); GM_EMO_SND[m.k](); } } break;
-        case 'dead': if (GM.run && GM.W) gmBurst(P.rx + 10, P.ry + 14, P.dc, 16); break;
-        case 'hang': P.hang = !!m.on; P.need = m.need | 0; P.prog = 0; if (m.on && GM.run) { gmSfx('hang'); gmToast(P.name + ' fell. Pull them up!'); gmPullStart(P); } else gmPullStop(P); break;
-        case 'prog': P.prog = m.got | 0; gmPullUI(); break;
-        case 'pull': if (GM.hang && m.to === GM.id) gmHangPull(); break;
-        case 'rescued': gmBurst(P.rx + 10, P.ry + 14, '#e2b56a', 14); gmSfx('rescue'); gmPullStop(P); break;
-        case 'win': if (GM.run && !GM.finished) gmWin(+m.time || 0, true); break;
+        case 'cfg': if (!GM.host) { GM.chain = !!m.chain; if (GameCore.LEVELS[m.lvi]) GM.selLv = m.lvi; gmLvChips(); gmLobbyUI(); } break;
+        case 'start': if (!GM.host && GM.mode === 'room' && Array.isArray(m.order)) { GM.chain = !!m.chain; gmBeginGame(m.order.filter(x => typeof x === 'string'), GM.chain, m.lvi); } break;
+        case 'lvl': if (!GM.host && GM.mode === 'room' && GM.run && P.host && GameCore.LEVELS[m.i]) { GM.selLv = m.i; gmBeginGame(GM.order, GM.chain, m.i); } break;
+        case 'again': if (GM.run && GM.mode === 'room') gmReset(true); break;
+        case 'sync': if (GM.W && same) { (m.d || []).forEach((v, i) => { if (v && i < GM.W.doorOpen.length) GM.W.doorOpen[i] = true; }); (m.g || []).forEach((v, i) => { if (v && i < GM.W.keyGone.length) GM.W.keyGone[i] = true; }); } break;
+        case 'key': if (GM.W && same && m.i >= 0 && m.i < GM.W.keyHolder.length && !GM.W.keyGone[m.i]) GM.W.keyHolder[m.i] = m.on ? P.id : null; break;
+        case 'door': if (GM.W && same && m.i >= 0 && m.i < GM.W.doorOpen.length) { GM.W.doorOpen[m.i] = true; if (m.k >= 0 && m.k < GM.W.keyGone.length) { GM.W.keyGone[m.k] = true; GM.W.keyHolder[m.k] = null; } gmSfx('door'); } break;
+        case 'em': if (GM_EMOTES.includes(m.k)) { P.emote = { k: m.k, t: 0 }; if (GM.run && P.lvi === GM.lvi && performance.now() - (GM.lastEmSnd || 0) > 250) { GM.lastEmSnd = performance.now(); GM_EMO_SND[m.k](); } } break;
+        case 'dead': if (GM.run && GM.W && P.lvi === GM.lvi && isFinite(m.x) && isFinite(m.y)) gmBurst(m.x + 10, m.y + 14, P.dc, 16); break;
+        case 'hang': P.hang = !!m.on; if (m.on) { P.hx = +m.hx; P.hangAt = performance.now(); if (GM.run) { gmSfx('hang'); gmToast(P.name + ' fell. Pull them up!'); } } if (GM.run && GM.me) gmRescueCheck(true); break;
+        case 'tap': if (same && GM.run) { GM.taps[P.id] = Math.max(GM.taps[P.id] || 0, m.n | 0); gmRescueCheck(true); } break;
+        case 'wipe': if (GM.run && !GM.finished && GM.mode === 'room') gmWipe(); break;
+        case 'rescued': gmBurst(P.rx + 10, P.ry + 14, '#e2b56a', 14); gmSfx('rescue'); break;
+        case 'win': if (GM.run && !GM.finished && GM.mode === 'room') gmWin(+m.time || 0, true); break;
     }
 }
 function gmRoomFail(msg) {
@@ -9603,13 +9801,13 @@ function gmJoin() {
 function gmHostPeer() { for (const P of GM.peers.values()) if (P.open && P.host) return P; return null; }
 function gmCopyCode() { try { navigator.clipboard.writeText(GM.code); const b = byId('gmCopy'); b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1400); } catch (e) { /* clipboard blocked */ } }
 function gmSetChain(v) { if (!GM.host) return; GM.chain = !!v; gmCfgSend(); gmLobbyUI(); }
-function gmCfgSend() { gmSend({ t: 'cfg', chain: GM.chain }); }
+function gmCfgSend() { gmSend({ t: 'cfg', chain: GM.chain, lvi: GM.selLv }); }
 function gmLobbyUI() {
     if (GM.screen !== 'lobby') return;
     const list = [{ name: GM.name, color: GM.dc, host: GM.host, me: true }];
     for (const P of GM.peers.values()) if (P.open) list.push({ name: P.name, color: P.dc, host: P.host, me: false });
     byId('gmMembers').innerHTML = list.map(p => '<div class="gm-mem"><i style="--c:' + p.color + '"></i><b>' + gmEsc(p.name) + '</b><span>' + (p.host ? 'Host' : '') + (p.me ? (p.host ? ' - you' : 'You') : '') + '</span></div>').join('');
-    const hostOk = GM.host || !!gmHostPeer();
+    const hostOk = GM.host || !!gmHostPeer(); gmLvChips();
     byId('gmChainRow').classList.toggle('ro', !GM.host);
     byId('gmYN').querySelectorAll('button').forEach(b => b.classList.toggle('on', (b.dataset.v === '1') === GM.chain));
     const st = byId('gmStart'); st.hidden = !GM.host; st.textContent = list.length > 1 ? 'Start with ' + list.length + ' players' : 'Start alone (practice)';
@@ -9620,28 +9818,36 @@ function gmEsc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '
 function gmStartGame() {
     if (!GM.host || GM.started) return;
     const order = [GM.id]; for (const P of GM.peers.values()) if (P.open) order.push(P.id);
-    gmSend({ t: 'start', order: order, chain: GM.chain && order.length > 1 });
-    gmBeginGame(order, GM.chain && order.length > 1);
+    gmSend({ t: 'start', order: order, chain: GM.chain && order.length > 1, lvi: GM.selLv });
+    gmBeginGame(order, GM.chain && order.length > 1, GM.selLv);
 }
 
 // ------------------------------------------------------------ the game session
-function gmBeginGame(order, chain) {
-    GM.lv = GM.lv || GameCore.level1(); const lv = GM.lv;
-    GM.W = new GameCore.World(lv); GM.order = order.slice(); GM.chain = !!chain; GM.started = true;
-    GM.me = GameCore.makePlayer(lv.spawn.x, lv.spawn.y); GM.deaths = 0; GM.finished = false; GM.hang = null; GM.rescue = null; GM.parts.length = 0; GM.fx.length = 0;
-    GM.t0 = performance.now(); GM.timeShown = ''; GM.winT = 0; GM.emote = null; GM.cam.x = lv.spawn.x - 120; GM.cam.y = 0; GM.camInit = false;
-    byId('gmEnd').hidden = true; byId('gmPull').hidden = true; byId('gmHang').hidden = true;
-    gmShow('play'); gmResize(); gmMuteUI(); gmEmoteBarBuild(); gmTeamUI(true); gmNetUI();
+const GM_LINK_BREAK = 11 * 32;      // farther apart than this the rope is slack (after somebody was teleported); it links again when they meet
+function gmLevelFor(i) { GM.lvCache = GM.lvCache || {}; return GM.lvCache[i] || (GM.lvCache[i] = GameCore.LEVELS[i].make()); }
+function gmBeginGame(order, chain, lvi) {
+    if (typeof lvi !== 'number' || !GameCore.LEVELS[lvi]) lvi = GM.selLv;
+    GM.lvi = lvi; GM.lv = gmLevelFor(lvi); GM.W = new GameCore.World(GM.lv); GM.order = order.slice(); GM.chain = !!chain; GM.started = true;
+    for (const P of GM.peers.values()) { P.snap.length = 0; P.got = false; P.lvi = -1; P.hang = false; }
+    gmFreshRun(); gmShow('play'); gmResize(); gmMuteUI(); gmEmoteBarBuild(); gmTeamUI(true); gmNetUI(); gmPlayUI();
     GM.run = true; GM.last = performance.now(); GM.acc = 0; cancelAnimationFrame(GM.raf); GM.raf = requestAnimationFrame(gmFrame);
-    gmToast(GM.mode === 'solo' ? 'Practice. The summit needs a friend.' : 'Go!');
+    gmToast(GM.lv.name);
 }
-function gmReset(fromNet) {
-    const lv = GM.lv; GM.W.reset(); GM.me = GameCore.makePlayer(lv.spawn.x, lv.spawn.y); GM.deaths = 0; GM.finished = false; GM.hang = null; GM.rescue = null;
-    GM.t0 = performance.now(); GM.winT = 0; GM.parts.length = 0; byId('gmEnd').hidden = true; byId('gmHang').hidden = true; byId('gmPull').hidden = true; GM.camInit = false;
-    if (!fromNet) gmSend({ t: 'again' }); gmToast('Again!');
+function gmFreshRun() {
+    const lv = GM.lv; GM.me = GameCore.makePlayer(lv.spawn.x, lv.spawn.y); GM.deaths = 0; GM.finished = false; GM.hang = null; GM.taps = {}; GM.link = {}; GM.parts.length = 0;
+    GM.t0 = performance.now(); GM.winT = 0; GM.emote = null; GM.camInit = false; GM.flash = 0; GM.respCd = 0; GM.hintTxt = ''; GM.paused = false;
+    for (const id of ['gmEnd', 'gmPull', 'gmHang', 'gmPause', 'gmEmotes']) byId(id).hidden = true; GM.bar = false; byId('gmHint').classList.remove('on');
 }
+function gmPlayUI() { const solo = GM.mode === 'solo'; byId('gmInv').hidden = solo; }
+function gmReset(fromNet) { GM.W.reset(); gmFreshRun(); if (!fromNet && GM.mode === 'room') gmSend({ t: 'again' }); gmToast('Again!'); }
 function gmAgain() { gmReset(false); }
-function gmTeamCp() { let cp = GM.me.cp; if (GM.mode === 'room') for (const P of GM.peers.values()) if (P.open && P.cp > cp) cp = P.cp; return cp; }
+function gmNext() {
+    const ni = GM.lvi + 1; if (!GameCore.LEVELS[ni]) { gmBack(); return; }
+    GM.selLv = ni; gmLS('sc_gm_lv', String(ni));
+    if (GM.mode === 'room') { if (!GM.host) return; gmSend({ t: 'lvl', i: ni }); }
+    gmBeginGame(GM.order, GM.chain, ni);
+}
+function gmTeamCp() { let cp = GM.me.cp; if (GM.mode === 'room') for (const P of GM.peers.values()) if (P.open && P.lvi === GM.lvi && P.cp > cp) cp = P.cp; return cp; }
 function gmResize() {
     const st = byId('gmStage'), cv = byId('gmCv'); if (!st || !cv) return;
     const r = st.getBoundingClientRect(); if (!r.width || !r.height) return;
@@ -9651,14 +9857,14 @@ function gmResize() {
 }
 function gmInput() {
     const i = GM.inp, k = GM.key, p = GM.pad; i.l = k.l || p.l; i.r = k.r || p.r; i.j = k.j || p.j;
-    // some phones report a left and a right press together: treat as neither
-    if (i.l && i.r) { i.l = i.r = false; }
+    // both directions held: the one pressed last wins
+    if (i.l && i.r) { if ((GM.dirT.r || 0) >= (GM.dirT.l || 0)) i.l = false; else i.r = false; }
 }
 // remote cards, smoothed a little behind real time
 function gmRemoteUpdate(now) {
     const rt = now - 90; GM.others.length = 0;
     for (const P of GM.peers.values()) {
-        if (!P.open || !P.got || !P.snap.length) continue;
+        if (!P.open || !P.got || !P.snap.length || P.lvi !== GM.lvi) continue;
         const s = P.snap; let x, y;
         if (rt <= s[0].t) { x = s[0].x; y = s[0].y; }
         else if (rt >= s[s.length - 1].t) { const l = s[s.length - 1], dt = Math.min(0.15, (rt - l.t) / 1000); x = l.x + l.vx * dt; y = l.y + (P.grounded ? 0 : l.vy * dt * 0.5); }
@@ -9668,10 +9874,16 @@ function gmRemoteUpdate(now) {
         GM.others.push(P);
     }
 }
+// the neighbours that pull you (chain). A rope that is stretched far beyond its length (somebody was teleported) goes slack, it only links again when you meet.
 function gmNeighbors() {
-    const out = []; if (!GM.chain || GM.mode !== 'room') return out;
-    const i = GM.order.indexOf(GM.id); if (i < 0) return out;
-    for (const j of [i - 1, i + 1]) { const id = GM.order[j]; const P = id && GM.peers.get(id); if (P && P.open && P.got && P.alive && !P.hang) out.push(P); }
+    const out = []; if (!GM.chain || GM.mode !== 'room' || !GM.me || !GM.me.alive || GM.me.hang) return out;
+    const i = GM.order.indexOf(GM.id); if (i < 0) return out; const me = GM.me;
+    for (const j of [i - 1, i + 1]) {
+        const id = GM.order[j], P = id && GM.peers.get(id); if (!P || !P.open || !P.got || P.lvi !== GM.lvi || !P.alive || P.hang) continue;
+        const d = Math.hypot(P.rx - me.x, P.ry - me.y); let on = GM.link[id] !== false;
+        if (on && d > GM_LINK_BREAK) on = false; else if (!on && d < GameCore.CHAIN.len) on = true;
+        GM.link[id] = on; if (on) out.push(P);
+    }
     return out;
 }
 function gmFrame(ts) {
@@ -9685,21 +9897,29 @@ function gmFrame(ts) {
     gmCamera(dt); gmRender(ts); gmHud(ts);
     if (ts - GM.sendT > 48) { GM.sendT = ts; gmSendState(ts); }
 }
+// x of the nearest card that hangs from the rope (the helpers cannot walk away from it)
+function gmHangerX() {
+    let best = null, bd = 1e9; for (const P of GM.peers.values()) if (P.open && P.hang && P.lvi === GM.lvi && P.hx !== undefined) { const d = Math.abs(P.hx - GM.me.x); if (d < bd) { bd = d; best = P.hx; } }
+    return best;
+}
 function gmStep(dt) {
-    const me = GM.me, W = GM.W, lv = GM.lv, ev = []; gmInput();
-    const objs = []; for (const P of GM.others) objs.push(P);
-    if (me.alive && !me.hang) {
+    const me = GM.me, W = GM.W, ev = []; gmInput();
+    if (me.hang) gmHangStep(dt);
+    else {
         const nb = gmNeighbors(), pull = nb.length ? GameCore.chainPull(me, nb) : null;
-        GameCore.stepPlayer(me, GM.inp, W, dt, GM.others, ev, pull);
+        let inp = GM.inp; const hx = gmHangerX();
+        if (hx !== null) {          // somebody hangs on the rope: you cannot go farther than the rope allows
+            const R = 176, c = me.x + 10; inp = { l: inp.l, r: inp.r, j: inp.j };
+            if (c > hx + R) { if (me.vx > 0) me.vx = 0; inp.r = false; } else if (c < hx - R) { if (me.vx < 0) me.vx = 0; inp.l = false; }
+        }
+        GameCore.stepPlayer(me, inp, W, dt, GM.others, ev, pull);
         if (ev.length) gmEvents(ev);
-    } else if (!me.alive) {
-        me.dead -= dt;
-        if (me.dead <= 0) { GameCore.respawn(me, GameCore.spawnFor(lv, gmTeamCp())); me.cp = Math.max(me.cp, -1); gmBurst(me.x + 10, me.y + 14, GM.dc, 8); }
-    } else if (me.hang) gmHangStep(dt);
+    }
     const all = [me]; for (const P of GM.others) all.push(P);
     const pr = W.pressed.p || W.pressed.q || W.pressed.r; W.update(dt, all);
     if ((W.pressed.p || W.pressed.q || W.pressed.r) && !pr) gmSfx('btn');
     if (GM.emote) { GM.emote.t += dt; if (GM.emote.t > 2.1) GM.emote = null; } if (GM.emoteCd > 0) GM.emoteCd -= dt;
+    if (GM.respCd > 0) GM.respCd -= dt; if (GM.flash > 0) GM.flash = Math.max(0, GM.flash - dt * 3.2);
     for (let i = GM.parts.length - 1; i >= 0; i--) { const q = GM.parts[i]; q.life -= dt; if (q.life <= 0) { GM.parts.splice(i, 1); continue; } q.vy += 900 * dt; q.x += q.vx * dt; q.y += q.vy * dt; }
     if (GM.shake > 0) GM.shake = Math.max(0, GM.shake - dt * 3);
     gmCheckWin(dt);
@@ -9710,65 +9930,152 @@ function gmEvents(ev) {
         if (e === 'jump') { gmSfx('jump'); gmDust(me.x + 10, me.y + 28, 3); }
         else if (e === 'land') { gmSfx('land'); gmDust(me.x + 10, me.y + 28, 4); }
         else if (e.indexOf('spring') === 0) { gmSfx('spring'); gmDust(me.x + 10, me.y + 28, 6); }
-        else if (e.indexOf('key:') === 0) { gmSfx('key'); gmSend({ t: 'key', i: +e.slice(4), on: 1 }); gmToast('Got a key'); gmBurst(me.x + 10, me.y + 8, '#e2b56a', 8); }
-        else if (e.indexOf('door:') === 0) { const a = e.split(':'); gmSfx('door'); gmSend({ t: 'door', i: +a[1], k: +a[2] }); gmToast('Door open'); }
+        else if (e.indexOf('key:') === 0) { gmSfx('key'); gmSend({ t: 'key', l: GM.lvi, i: +e.slice(4), on: 1 }); gmToast('Got a key'); gmBurst(me.x + 10, me.y + 8, '#e2b56a', 8); }
+        else if (e.indexOf('door:') === 0) { const a = e.split(':'); gmSfx('door'); gmSend({ t: 'door', l: GM.lvi, i: +a[1], k: +a[2] }); gmToast('Door open'); }
         else if (e.indexOf('cp:') === 0) { gmSfx('cp'); gmToast('Checkpoint'); gmBurst(me.x + 10, me.y + 8, '#e2b56a', 10); }
-        else if (e.indexOf('die:') === 0) gmDie(e.slice(4));
-        else if (e === 'fall') gmFall();
+        else if (e.indexOf('die:') === 0) { gmDie(e.slice(4)); break; }
+        else if (e === 'fall') { gmFall(); break; }
     }
 }
-function gmDie(why) {
-    const me = GM.me; if (!me.alive) return;
-    const hadKey = me.key; GameCore.kill(me, GM.W); GM.deaths++; GM.shake = 0.25;
-    gmBurst(me.x + 10, me.y + 14, GM.dc, 18); gmSfx('die'); gmSend({ t: 'dead' }); if (hadKey >= 0) gmSend({ t: 'key', i: hadKey, on: 0 });
+// instant jump to a place (no sliding, no rope tug)
+function gmTeleport(pt) {
+    const me = GM.me; GameCore.respawn(me, pt); me.inv = 1.1; GM.camInit = false; GM.flash = 1; GM.link = {}; for (const id of GM.order) if (id !== GM.id) GM.link[id] = false;
+    gmBurst(me.x + 10, me.y + 14, GM.dc, 10); me.t = 0;
 }
+function gmDie(why) {
+    const me = GM.me; if (!me.alive || me.hang) return;
+    const hadKey = me.key, ox = me.x, oy = me.y;
+    GameCore.kill(me, GM.W); if (why !== 'manual') { GM.deaths++; GM.shake = 0.25; gmSfx('die'); }
+    gmBurst(ox + 10, oy + 14, GM.dc, 18); gmSend({ t: 'dead', x: ox, y: oy }); if (hadKey >= 0) gmSend({ t: 'key', l: GM.lvi, i: hadKey, on: 0 });
+    gmTeleport(GameCore.spawnFor(GM.lv, gmTeamCp()));
+}
+function gmRespawnMe(fromMenu) {
+    if (!GM.run || GM.finished || !GM.me || GM.respCd > 0) return;
+    if (GM.me.hang) { gmToast('Wait for your friends to pull you up'); return; }
+    GM.respCd = 1; gmDie('manual'); gmToast('Back at the flag'); if (fromMenu) gmPause(false);
+}
+// ---- falling into a pit: alone you restart, on a chain you hang from the rope
+function gmMates() { const a = []; for (const P of GM.peers.values()) if (P.open && P.got && P.lvi === GM.lvi && P.alive && !P.hang) a.push(P); return a; }
 function gmFall() {
     const me = GM.me; if (!me.alive || me.hang) return;
-    const mates = []; for (const P of GM.peers.values()) if (P.open && P.alive && !P.hang && P.got) mates.push(P);
-    if (GM.chain && GM.mode === 'room' && mates.length) {
-        me.hang = true; me.hangT = 0; me.vx = me.vy = 0; me.y = GM.lv.floorY + 24; me.key = me.key;
-        GM.hang = { need: GameCore.tapsAt(GM.lv, me.x), got: 0 }; gmSend({ t: 'hang', on: 1, need: GM.hang.need }); gmSfx('hang'); byId('gmHang').hidden = false; gmHangUI(); return;
+    if (GM.chain && GM.mode === 'room' && gmMates().length) {
+        me.hang = true; me.vx = me.vy = 0; me.ride = null; GM.hang = { x0: me.x, t: 0 };
+        gmSend({ t: 'hang', on: 1, hx: me.x, l: GM.lvi }); gmSfx('hang'); gmToast('Hang on! Your friends have to pull you up');
+        gmPanelUI(null, true); return;
     }
     gmDie('fall');
 }
 function gmHangStep(dt) {
-    const me = GM.me; me.hangT += dt;
-    if (me.hangT > 12) { GM.hang = null; me.hang = false; byId('gmHang').hidden = true; gmSend({ t: 'hang', on: 0 }); me.alive = true; gmDie('fall'); }
-}
-function gmHangPull() {
-    const h = GM.hang, me = GM.me; if (!h) return;
-    h.got++; gmSend({ t: 'prog', got: h.got }); gmHangUI(); gmSfx('pull');
-    if (h.got >= h.need) {
-        let best = null, bd = 1e9; for (const P of GM.peers.values()) if (P.open && P.alive && !P.hang && P.got) { const d = Math.abs(P.rx - me.x); if (d < bd) { bd = d; best = P; } }
-        const spot = best ? { x: best.rx, y: best.ry - 34 } : GameCore.spawnFor(GM.lv, gmTeamCp());
-        me.hang = false; me.x = spot.x; me.y = spot.y; me.vx = 0; me.vy = -380; me.inv = 1.3; me.grounded = false; GM.hang = null; byId('gmHang').hidden = true;
-        gmSend({ t: 'hang', on: 0 }); gmSend({ t: 'rescued' }); gmSfx('rescue'); gmBurst(me.x + 10, me.y + 14, '#e2b56a', 14); gmToast('Back up!');
+    const me = GM.me, h = GM.hang; if (!h) { me.hang = false; return; } h.t += dt;
+    let a = null, bd = 1e9; for (const P of gmMates()) { const d = Math.abs(P.rx - h.x0); if (d < bd) { bd = d; a = P; } }
+    if (a) {            // dangle from the nearest helper
+        const tx = Math.max(h.x0 - 40, Math.min(h.x0 + 40, a.rx)) + Math.sin(h.t * 2.4) * 8, ty = a.ry + 100 + Math.sin(h.t * 3.1) * 3, f = Math.min(1, dt * 6);
+        me.x += (tx - me.x) * f; me.y += (ty - me.y) * f;
     }
+    me.vx = me.vy = 0; me.grounded = false;
+    if (h.t >= GameCore.HANG_TIME) { gmSend({ t: 'wipe' }); gmWipe(); return; }
+    gmRescueCheck();
 }
-function gmHangUI() { const h = GM.hang; if (!h) return; byId('gmHangDots').innerHTML = Array.from({ length: h.need }, (_, i) => '<s class="' + (i < h.got ? 'on' : '') + '"></s>').join(''); }
-// the person who is not hanging sees a PULL button that jumps to a random place after each tap
-function gmPullStart(P) { GM.rescue = P; GM.pullTaps = 0; byId('gmPull').hidden = false; gmPullMove(); gmPullUI(); }
-function gmPullStop(P) { if (GM.rescue === P || !P.hang) { let any = null; for (const Q of GM.peers.values()) if (Q.hang && Q !== P) any = Q; GM.rescue = any; if (!any) byId('gmPull').hidden = true; } }
+// nobody pulled in time: everybody dies and is teleported to the checkpoint
+function gmWipe() {
+    const me = GM.me; if (!me || !GM.run) return;
+    me.hang = false; GM.hang = null; GM.taps = {}; for (const P of GM.peers.values()) P.hang = false;
+    gmDie('wipe'); gmToast('Nobody pulled in time. Everyone is back at the flag.'); gmPanelUI(null, true);
+}
+// who hangs, who helps, and how many taps each helper owes (5 taps per hanging card, shared between the helpers)
+function gmRescueInfo() {
+    const members = [{ id: GM.id, hang: GM.me.hang, alive: GM.me.alive }];
+    for (const P of GM.peers.values()) if (P.open && P.got && P.lvi === GM.lvi) members.push({ id: P.id, hang: P.hang, alive: P.alive });
+    const hangers = members.filter(m => m.hang), rescuers = members.filter(m => !m.hang && m.alive).sort((a, b) => a.id < b.id ? -1 : 1);
+    const H = hangers.length, R = rescuers.length, total = GameCore.RESCUE * H, quota = {};
+    rescuers.forEach((m, i) => { quota[m.id] = Math.floor(total / R) + (i < total % R ? 1 : 0); });
+    return { H: H, R: R, total: total, quota: quota, hangers: hangers, rescuers: rescuers };
+}
+function gmRescueDone(info) { if (!info.H || !info.R) return false; let sum = 0; for (const r of info.rescuers) sum += Math.min(GM.taps[r.id] || 0, info.quota[r.id]); return sum >= info.total; }
+function gmRescueCheck(force) {
+    if (!GM.run || !GM.me) return; const info = gmRescueInfo();
+    if (!info.H) { GM.taps = {}; gmPanelUI(info, true); return; }
+    if (GM.me.hang && gmRescueDone(info)) gmRescueMe();
+    gmPanelUI(info, force);
+}
+function gmRescueMe() {
+    const me = GM.me, mates = gmMates(); let best = null, bd = 1e9; for (const P of mates) { const d = Math.abs(P.rx - me.x); if (d < bd) { bd = d; best = P; } }
+    const spot = best ? { x: best.rx, y: best.ry - 34 } : GameCore.spawnFor(GM.lv, gmTeamCp());
+    me.hang = false; me.x = spot.x; me.y = spot.y; me.vx = 0; me.vy = -380; me.inv = 1.3; me.grounded = false; GM.hang = null; GM.link = {};
+    gmSend({ t: 'hang', on: 0 }); gmSend({ t: 'rescued' }); gmSfx('rescue'); gmBurst(me.x + 10, me.y + 14, '#e2b56a', 14); gmToast('Back up!'); GM.camInit = false;
+}
+function gmPullTap() {
+    const info = gmRescueInfo(), me = GM.id, q = info.quota[me]; if (!info.H || q === undefined) return;
+    const n = (GM.taps[me] || 0); if (n >= q) return; GM.taps[me] = n + 1; gmSend({ t: 'tap', n: n + 1, l: GM.lvi }); gmSfx('pull'); gmPullMove(); gmRescueCheck(true);
+}
 function gmPullMove() {
     const b = byId('gmPull'), st = byId('gmStage'), w = st.clientWidth, h = st.clientHeight, s = 92;
-    const x = 12 + Math.random() * Math.max(10, w - s - 24), y = h * 0.16 + Math.random() * Math.max(10, h * 0.42 - s * 0.5);
+    const x = 12 + Math.random() * Math.max(10, w - s - 24), y = h * 0.2 + Math.random() * Math.max(10, h * 0.4 - s * 0.5);
     b.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px)';
 }
-function gmPullUI() { const P = GM.rescue; if (!P) return; byId('gmPullDots').innerHTML = Array.from({ length: P.need || 3 }, (_, i) => '<s class="' + (i < P.prog ? 'on' : '') + '"></s>').join(''); }
-function gmPullTap() { const P = GM.rescue; if (!P) return; gmSendTo(P, { t: 'pull', to: P.id }); gmSfx('pull'); gmPullMove(); P.prog++; gmPullUI(); }
+// the rescue panel and the PULL button follow the situation
+function gmPanelUI(info, force) {
+    if (!GM.run || !GM.me) return; const now = performance.now(); if (!force && now - (GM.panelT || 0) < 150) return; GM.panelT = now; info = info || gmRescueInfo();
+    const hang = byId('gmHang'), pull = byId('gmPull'), me = GM.me;
+    if (!info.H) { hang.hidden = true; if (!pull.hidden) pull.hidden = true; return; }
+    let left = GameCore.HANG_TIME, who = '';
+    if (me.hang && GM.hang) left = GameCore.HANG_TIME - GM.hang.t;
+    else for (const P of GM.peers.values()) if (P.hang && P.lvi === GM.lvi) { left = Math.min(left, GameCore.HANG_TIME - (performance.now() - (P.hangAt || performance.now())) / 1000); who = who || P.name; }
+    left = Math.max(0, left); const sec = Math.ceil(left);
+    hang.hidden = false; hang.classList.toggle('low', left < 4);
+    const myQ = info.quota[GM.id], myT = GM.taps[GM.id] || 0;
+    if (me.hang) {
+        byId('gmHangT').textContent = 'Hanging - ' + sec + 's'; byId('gmHangS').textContent = 'Your friends must pull you up'; 
+        let sum = 0; for (const r of info.rescuers) sum += Math.min(GM.taps[r.id] || 0, info.quota[r.id]); const need = info.total;
+        byId('gmHangDots').innerHTML = Array.from({ length: need }, (_, i) => '<s class="' + (i < sum ? 'on' : '') + '"></s>').join('');
+    } else {
+        byId('gmHangT').textContent = (who || 'A friend') + ' fell - ' + sec + 's'; byId('gmHangS').textContent = myQ !== undefined ? (myT >= myQ ? 'Your part is done, the others are pulling' : 'Tap PULL (' + myT + ' of ' + myQ + ' for you)') : 'Wait';
+        byId('gmHangDots').innerHTML = '';
+    }
+    const show = !me.hang && myQ !== undefined && myT < myQ;
+    if (show && pull.hidden) { pull.hidden = false; gmPullMove(); }
+    if (!show && !pull.hidden) pull.hidden = true;
+    if (show) { byId('gmPullTxt').textContent = 'PULL ' + myT + '/' + myQ; byId('gmPullDots').innerHTML = Array.from({ length: myQ }, (_, i) => '<s class="' + (i < myT ? 'on' : '') + '"></s>').join(''); }
+}
 function gmCheckWin(dt) {
     if (GM.finished) return; const me = GM.me;
     let all = me.alive && me.atExit;
-    if (GM.mode === 'room' && GM.order.length > 1) { for (const id of GM.order) { if (id === GM.id) continue; const P = GM.peers.get(id); if (!P || !P.open) continue; if (!(P.alive && P.atExit)) { all = false; break; } } }
+    if (GM.mode === 'room' && GM.order.length > 1) { for (const id of GM.order) { if (id === GM.id) continue; const P = GM.peers.get(id); if (!P || !P.open) continue; if (!(P.alive && P.atExit && P.lvi === GM.lvi)) { all = false; break; } } }
     GM.winT = all ? GM.winT + dt : 0;
-    if (GM.winT > 0.6) { const t = (performance.now() - GM.t0) / 1000; gmSend({ t: 'win', time: t }); gmWin(t, false); }
+    if (GM.winT > 0.6) { const t = (performance.now() - GM.t0) / 1000; if (GM.mode === 'room') gmSend({ t: 'win', time: t }); gmWin(t, false); }
 }
+// ---- menu while playing
+function gmPause(on) {
+    if (!GM.run) return; GM.paused = !!on; byId('gmPause').hidden = !on; GM.pad.l = GM.pad.r = GM.pad.j = false; GM.key.l = GM.key.r = GM.key.j = false;
+    byId('gmPauseInv').hidden = GM.mode === 'solo';
+}
+function gmInviteUrl() {
+    const base = location.href.split('#')[0], lv = GM.lvi || GM.selLv;
+    return base + '#chainrun=' + (GM.mode === 'room' ? GM.code : 'crowd') + (GM.mode === 'room' ? '' : '-' + lv);
+}
+function gmInvite() {
+    const url = gmInviteUrl(), msg = GM.mode === 'room' ? 'Join my Chain Run room. Code: ' + GM.code : 'Play Chain Run with me in the live crowd';
+    const done = t => { gmToast(t); };
+    if (navigator.share) { navigator.share({ title: 'Chain Run', text: msg, url: url }).catch(() => {}); return; }
+    try { navigator.clipboard.writeText(msg + '\n' + url).then(() => done('Invite link copied'), () => done(url)); } catch (e) { done(url); }
+}
+function gmCheckHash() {
+    const m = /#chainrun=([A-Za-z0-9]+)(?:-(\d))?/.exec(location.hash || ''); if (!m) return;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ }
+    gmOpen(); setTimeout(() => {
+        if (m[1].toLowerCase() === 'crowd') { if (m[2] && GameCore.LEVELS[+m[2]]) GM.selLv = +m[2]; gmGo('crowd'); }
+        else { gmGo('room'); byId('gmCode').value = m[1].toUpperCase(); gmJoin(); }
+    }, 350);
+}
+
 function gmFmt(t) { const m = Math.floor(t / 60), s = Math.floor(t % 60); return m + ':' + String(s).padStart(2, '0'); }
-function gmWin(t, remote) {
+function gmWin(t) {
     if (GM.finished) return; GM.finished = true; gmSfx('win'); GM.shake = 0;
-    byId('gmEndTitle').textContent = GM.mode === 'crowd' ? 'You made it' : 'Level clear';
-    byId('gmEndText').textContent = 'Time ' + gmFmt(t) + '. Deaths ' + GM.deaths + '.';
-    byId('gmEnd').hidden = false;
+    const last = !GameCore.LEVELS[GM.lvi + 1], room = GM.mode === 'room';
+    byId('gmEndTitle').textContent = last ? 'You beat the game' : (GM.lvi === 0 ? 'Training clear' : 'Level clear');
+    byId('gmEndText').textContent = GM.lv.name + '. Time ' + gmFmt(t) + ', deaths ' + GM.deaths + '.' + (room && !GM.host && !last ? ' The host picks the next level.' : '');
+    const nx = byId('gmNext'); nx.hidden = last || (room && !GM.host); nx.textContent = GM.lvi === 0 ? 'Start Level 1' : 'Next level';
+    byId('gmEnd').hidden = false; byId('gmPull').hidden = true; byId('gmHang').hidden = true;
     const cx = GM.lv.exit.x + GM.lv.exit.w / 2, cy = GM.lv.exit.y; for (let i = 0; i < 40; i++) gmBurst(cx, cy, GM_COLORS[i % GM_COLORS.length], 1);
 }
 
@@ -9783,7 +10090,7 @@ function gmEmoteBarBuild() {
 }
 function gmEmoteBar(force) { GM.bar = typeof force === 'boolean' ? force : !GM.bar; byId('gmEmotes').hidden = !GM.bar; byId('gmEmBtn').classList.toggle('on', GM.bar); }
 function gmEmote(k) {
-    if (!GM.run || GM.emoteCd > 0) return; GM.emote = { k: k, t: 0 }; GM.emoteCd = 0.8; gmSend({ t: 'em', k: k }); GM_EMO_SND[k](); gmEmoteBar(false);
+    if (!GM.run || GM.emoteCd > 0 || GM.paused) return; GM.emote = { k: k, t: 0 }; GM.emoteCd = 0.8; gmSend({ t: 'em', k: k }); GM_EMO_SND[k](); gmEmoteBar(false);
 }
 
 // ------------------------------------------------------------ particles, toast, hud
@@ -9802,8 +10109,11 @@ function gmTeamUI(force) {
 function gmHud(ts) {
     if (ts - GM.hudT < 250) return; GM.hudT = ts;
     const t = gmFmt(GM.finished ? 0 : (performance.now() - GM.t0) / 1000); const el = byId('gmTime'); if (!GM.finished && el.textContent !== t) el.textContent = t;
-    const z = GM.lv.zones[GameCore.zoneAt(GM.lv, GM.me.x)].name + (GM.deaths ? ' - ' + GM.deaths + (GM.deaths === 1 ? ' fall' : ' falls') : ''); const zel = byId('gmZone'); if (zel.textContent !== z) zel.textContent = z;
-    gmNetUI(); gmTeamUI(false);
+    const lv = GM.lv, tx = Math.floor((GM.me.x + 10) / GameCore.TS);
+    const z = lv.name.split(':')[0] + ' - ' + lv.zones[GameCore.zoneAt(lv, GM.me.x)].name + (GM.deaths ? ' - ' + GM.deaths + (GM.deaths === 1 ? ' fall' : ' falls') : ''); const zel = byId('gmZone'); if (zel.textContent !== z) zel.textContent = z;
+    let hint = ''; for (const h of lv.hints) if (tx >= h.x0 && tx <= h.x1) { hint = h.text; break; }
+    if (hint !== GM.hintTxt) { GM.hintTxt = hint; const he = byId('gmHint'); if (hint) { he.textContent = hint; he.classList.add('on'); } else he.classList.remove('on'); }
+    gmNetUI(); gmTeamUI(false); if (GM.hang || gmRescueInfo().H || !byId('gmHang').hidden) gmPanelUI();
 }
 
 // ------------------------------------------------------------ camera + drawing
@@ -9849,10 +10159,15 @@ function gmRender(ts) {
             else if (ch === 'C') { const reached = lv.cps.findIndex(c2 => c2.tx === x && c2.ty === y) <= Math.max(GM.me.cp, gmTeamCp()); g.fillStyle = '#6b523c'; g.fillRect(X + 14, Y + 2, 3, TS - 2); g.fillStyle = reached ? '#e2b56a' : '#6e5f50'; g.beginPath(); const w = Math.sin(t * 4 + x) * 1.5; g.moveTo(X + 17, Y + 3); g.lineTo(X + 29 + w, Y + 8); g.lineTo(X + 17, Y + 14); g.fill(); }
             else if (ch === 'S') { g.fillStyle = '#8a6a4b'; g.fillRect(X + 3, Y + TS - 5, TS - 6, 5); g.strokeStyle = '#e2b56a'; g.lineWidth = 3; g.beginPath(); for (let i = 0; i <= 4; i++) g.lineTo(X + (i & 1 ? 21 : 11), Y + TS - 6 - i * 4); g.stroke(); g.fillStyle = '#e2b56a'; g.fillRect(X + 6, Y + 10, TS - 12, 4); }
             else if (ch === 'k') { const i = lv.keys.findIndex(k2 => k2.tx === x && k2.ty === y); if (i >= 0 && !W.keyGone[i] && W.keyHolder[i] === null) gmKey(g, X + TS / 2, Y + TS / 2 + Math.sin(t * 3 + x) * 2.5, 1, '#e2b56a'); }
+            else if (GameCore.BELT[ch] !== undefined) { const sp = GameCore.BELT[ch], fast = Math.abs(sp) > 100; g.fillStyle = '#2b2520'; g.fillRect(X, Y, TS, TS); g.fillStyle = fast ? '#7a4d33' : '#5d4a38'; g.fillRect(X, Y, TS, 9); g.fillStyle = fast ? '#e2b56a' : '#c9a27e'; const off = ((t * sp * 0.5) % 16 + 16) % 16, dr = sp > 0 ? 1 : -1; for (let q = 0; q < 2; q++) { const cx = X + ((q * 16 + off) % 32) + 4; g.beginPath(); g.moveTo(cx - 3 * dr, Y + 1.5); g.lineTo(cx + 3 * dr, Y + 4.5); g.lineTo(cx - 3 * dr, Y + 7.5); g.lineTo(cx - 1 * dr, Y + 4.5); g.closePath(); g.fill(); } }
+            else if (ch === 'f') { g.fillStyle = '#3c3029'; g.fillRect(X, Y, TS, TS); g.fillStyle = '#5b4a3e'; g.fillRect(X + 5, Y, TS - 10, 8); g.fillStyle = '#17110d'; g.fillRect(X + 12, Y, 8, 3); const st = W.fireState(x); if (st >= 1) gmFlame(g, X, Y, st, t); }
+            else if (ch === 'i') { const st = W.spikeState(x); if (st === 2) gmSpikes(g, X, Y, false, '#ff6b5a'); else if (st === 1) gmSpikes(g, X, Y, false, '#ff9a6b', true); else { g.fillStyle = 'rgba(255,238,220,0.16)'; g.fillRect(X + 6, Y + TS - 2, 5, 2); g.fillRect(X + 14, Y + TS - 2, 5, 2); g.fillRect(X + 22, Y + TS - 2, 5, 2); } }
             else if (ch === 'E') { /* drawn below as one portal */ }
             else if (ch === 'w') { /* drawn with the moving objects */ }
         }
     }
+    // signs with tips
+    for (const h of lv.hints) { const sx0 = (h.x0 + 1) * TS; if (sx0 < cam.x - TS || sx0 > cam.x + GM.vw / k + TS || T[15 * lv.w + h.x0 + 1] !== 46) continue; g.fillStyle = '#6b523c'; g.fillRect(sx0 + 14, 15 * TS + 14, 4, 18); g.fillStyle = '#8a6a4b'; g.fillRect(sx0 + 4, 15 * TS + 3, 24, 15); g.fillStyle = '#2a211b'; g.fillRect(sx0 + 8, 15 * TS + 7, 16, 2); g.fillRect(sx0 + 8, 15 * TS + 11, 10, 2); }
     // exit portal
     { const e = lv.exit; g.fillStyle = 'rgba(226,181,106,0.12)'; g.fillRect(e.x, e.y, e.w, e.h); g.strokeStyle = '#e2b56a'; g.lineWidth = 3; g.strokeRect(e.x + 3, e.y + 3, e.w - 6, e.h - 6);
         for (let i = 0; i < 3; i++) { const u = (t * 0.7 + i / 3) % 1; g.globalAlpha = (1 - u) * 0.5; g.strokeStyle = '#e2b56a'; g.lineWidth = 2; g.strokeRect(e.x + 3 - u * 10, e.y + 3 - u * 10, e.w - 6 + u * 20, e.h - 6 + u * 20); } g.globalAlpha = 1; }
@@ -9878,10 +10193,21 @@ function gmRender(ts) {
     const lab = (name, x, y, color, me) => { const px = (x + 10 - cam.x) * k + sx, py = (y - cam.y) * k + sy - 8; g.fillStyle = 'rgba(15,10,7,0.6)'; const w = g.measureText(name).width + 10; g.fillRect(px - w / 2, py - 11, w, 14); g.fillStyle = me ? '#fff' : color; g.fillText(name, px, py); };
     for (const P of GM.others) { lab(P.name, P.rx, P.ry, P.dc, false); if (P.emote) gmEmoteDraw(g, P.emote, (P.rx + 10 - cam.x) * k + sx, (P.ry - cam.y) * k + sy - 34); }
     if (GM.me.alive) { lab(GM.name, GM.me.x, GM.me.y, GM.dc, true); if (GM.emote) gmEmoteDraw(g, GM.emote, (GM.me.x + 10 - cam.x) * k + sx, (GM.me.y - cam.y) * k + sy - 34); }
+    // seconds left for whoever hangs on the rope
+    g.font = '700 13px ui-monospace, monospace'; const nowMs = performance.now();
+    const cnt = (x, y, left) => { const px = (x + 10 - cam.x) * k + sx, py = (y - cam.y) * k + sy - 24; g.fillStyle = left < 4 ? '#ff6b5a' : '#e2b56a'; g.fillText(String(Math.max(0, Math.ceil(left))), px, py); };
+    if (GM.me.hang && GM.hang) cnt(GM.me.x, GM.me.y, GameCore.HANG_TIME - GM.hang.t);
+    for (const P of GM.others) if (P.hang) cnt(P.rx, P.ry, GameCore.HANG_TIME - (nowMs - (P.hangAt || nowMs)) / 1000);
+    if (GM.flash > 0) { g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = 'rgba(255,240,220,' + (GM.flash * 0.5).toFixed(2) + ')'; g.fillRect(0, 0, g.canvas.width, g.canvas.height); }
 }
 function gmEmoteDraw(g, e, x, y) {
     const u = Math.min(1, e.t / 0.18), pop = u < 1 ? 0.4 + 0.6 * (1 - Math.pow(1 - u, 3)) + Math.sin(u * 3.14) * 0.15 : 1, fade = e.t > 1.7 ? Math.max(0, (2.1 - e.t) / 0.4) : 1, rise = Math.min(14, e.t * 30);
     g.save(); g.globalAlpha = fade; gmDrawEmote(g, e.k, x, y - rise, 17 * pop, e.t); g.restore();
+}
+function gmFlame(g, X, Y, st, t) {
+    const big = st === 2, h = big ? 4 * 32 - 8 : 24 + Math.sin(t * 30) * 4, w = big ? 22 : 11, cx = X + 16, fl = Math.sin(t * 26) * 2;
+    g.fillStyle = big ? '#ff7a3d' : 'rgba(255,150,80,0.9)'; g.beginPath(); g.moveTo(cx - w / 2, Y); g.quadraticCurveTo(cx - w / 2 - 3, Y - h * 0.55, cx + fl, Y - h); g.quadraticCurveTo(cx + w / 2 + 3, Y - h * 0.55, cx + w / 2, Y); g.closePath(); g.fill();
+    g.fillStyle = big ? '#ffd166' : 'rgba(255,214,120,0.9)'; const h2 = h * 0.6, w2 = w * 0.55; g.beginPath(); g.moveTo(cx - w2 / 2, Y); g.quadraticCurveTo(cx - w2 / 2 - 2, Y - h2 * 0.55, cx - fl * 0.5, Y - h2); g.quadraticCurveTo(cx + w2 / 2 + 2, Y - h2 * 0.55, cx + w2 / 2, Y); g.closePath(); g.fill();
 }
 function gmHid(lv, tx, ty) { for (let i = 0; i < lv.hid.length; i++) if (lv.hid[i].tx === tx && lv.hid[i].ty === ty) return i; return 0; }
 function gmSpikes(g, X, Y, down, col, small) {
@@ -9897,9 +10223,11 @@ function gmPlayerDraw(g, x, y, color, face, alive, hang, grounded, vx, t, key) {
 }
 function gmChainDraw(g, t) {
     if (!GM.chain || GM.mode !== 'room') return; const L = GameCore.CHAIN.len, me = GM.me;
-    const pos = id => { if (id === GM.id) return { x: me.x + 10, y: me.y + 14, hang: me.hang }; const P = GM.peers.get(id); return P && P.open && P.got ? { x: P.rx + 10, y: P.ry + 14, hang: P.hang } : null; };
+    const pos = id => { if (id === GM.id) return { x: me.x + 10, y: me.y + 14, hang: me.hang }; const P = GM.peers.get(id); return P && P.open && P.got && P.lvi === GM.lvi ? { x: P.rx + 10, y: P.ry + 14, hang: P.hang } : null; };
     for (let i = 0; i + 1 < GM.order.length; i++) {
-        const a = pos(GM.order[i]), b = pos(GM.order[i + 1]); if (!a || !b) continue; const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy), slack = Math.max(0, L - d), taut = d >= L;
+        const a = pos(GM.order[i]), b = pos(GM.order[i + 1]); if (!a || !b) continue; const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy), hang = a.hang || b.hang;
+        if (!hang && d > GM_LINK_BREAK) continue;           // slack rope: somebody was teleported, it links up again when they meet
+        const slack = hang ? 0 : Math.max(0, L - d), taut = hang || d >= L;
         g.strokeStyle = taut ? '#e5a46f' : '#b9a58f'; g.lineWidth = taut ? 3 : 2.4; g.beginPath();
         for (let s = 0; s <= 12; s++) { const u = s / 12; g.lineTo(a.x + dx * u, a.y + dy * u + Math.sin(u * Math.PI) * slack * 0.45); } g.stroke();
         g.fillStyle = 'rgba(20,14,10,0.6)'; for (let s = 1; s < 12; s += 2) { const u = s / 12; g.fillRect(a.x + dx * u - 1.2, a.y + dy * u + Math.sin(u * Math.PI) * slack * 0.45 - 1.2, 2.4, 2.4); }
@@ -9911,32 +10239,52 @@ function gmKeyEvt(e, down) {
     if (!GM.open || GM.screen !== 'play') return;
     const tag = (e.target && e.target.tagName) || ''; if (tag === 'INPUT' || tag === 'TEXTAREA') return;
     const k = e.key; let used = true;
-    if (k === 'ArrowLeft' || k === 'a' || k === 'A') GM.key.l = down;
-    else if (k === 'ArrowRight' || k === 'd' || k === 'D') GM.key.r = down;
+    if (down && k === 'Escape') { if (GM.paused) gmPause(false); else if (GM.bar) gmEmoteBar(false); else gmPause(true); e.preventDefault(); return; }
+    if (GM.paused) return;
+    const dir = (n, v) => { if (v && !GM.key[n]) GM.dirT[n] = performance.now(); GM.key[n] = v; };
+    if (k === 'ArrowLeft' || k === 'a' || k === 'A') dir('l', down);
+    else if (k === 'ArrowRight' || k === 'd' || k === 'D') dir('r', down);
     else if (k === 'ArrowUp' || k === 'w' || k === 'W' || k === ' ') GM.key.j = down;
     else if (down && !e.repeat && k >= '1' && k <= '6') gmEmote(GM_EMOTES[+k - 1]);
     else if (down && !e.repeat && (k === 'e' || k === 'E')) gmEmoteBar();
-    else if (down && k === 'Escape') { if (GM.bar) gmEmoteBar(false); else gmBack(); }
+    else if (down && !e.repeat && (k === 'r' || k === 'R')) gmRespawnMe();
     else used = false;
     if (used) e.preventDefault();
 }
+// every finger is checked against the buttons on each touch event, so any combination works and sliding from one button to another is fine
+function gmPadApply(want) {
+    for (const k of ['l', 'r', 'j']) if (want[k] !== GM.pad[k]) { if (want[k]) GM.dirT[k] = performance.now(); GM.pad[k] = want[k]; const b = document.querySelector('#gmPad .gm-b[data-k="' + k + '"]'); if (b) b.classList.toggle('down', want[k]); }
+}
+function gmTouchEvt(e) {
+    if (!GM.open || GM.screen !== 'play' || GM.paused) return;
+    const onPad = e.target && e.target.closest && e.target.closest('#gmPad'); if (onPad && e.cancelable) e.preventDefault();
+    const els = document.querySelectorAll('#gmPad .gm-b'), want = { l: false, r: false, j: false };
+    const rects = []; els.forEach(b => rects.push({ k: b.dataset.k, r: b.getBoundingClientRect() }));
+    for (const t of e.touches) for (const q of rects) { const m = q.k === 'j' ? 18 : 4; if (t.clientX >= q.r.left - m && t.clientX <= q.r.right + m && t.clientY >= q.r.top - m && t.clientY <= q.r.bottom + m) want[q.k] = true; }
+    if (GM.mouseK) want[GM.mouseK] = true; gmPadApply(want);
+}
 function gmBindControls() {
     document.addEventListener('keydown', e => gmKeyEvt(e, true)); document.addEventListener('keyup', e => gmKeyEvt(e, false));
-    window.addEventListener('blur', () => { for (const k of ['l', 'r', 'j']) GM.key[k] = GM.pad[k] = false; });
+    const reset = () => { for (const k of ['l', 'r', 'j']) GM.key[k] = false; GM.mouseK = null; gmPadApply({ l: false, r: false, j: false }); };
+    window.addEventListener('blur', reset);
+    const pl = byId('gmPlay');
+    for (const n of ['touchstart', 'touchmove', 'touchend', 'touchcancel']) pl.addEventListener(n, gmTouchEvt, { passive: false, capture: true });
+    // mouse (a computer): hold a button with the pointer
     document.querySelectorAll('#gmPad .gm-b').forEach(b => {
-        const k = b.dataset.k, on = e => { e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ } GM.pad[k] = true; b.classList.add('down'); }, off = () => { GM.pad[k] = false; b.classList.remove('down'); };
-        b.addEventListener('pointerdown', on); b.addEventListener('pointerup', off); b.addEventListener('pointercancel', off); b.addEventListener('lostpointercapture', off); b.addEventListener('contextmenu', e => e.preventDefault());
+        b.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; e.preventDefault(); GM.mouseK = b.dataset.k; gmPadApply(Object.assign({ l: false, r: false, j: false }, { [b.dataset.k]: true })); });
+        b.addEventListener('contextmenu', e => e.preventDefault());
     });
+    window.addEventListener('pointerup', e => { if (e.pointerType === 'mouse' && GM.mouseK) { GM.mouseK = null; gmPadApply({ l: false, r: false, j: false }); } });
     byId('gmPull').addEventListener('pointerdown', e => { e.preventDefault(); gmPullTap(); });
     window.addEventListener('resize', () => { if (GM.open) gmResize(); });
     document.addEventListener('fullscreenchange', () => { if (GM.open) setTimeout(gmResize, 120); });
     window.addEventListener('popstate', () => { if (GM.open && GM.hist) { GM.hist = false; gmClose(true); } });
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') for (const k of ['l', 'r', 'j']) GM.key[k] = GM.pad[k] = false; });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') reset(); });
     byId('gmName').addEventListener('input', e => { GM.name = e.target.value.slice(0, 12) || 'Player'; byId('gmPrevName').textContent = GM.name; });
     byId('gmCode').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
     const st = byId('gmStage'); if (st && window.ResizeObserver) new ResizeObserver(() => { if (GM.open && GM.screen === 'play') gmResize(); }).observe(st);
 }
-function initGame() { gmLoadProfile(); gmBindControls(); gmCardArt(); }
+function initGame() { gmLoadProfile(); gmBindControls(); gmCardArt(); setTimeout(gmCheckHash, 400); }
 // the little picture on the About card
 function gmCardArt() {
     const c = byId('gmCardCv'); if (!c) return; const g = c.getContext('2d');
