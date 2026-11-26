@@ -2484,6 +2484,23 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
 .gm-gad i { position: absolute; left: 0; bottom: 0; height: 3px; width: var(--lvl, 0%); background: var(--accent); transition: width 0.08s linear; }
 @media (max-height: 460px) { .gm-gads { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); } }
 #gmDarkCv { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; display: none; }
+
+/* turn 13: lash (live crowd) */
+.gm-lash { position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); bottom: calc(176px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 8px; pointer-events: none; max-width: calc(100% - 24px); }
+.gm-lash[hidden], .gm-lash .gm-gad[hidden] { display: none; }
+.gm-lash .gm-gad { white-space: nowrap; max-width: 62vw; }
+.gm-lash .gm-gad span { overflow: hidden; text-overflow: ellipsis; }
+.gm-lash .gm-gad:disabled { opacity: 0.6; }
+.gm-gad.glow { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.3); animation: gmGlow 1.1s ease-in-out infinite; }
+@keyframes gmGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.55); } 50% { box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0); } }
+html.no-motion .gm-gad.glow { animation: none; }
+.gm-ask { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); top: calc(150px + env(safe-area-inset-top, 0px)); width: min(86%, 340px); padding: 14px 16px; border-radius: 16px; background: rgba(var(--ink-rgb), 0.92); border: 1px solid rgba(var(--accent-rgb), 0.6); color: var(--text); display: flex; flex-direction: column; gap: 10px; text-align: center; }
+.gm-ask[hidden] { display: none; }
+.gm-ask b { font-weight: 600; }
+.gm-ask div { display: flex; gap: 8px; justify-content: center; }
+.gm-ask .gm-go { padding: 10px 18px; touch-action: manipulation; }
+.gm-ask .gm-go.ghost { background: transparent; border: 1px solid rgba(var(--paper-rgb), 0.22); color: var(--muted); }
+@media (max-height: 460px) { .gm-lash { bottom: calc(18px + env(safe-area-inset-bottom, 0px)); } .gm-ask { top: calc(70px + env(safe-area-inset-top, 0px)); } }
 /* ---- extra ciphers: only what the old cipher pages do not already have ---- */
 .xc-desc { color: var(--muted); font-size: 0.92em; margin: -8px 0 16px; }
 .xc-row select, .xc-row input[type="text"] { flex: 1; min-width: 0; padding: 9px 12px; border: 1px solid var(--stroke); border-radius: 10px; background: var(--field); color: var(--accent); font-size: 1em; font-family: var(--mono); }
@@ -2525,7 +2542,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
                 <button type="button" class="gm-mode ghost" onclick="gmOpenShop()"><b>Shop<em class="gm-coinc"><i class="gm-coini"></i><span id="gmCoinMenu">0</span></em></b><span>Spend the coins you collect on double jump, speed boost, rocket and key locker.</span></button>
                 <button type="button" class="gm-mode ghost" onclick="gmGo('solo')"><b>Training</b><span>Alone. Every obstacle has a tip: when to jump, when to run, what to hold.</span></button>
             </div>
-            <p class="gm-fine">Keys: A D or arrows to move, W / Up / Space to jump, R to respawn, Z X C for power-ups, hold M to shout, F for fullscreen, Esc for the menu. Click or tap round switches in the levels.</p>
+            <p class="gm-fine">Keys: A D or arrows to move, W / Up / Space to jump, R to respawn, Z X C for power-ups, hold M to shout, F for fullscreen, Esc for the menu. Click or tap round switches in the levels. L lashes or unlashes in the live crowd.</p>
         </div>
     </section>
 
@@ -2587,6 +2604,11 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
             <button type="button" class="gm-gad" id="gmMicB" hidden aria-label="Microphone"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Mic</span><i></i></button>
             <button type="button" class="gm-gad" id="gmShoutB" hidden aria-label="Shout, hold"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l6 4V6L7 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.500 6.500a8 8 0 0 1 0 11"/></svg><span>Shout</span></button>
         </div>
+        <div class="gm-lash" id="gmLash" hidden>
+            <button type="button" class="gm-gad glow" id="gmLashB" hidden aria-label="Lash a rope to the player next to you"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.700 0l3-3a4 4 0 0 0-5.700-5.700l-1 1"/><path d="M14 10a4 4 0 0 0-5.700 0l-3 3a4 4 0 0 0 5.700 5.700l1-1"/></svg><span>Lash</span></button>
+            <button type="button" class="gm-gad" id="gmUnlashB" hidden aria-label="Release the rope"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.700 0l3-3a4 4 0 0 0-5.700-5.700l-1 1"/><path d="M14 10a4 4 0 0 0-5.700 0l-3 3a4 4 0 0 0 5.700 5.700l1-1"/><path d="M4 4l16 16"/></svg><span>Unlash</span></button>
+        </div>
+        <div class="gm-ask" id="gmAsk" hidden role="alertdialog"><b id="gmAskT">Somebody wants to lash a rope to you</b><div><button type="button" class="gm-go" id="gmAskY">Accept</button><button type="button" class="gm-go ghost" id="gmAskN">Decline</button></div></div>
         <button type="button" class="gm-pull" id="gmPull" hidden><span id="gmPullTxt">PULL</span><i id="gmPullDots"></i></button>
         <div class="gm-hang" id="gmHang" hidden><b id="gmHangT">Hanging</b><span id="gmHangS">Your friends are pulling you up</span><i id="gmHangDots"></i></div>
         <div class="gm-emotes" id="gmEmotes" hidden></div>
@@ -5563,6 +5585,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
     var ABIL = { dj: { price: 2, dur: 30, cd: 60 }, sp: { price: 4, dur: 5, cd: 12 }, ro: { price: 6, dur: 7, cd: 30 }, kl: { price: 3 } };
     var RESCUE = 5, HANG_TIME = 10;     // taps needed to pull one hanging card up (shared between the helpers), seconds before everybody is sent back
     var CHAIN = { len: 5 * TS, k: 60, maxAcc: 3600 };
+    var MIC_RANGE = 10 * TS, BOMB_R = 44, BOMB_BOOM = 0.3, QUAKE_ACC = 560;
     var C = function (c) { return c.charCodeAt(0); };
     var T = { '#': C('#'), '=': C('='), '^': C('^'), 'v': C('v'), '~': C('~'), 'w': C('w'), 'h': C('h'), 'S': C('S'), 'k': C('k'), 'd': C('d'), 'C': C('C'), 'E': C('E'), '@': C('@'), 'f': C('f'), 'i': C('i') };
     var BELT = { '>': 90, '<': -90, '}': 170, '{': -170 };
@@ -5571,7 +5594,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
     // ------------------------------------------------------------------ level building
     function Builder(w, h) {
         this.w = w; this.h = h; this.t = new Uint8Array(w * h).fill(C('.'));
-        this.movers = []; this.saws = []; this.rescue = []; this.zones = []; this.fxs = []; this.hints = []; this.holds = {}; this.name = ''; this.dark = false; this.tapSec = {}; this.endless = false;
+        this.movers = []; this.saws = []; this.rescue = []; this.zones = []; this.fxs = []; this.hints = []; this.holds = {}; this.name = ''; this.dark = false; this.tapSec = {}; this.endless = false; this.bombs = []; this.quakes = [];
     }
     Builder.prototype.put = function (x, y, ch) { if (x >= 0 && y >= 0 && x < this.w && y < this.h) this.t[y * this.w + x] = C(ch); return this; };
     Builder.prototype.fill = function (x0, y0, x1, y1, ch) { for (var y = y0; y <= y1; y++) for (var x = x0; x <= x1; x++) this.put(x, y, ch); return this; };
@@ -5583,6 +5606,10 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
     Builder.prototype.holdFor = function (l, sec) { this.holds[l] = sec; return this; };
     Builder.prototype.tapFor = function (l, sec) { this.tapSec[l] = sec; return this; };
     Builder.prototype.darkness = function () { this.dark = true; return this; };
+    // falling bombs over tiles x0..x1: each one shows a marker on the ground, drops, and blasts (period = seconds between bombs, streams = bombs at once)
+    Builder.prototype.bombZone = function (x0, x1, period, streams, warn, seed) { this.bombs.push({ x0: x0, x1: x1, period: period, streams: streams || 1, warn: warn || 1.1, seed: seed || (x0 * 31 + 7), off: (x0 * 0.37) % 1.3 }); return this; };
+    // earthquake over tiles x0..x1: rumble, then the ground shakes and shoves you sideways
+    Builder.prototype.quakeZone = function (x0, x1, period) { this.quakes.push({ x0: x0, x1: x1, period: period || 9, off: (x0 * 0.61) % 3 }); return this; };
     Builder.prototype.fx = function (x0, y0, x1, y1, type, ax, ay) { this.fxs.push({ x0: x0, y0: y0, x1: x1, y1: y1, type: type, ax: ax || 0, ay: ay || 0 }); return this; };
     Builder.prototype.coins = function (x0, x1, y) { for (var x = x0; x <= x1; x++) if ((x & 1) === 0 && this.t[y * this.w + x] === C('.')) this.put(x, y, 'o'); return this; };
     Builder.prototype.pit = function (x0, x1) { return this.fill(x0, 16, x1, this.h - 1, '.'); };
@@ -5648,7 +5675,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         return finish(b);
     }
     function finish(b) {
-        var lv = { w: b.w, h: b.h, t: b.t, movers: b.movers, saws: b.saws, rescue: b.rescue, zones: b.zones, spawn: null, cps: [], keys: [], doors: [], thw: [], hid: [], crumbles: [], exit: null, buttons: [], springs: [], fire: [], spk: [], coins: [], fx: b.fxs, hints: b.hints, hold: b.holds, name: b.name, lamps: [], taps: [], dark: !!b.dark, tapSec: b.tapSec, endless: !!b.endless };
+        var lv = { w: b.w, h: b.h, t: b.t, movers: b.movers, saws: b.saws, rescue: b.rescue, zones: b.zones, spawn: null, cps: [], keys: [], doors: [], thw: [], hid: [], crumbles: [], exit: null, buttons: [], springs: [], fire: [], spk: [], coins: [], fx: b.fxs, hints: b.hints, hold: b.holds, name: b.name, lamps: [], taps: [], dark: !!b.dark, tapSec: b.tapSec, endless: !!b.endless, bombs: b.bombs, quakes: b.quakes };
         var ex0 = 1e9, ey0 = 1e9, ex1 = -1, ey1 = -1, doorTiles = {}, i;
         for (var y = 0; y < b.h; y++) for (var x = 0; x < b.w; x++) {
             var ch = String.fromCharCode(b.t[y * b.w + x]);
@@ -5676,6 +5703,11 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         lv.exit = { x: ex0 * TS, y: ey0 * TS, w: (ex1 - ex0 + 1) * TS, h: (ey1 - ey0 + 1) * TS };
         lv.cps.sort(function (a, c) { return a.tx - c.tx; });
         lv.floorY = b.h * TS;
+        var surf = '#=~I><}{f';
+        for (i = 0; i < lv.bombs.length; i++) {
+            var bz = lv.bombs[i]; bz.cols = [];
+            for (x = Math.max(0, bz.x0); x <= Math.min(b.w - 1, bz.x1); x++) { for (y = 10; y < b.h; y++) if (surf.indexOf(String.fromCharCode(b.t[y * b.w + x])) >= 0) { bz.cols.push({ tx: x, y: y * TS }); break; } }
+        }
         return lv;
     }
     // ------------------------------------------------------------------ the other levels
@@ -5942,18 +5974,38 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         ice: { tier: 2, w: 18, make: function (b, x, ri, tier) { b.row(x + 2, x + 14, 16, 'I'); b.put(x + 9, 15, '^'); if (tier >= 2) b.put(x + 12, 15, '^'); } },
         gauntlet: { tier: 2, w: 24, make: function (b, x) { b.pit(x + 4, x + 6); b.row(x + 9, x + 10, 15, '^'); b.pit(x + 13, x + 15); b.coins(x + 4, x + 15, 12); } },
         mic: { tier: 2, w: 28, make: function (b, x) { b.fill(x + 12, 9, x + 16, 15, '#'); b.mover({ x0: x + 7.5, y0: 15.6, x1: x + 7.5, y1: 8.6, w: 3, period: 1, mic: true, speed: 3 }); } },
+        // ---- the further you go, the less sense it makes (all of it can still be done alone, as a pair or roped as three)
+        stones: { tier: 3, w: 30, make: function (b, x, ri, tier) {
+            var s = tier >= 6 ? 1 : tier >= 5 ? ri(1, 2) : tier >= 4 ? 2 : ri(2, 3), g = 3, n = tier >= 6 ? 4 : 3, L = n * s + (n + 1) * g, px = x + 4;
+            b.pit(px, px + L - 1);
+            for (var i = 0; i < n; i++) { var sx = px + g + i * (s + g), top = 15 - (i & 1); b.fill(sx, top, sx + s - 1, 15, '#'); if (top === 14) b.put(sx, 14, '#'); b.fill(sx, 16, sx + s - 1, b.h - 1, '#'); b.coins(sx, sx + s - 1, top - 2); }
+        } },
+        bombrun: { tier: 3, w: 24, make: function (b, x, ri, tier) { b.bombZone(x + 3, x + 20, tier >= 5 ? 2.0 : (tier >= 4 ? 2.4 : 2.8), tier >= 6 ? 2 : 1, tier >= 6 ? 0.9 : 1.1, x * 13 + 5); b.coins(x + 4, x + 19, 14); } },
+        bombgap: { tier: 4, w: 22, make: function (b, x, ri, tier) { var pw = ri(3, 4); b.pit(x + 8, x + 7 + pw); b.bombZone(x + 2, x + 18, tier >= 6 ? 1.8 : 2.2, tier >= 6 ? 2 : 1, tier >= 6 ? 0.9 : 1.1, x * 7 + 3); b.coins(x + 7, x + 8 + pw, 12); } },
+        shaky: { tier: 4, w: 30, make: function (b, x, ri, tier) {
+            b.pit(x + 4, x + 22); var py = 15.6;
+            for (var i = 0; i < 3; i++) { var ps = x + 6 + i * 6; b.mover({ x0: ps, y0: py, x1: ps + 0.8, y1: py, w: 3, period: tier >= 6 ? 0.4 : 0.5, phase: i * 0.3, vib: true }); }
+            b.quakeZone(x + 2, x + 25, tier >= 6 ? 6.5 : 8);
+        } },
+        crumbstones: { tier: 5, w: 28, make: function (b, x, ri, tier) { b.pit(x + 4, x + 21); for (var i = 0; i < 6; i++) b.put(x + 5 + i * 3, 16, '~'); b.coins(x + 5, x + 20, 13); } },
+        chaos: { tier: 6, w: 34, make: function (b, x, ri, tier) {
+            b.pit(x + 4, x + 24); var py = 15.6;
+            for (var i = 0; i < 4; i++) { var ps = x + 6 + i * 5; b.mover({ x0: ps, y0: py, x1: ps + 0.9, y1: py, w: 2, period: 0.4, phase: i * 0.25, vib: true }); }
+            b.bombZone(x + 2, x + 30, 1.6, 2, 0.9, x * 11 + 1); b.quakeZone(x + 2, x + 30, 6);
+        } },
         tap2: { tier: 2, w: 30, make: function (b, x) { b.fill(x + 8, 0, x + 8, 10, '#'); b.fill(x + 8, 11, x + 8, 15, 'P'); b.put(x + 6, 6, '1'); b.fill(x + 18, 0, x + 18, 10, '#'); b.fill(x + 18, 11, x + 18, 15, 'Q'); b.put(x + 16, 6, '2'); } }
     };
     var CHUNK_NAMES = Object.keys(CHUNKS);
+    var CALM = { rest: 1, tap: 1, tap2: 1, shake: 1, mic: 1, thwomp: 1, bombrun: 1, bombgap: 1, shaky: 1, chaos: 1 };       // no extra bombs or quakes on top of these
     function endless(seed) {
         seed = (seed | 0) || 20260101; var r = rng(seed), ri = function (a, c) { return a + Math.floor(r() * (c - a + 1)); };
-        var N = 60, plan = [], last = '', i, width = 12;
+        var N = 72, plan = [], last = '', i, width = 12;
         for (i = 0; i < N; i++) {
-            var tier = i < 3 ? 0 : Math.min(3, 1 + Math.floor(i / 12));
+            var tier = i < 3 ? 0 : Math.min(6, 1 + Math.floor(i / 10));
             var pool = CHUNK_NAMES.filter(function (n) { return CHUNKS[n].tier <= tier && n !== last && n !== 'rest'; });
             if (r() < 0.6) { var hard = pool.filter(function (n) { return CHUNKS[n].tier >= tier - 1; }); if (hard.length) pool = hard; }
             var nm = (i % 10 === 9) ? 'rest' : pool[Math.floor(r() * pool.length)];
-            plan.push({ n: nm, tier: tier }); last = nm; width += CHUNKS[nm].w;
+            plan.push({ n: nm, tier: tier, ob: r(), oq: r() }); last = nm; width += CHUNKS[nm].w;
         }
         width += 16;
         var b = new Builder(width, 20); b.endless = true; b.name = 'Level 9: Endless Run'; b.holdFor('p', 0.25).holdFor('q', 0.25).holdFor('r', 0.9).tapFor('p', 4).tapFor('q', 4).tapFor('r', 4);
@@ -5961,7 +6013,13 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         var x = 12, zs = 0, zn = 1;
         for (i = 0; i < N; i++) {
             if (i > 0 && i % 4 === 0) { b.zone(zs, x - 1, 'Run ' + zn, 5); zs = x; zn++; b.put(x + 1, 15, 'C'); }
-            CHUNKS[plan[i].n].make(b, x, ri, plan[i].tier); x += CHUNKS[plan[i].n].w;
+            CHUNKS[plan[i].n].make(b, x, ri, plan[i].tier);
+            var pl = plan[i], tr = pl.tier, cw = CHUNKS[pl.n].w;
+            if (tr >= 4 && !CALM[pl.n]) {       // from here on any piece can come with a bomb rain and an earthquake on top
+                if (pl.ob < (tr - 3) * 0.22) b.bombZone(x + 3, x + cw - 3, 3.2 - 0.3 * tr, tr >= 6 ? 2 : 1, tr >= 6 ? 0.9 : 1.1, x * 17 + i);
+                if (tr >= 5 && pl.oq < (tr - 4) * 0.18) b.quakeZone(x + 2, x + cw - 2, 10 - tr);
+            }
+            x += cw;
         }
         b.zone(zs, width - 1, 'Run ' + zn, 5); b.fill(x + 10, 13, x + 11, 15, 'E');
         var lv = finish(b); lv.seed = seed; return lv;
@@ -6001,7 +6059,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         this.keyAge = lv.keys.map(function () { return -1; });           // shake keys: -1 still hanging, else seconds since they fell
         this.lampOn = lv.lamps.map(function () { return false; });
         this.tapFlash = lv.taps.map(function () { return 0; });
-        this.mic = 0;
+        this.mic = 0; this.mmic = lv.movers.map(function () { return 0; }); this.bombList = [];
         this.update(0, []);
     };
     World.prototype.active = function (l) { return this.t < this.hold[l]; };
@@ -6034,6 +6092,13 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
     World.prototype.update = function (dt, players) {
         var lv = this.lv, i, j, p; this.t += dt;
         var mic = 0; for (j = 0; j < players.length; j++) if (players[j].mic > mic) mic = players[j].mic; this.mic = Math.min(1, mic);
+        // a voice only lifts the mic platforms that are near the one who shouts
+        for (i = 0; i < lv.movers.length; i++) if (lv.movers[i].mic) {
+            var mm = lv.movers[i], mcx = ((mm.x0 + mm.x1) / 2 + mm.w / 2) * TS, mb = 0;
+            for (j = 0; j < players.length; j++) { p = players[j]; if (p.alive !== false && !p.hang && p.mic > mb && Math.abs(p.x + p.w / 2 - mcx) < MIC_RANGE) mb = p.mic; }
+            this.mmic[i] = Math.min(1, mb);
+        }
+        this.bombsAt(this.t, this.bombList);
         for (i = 0; i < this.keyAge.length; i++) if (this.keyAge[i] >= 0) this.keyAge[i] += dt;
         for (i = 0; i < this.tapFlash.length; i++) if (this.tapFlash[i] > 0) this.tapFlash[i] -= dt;
         // buttons
@@ -6075,7 +6140,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         for (i = 0; i < lv.movers.length; i++) {
             var m = lv.movers[i], mp;
             if (m.btn || m.mic) {
-                var tg = m.mic ? this.mic : (this.active(m.btn) ? 1 : 0), ln = Math.max(0.01, Math.sqrt((m.x1 - m.x0) * (m.x1 - m.x0) + (m.y1 - m.y0) * (m.y1 - m.y0))), step = (m.speed || 2.5) * dt / ln, dd = tg - this.mu[i];
+                var tg = m.mic ? this.mmic[i] : (this.active(m.btn) ? 1 : 0), ln = Math.max(0.01, Math.sqrt((m.x1 - m.x0) * (m.x1 - m.x0) + (m.y1 - m.y0) * (m.y1 - m.y0))), step = (m.speed || 2.5) * dt / ln, dd = tg - this.mu[i];
                 this.mu[i] += Math.abs(dd) <= step ? dd : (dd > 0 ? step : -step);
                 mp = { x: (m.x0 + (m.x1 - m.x0) * this.mu[i]) * TS, y: (m.y0 + (m.y1 - m.y0) * this.mu[i]) * TS };
             } else mp = this.moverPos(m, this.t);
@@ -6083,6 +6148,38 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
             pf.dx = mp.x - pf.x; pf.dy = mp.y - pf.y; pf.x = mp.x; pf.y = mp.y; pf.w = m.w * TS; pf.h = 10;
         }
         this.saws.length = 0; for (i = 0; i < lv.saws.length; i++) this.saws.push(this.sawPos(lv.saws[i], this.t));
+    };
+    // bombs: pure function of the clock. ph 0 = marker on the ground, 1 = falling, 2 = blast (lethal inside BOMB_R)
+    function hash3(a, b, c) { var h = Math.imul(a | 0, 374761393) ^ Math.imul(b | 0, 668265263) ^ Math.imul(c | 0, 2246822519); h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+    World.prototype.bombsAt = function (t, out) {
+        out.length = 0; var zs = this.lv.bombs; if (!zs || !zs.length) return out;
+        for (var i = 0; i < zs.length; i++) {
+            var z = zs[i]; if (!z.cols.length) continue;
+            for (var s = 0; s < z.streams; s++) {
+                var tt = t + z.off + s * z.period / z.streams, k = Math.floor(tt / z.period), local = tt - k * z.period;
+                if (local > z.warn + BOMB_BOOM) continue;
+                var c = z.cols[Math.floor(hash3(z.seed, k, s) * z.cols.length) % z.cols.length], x = c.tx * TS + 16 + (hash3(z.seed + 1, k, s) - 0.5) * 14, ph, u;
+                if (local < z.warn) { ph = local > z.warn - 0.4 ? 1 : 0; u = ph ? (local - (z.warn - 0.4)) / 0.4 : local / (z.warn - 0.4); } else { ph = 2; u = (local - z.warn) / BOMB_BOOM; }
+                out.push({ x: x, y: c.y, ph: ph, u: u, r: BOMB_R, key: i + '.' + s + '.' + k });
+            }
+        }
+        return out;
+    };
+    // earthquakes: intensity 0..1 for somebody standing at pixel x (it starts a few tiles before the zone so you feel it coming)
+    World.prototype.quakeAt = function (px, margin) {
+        var zs = this.lv.quakes, best = 0; if (!zs || !zs.length) return 0; margin = margin === undefined ? 6 * TS : margin;
+        for (var i = 0; i < zs.length; i++) {
+            var z = zs[i]; if (px < z.x0 * TS - margin || px > (z.x1 + 1) * TS + margin) continue;
+            var local = (this.t + z.off) % z.period, start = z.period - 3.8, u = 0;
+            if (local >= start && local < start + 1.2) u = 0.22; else if (local >= start + 1.2 && local < start + 3.8) { var q = local - start - 1.2; u = Math.min(1, q / 0.3, (2.6 - q) / 0.4); }
+            if (u > best) best = u;
+        }
+        return Math.max(0, best);
+    };
+    World.prototype.quakeShove = function (px) {      // sideways acceleration inside a quake zone
+        var zs = this.lv.quakes; if (!zs || !zs.length) return 0;
+        for (var i = 0; i < zs.length; i++) { var z = zs[i]; if (px >= z.x0 * TS && px <= (z.x1 + 1) * TS) { var q = this.quakeAt(px, 0); if (q > 0.5) return QUAKE_ACC * q * Math.sin(this.t * 11.3 + i); } }
+        return 0;
     };
     // timed hazards (pure functions of the clock, so everybody sees the same)
     World.prototype.fireState = function (tx) { var u = (this.t + tx * 1.13) % 3.4; return u < 1.8 ? 0 : (u < 2.4 ? 1 : 2); };
@@ -6160,6 +6257,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
         if (rocket) { var tv = inp.j ? -340 * hv : 60, ra = 3000 * dt; p.vy += Math.max(-ra, Math.min(ra, tv - p.vy)); p.grounded = false; }
         else p.vy = Math.min(PHYS.maxFall * (gmul < 1 ? 0.6 : 1), p.vy + PHYS.grav * gmul * dt);
         if (wx || wy) { p.vx += wx * dt; p.vy += wy * dt; }
+        if (lv.quakes && lv.quakes.length && !W.hazardsOff) p.vx += W.quakeShove(fxx) * dt;
         // chain pull (acceleration toward your neighbours)
         if (pull) { p.vx += pull.ax * dt; p.vy += pull.ay * dt; }
         // ride whatever carried us last frame
@@ -6220,6 +6318,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
             if (!W.hazardsOff) for (i = 0; i < lv.fire.length && !hz; i++) if (W.fireState(lv.fire[i].tx) === 2 && rect(p, { x: lv.fire[i].tx * TS + 8, y: (lv.fire[i].ty - 4) * TS + 4, w: TS - 16, h: 4 * TS - 4 })) hz = 'fire';
             for (i = 0; i < W.saws.length && !hz; i++) if (circleHit(p, W.saws[i])) hz = 'saw';
             for (i = 0; i < lv.thw.length && !hz; i++) if (W.th[i].s === 1 && rect(p, W.thwRect(i))) hz = 'thwomp';
+            if (!W.hazardsOff && W.bombList) for (i = 0; i < W.bombList.length && !hz; i++) { var bm = W.bombList[i]; if (bm.ph === 2 && circleHit(p, { x: bm.x, y: bm.y - 6, r: bm.r })) hz = 'bomb'; }
             if (hz) ev.push('die:' + hz);
         }
         p.dx = p.x - px0; p.dy = p.y - py0;
@@ -6246,7 +6345,7 @@ html.no-motion .gm-pull, html.no-motion .gm-screen.on { animation: none; }
     return {
         TS: TS, PW: PW, PH: PH, DT: DT, PHYS: PHYS, CHAIN: CHAIN, T: T,
         level1: level1, LEVELS: LEVELS, ABIL: ABIL, RESCUE: RESCUE, HANG_TIME: HANG_TIME, BELT: BELT, World: World, makePlayer: makePlayer, stepPlayer: stepPlayer, chainPull: chainPull, kill: kill, respawn: respawn, spawnFor: spawnFor,
-        zoneAt: zoneAt, tapsAt: tapsAt, endless: endless, CHUNKS: CHUNKS, Builder: Builder, finish: finish, overlapSolid: overlapSolid, GATE: GATE, BRIDGE: BRIDGE
+        zoneAt: zoneAt, tapsAt: tapsAt, endless: endless, CHUNKS: CHUNKS, Builder: Builder, finish: finish, overlapSolid: overlapSolid, GATE: GATE, BRIDGE: BRIDGE, MIC_RANGE: MIC_RANGE, BOMB_R: BOMB_R
     };
 });
 
@@ -10815,6 +10914,120 @@ const GM = {
 };
 
 Object.assign(GM, { coins: 0, inv: { dj: 0, sp: 0, ro: 0, kl: 0 }, coinEp: 0, ab: { dj: { on: 0, cd: 0 }, sp: { on: 0, cd: 0 }, ro: { on: 0, cd: 0 } }, cpSeen: -1, assistT: 0, heavyOn: false, dirT: { l: 0, r: 0 }, selLv: 1, link: {}, taps: {}, lvi: 1, flash: 0, respCd: 0, paused: false, lvCache: {}, padEls: null });
+Object.assign(GM, { edges: new Map(), edgeVer: 0, grp: null, grpVer: -1, lashIn: null, lashOut: null, lashNear: null, lashT: 0, lashSig: '', wipeAt: 0, quakeI: 0, qHint: 0, bHint: 0, bombSeen: new Map(), rT: 0, fi: 16.7, camDt: 0, slow: 0, dprCap: 1.6, rumT: 0 });
+// ---- who is tied to whom. Private room with the rope on: everybody in join order. Live crowd: only the players that lashed each other.
+function gmRope() { return GM.mode === 'room' ? !!GM.chain : GM.mode === 'crowd'; }
+function gmEdgeKey(a, b) { return a < b ? a + '|' + b : b + '|' + a; }
+function gmPartners(id) {
+    const out = [];
+    if (GM.mode === 'room') { if (!GM.chain) return out; const i = GM.order.indexOf(id); if (i < 0) return out; for (const j of [i - 1, i + 1]) if (GM.order[j]) out.push(GM.order[j]); return out; }
+    for (const e of GM.edges.values()) { if (e.a === id) out.push(e.b); else if (e.b === id) out.push(e.a); }
+    return out;
+}
+function gmGroupSet() {
+    if (GM.grp && GM.grpVer === GM.edgeVer) return GM.grp;
+    const set = new Set([GM.id]);
+    if (GM.mode === 'room') { if (GM.chain) for (const id of GM.order) set.add(id); }
+    else { const q = [GM.id]; while (q.length) { const c = q.pop(); for (const n of gmPartners(c)) if (!set.has(n)) { set.add(n); q.push(n); } } }
+    GM.grp = set; GM.grpVer = GM.edgeVer; return set;
+}
+function gmInGroup(id) { return gmGroupSet().has(id); }
+function gmComp(id) { const set = new Set([id]), q = [id]; while (q.length) { const c = q.pop(); for (const n of gmPartners(c)) if (!set.has(n)) { set.add(n); q.push(n); } } return set; }
+// a rope needs two free ends, no loop, and a group of three at most
+function gmLashAllowed(a, b) {
+    if (a === b || GM.edges.has(gmEdgeKey(a, b))) return false;
+    if (gmPartners(a).length >= 2 || gmPartners(b).length >= 2) return false;
+    const ca = gmComp(a); if (ca.has(b)) return false;
+    return ca.size + gmComp(b).size <= 3;
+}
+function gmEdgeSet(a, b, on, by) {
+    const k = gmEdgeKey(a, b), now = performance.now();
+    if (on) { let e = GM.edges.get(k); if (!e) { e = { a: a < b ? a : b, b: a < b ? b : a, ts: {}, born: now }; GM.edges.set(k, e); GM.edgeVer++; } e.ts[e.a] = now; e.ts[e.b] = now; return e; }
+    if (GM.edges.delete(k)) { GM.edgeVer++; if (GM.link) delete GM.link[a === GM.id ? b : a]; return true; } return false;
+}
+function gmEdgeDropPeer(id) { let n = 0; for (const [k, e] of Array.from(GM.edges)) if (e.a === id || e.b === id) { GM.edges.delete(k); n++; } if (n) GM.edgeVer++; if (GM.lashOut && GM.lashOut.to === id) GM.lashOut = null; if (GM.lashIn && GM.lashIn.from === id) { GM.lashIn = null; gmAskUI(); } }
+function gmLashReset(tell) {
+    if (tell && GM.mode === 'crowd' && GM.peers.size) for (const id of gmPartners(GM.id)) gmSend({ t: 'lash', a: GM.id, b: id, on: 0 });
+    GM.edges.clear(); GM.edgeVer++; GM.lashIn = null; GM.lashOut = null; GM.lashNear = null; GM.lashSig = '';
+    const a = byId('gmAsk'); if (a) a.hidden = true;
+}
+// edges that nobody confirms any more (somebody closed the page, a message got lost) fade away
+function gmLashSweep() {
+    if (GM.mode !== 'crowd' || !GM.edges.size) return; const now = performance.now();
+    for (const [k, e] of Array.from(GM.edges)) {
+        const mine = e.a === GM.id || e.b === GM.id, other = e.a === GM.id ? e.b : e.a;
+        const stale = mine ? now - (e.ts[other] || e.born) > 9000 : now - Math.max(e.ts[e.a] || 0, e.ts[e.b] || 0, e.born) > 9000;
+        if (stale || (mine && !GM.peers.has(other))) { GM.edges.delete(k); GM.edgeVer++; if (mine) { delete GM.link[other]; if (GM.run) gmToast('The rope came loose'); } }
+    }
+    if (GM.lashOut && now - GM.lashOut.t > 9000) { GM.lashOut = null; gmLashUI(true); }
+    if (GM.lashIn && now - GM.lashIn.t > 12000) { GM.lashIn = null; gmAskUI(); }
+}
+function gmLashScan() {
+    GM.lashNear = null; if (GM.mode !== 'crowd' || !GM.me || !GM.me.alive || GM.me.hang || GM.paused) return;
+    let best = null, bd = GM_LASH_R;
+    for (const P of GM.others) { if (!P.alive || P.hang || P.lvi !== GM.lvi || GM.edges.has(gmEdgeKey(GM.id, P.id))) continue; const d = Math.hypot(P.rx - GM.me.x, P.ry - GM.me.y); if (d < bd) { bd = d; best = P; } }
+    GM.lashNear = best ? best.id : null;
+}
+const GM_LASH_R = 112;
+function gmLashUI(force) {
+    const box = byId('gmLash'); if (!box) return; const crowd = GM.mode === 'crowd' && GM.run;
+    if (box.hidden === crowd) box.hidden = !crowd; if (!crowd) return;
+    const near = GM.lashNear && GM.peers.get(GM.lashNear), has = gmPartners(GM.id).length > 0, pend = !!GM.lashOut;
+    const sig = (near ? near.id + near.name : '') + '|' + has + '|' + pend; if (sig === GM.lashSig && !force) return; GM.lashSig = sig;
+    const lb = byId('gmLashB'), ub = byId('gmUnlashB');
+    lb.hidden = !(near || pend); lb.disabled = pend; lb.classList.toggle('glow', !!near && !pend);
+    lb.querySelector('span').textContent = pend ? 'Asking...' : (near ? 'Lash ' + near.name : 'Lash');
+    ub.hidden = !has;
+}
+function gmLashPress() {
+    if (GM.mode !== 'crowd' || !GM.run || GM.paused) return;
+    const P = GM.lashNear && GM.peers.get(GM.lashNear); if (!P || GM.lashOut) return;
+    if (!gmLashAllowed(GM.id, P.id)) { gmToast('Your rope group is full. Three at most.'); return; }
+    GM.lashOut = { to: P.id, t: performance.now() }; gmSend({ t: 'lreq', to: P.id, l: GM.lvi }); gmSfx('pull'); gmToast('Asked ' + P.name + ' to lash'); gmLashUI(true);
+}
+function gmUnlashAll() {
+    if (GM.mode !== 'crowd') return; const ids = gmPartners(GM.id); if (!ids.length) return;
+    for (const id of ids) { gmSend({ t: 'lash', a: GM.id, b: id, on: 0 }); gmEdgeSet(GM.id, id, false); }
+    gmSfx('unlash'); gmToast('Rope released'); gmLashUI(true);
+}
+function gmLashKey() { if (GM.lashNear && !GM.lashOut) gmLashPress(); else if (gmPartners(GM.id).length) gmUnlashAll(); }
+function gmLashAsked(P) {
+    if (GM.mode !== 'crowd' || !GM.run || !GM.me || !GM.me.alive || GM.me.hang || GM.lashIn || GM.paused) { gmSend({ t: 'lres', to: P.id, ok: 0 }); return; }
+    GM.lashIn = { from: P.id, name: P.name, t: performance.now() }; gmSfx('join'); gmAskUI();
+}
+function gmAskUI() {
+    const el = byId('gmAsk'); if (!el) return; const a = GM.lashIn; el.hidden = !a; if (a) byId('gmAskT').textContent = a.name + ' wants to lash a rope to you';
+}
+function gmLashReply(ok) {
+    const a = GM.lashIn; if (!a) return; GM.lashIn = null; gmAskUI();
+    if (!ok) { gmSend({ t: 'lres', to: a.from, ok: 0 }); return; }
+    if (!gmLashAllowed(GM.id, a.from)) { gmSend({ t: 'lres', to: a.from, ok: 0, why: 'full' }); gmToast('Your rope group is full'); return; }
+    gmEdgeSet(GM.id, a.from, true); gmSend({ t: 'lash', a: GM.id, b: a.from, on: 1 }); gmSend({ t: 'lres', to: a.from, ok: 1 });
+    GM.link[a.from] = true; gmSfx('lash'); gmToast('Lashed to ' + a.name); gmLashUI(true);
+}
+function gmOnLash(P, m) {
+    if (GM.mode !== 'crowd' || typeof m.a !== 'string' || typeof m.b !== 'string' || m.a === m.b || (P.id !== m.a && P.id !== m.b)) return;
+    if (m.on) { if (!GM.edges.has(gmEdgeKey(m.a, m.b)) && !gmLashAllowedKnown(m.a, m.b)) return; gmEdgeSet(m.a, m.b, true); if (m.a === GM.id || m.b === GM.id) { gmSfx('lash'); } }
+    else gmEdgeSet(m.a, m.b, false);
+    gmLashUI(true);
+}
+// the same test, for ropes between two other players (we only see part of the picture, so just keep the numbers sane)
+function gmLashAllowedKnown(a, b) { return gmPartners(a).length < 2 && gmPartners(b).length < 2; }
+function gmOnLk(P, m) {
+    if (GM.mode !== 'crowd' || !Array.isArray(m.ids)) return; const now = performance.now();
+    for (const id of m.ids.slice(0, 2)) {
+        if (typeof id !== 'string' || id === P.id) continue; const k = gmEdgeKey(P.id, id), e = GM.edges.get(k);
+        if (id === GM.id && !e) { gmSend({ t: 'lash', a: GM.id, b: P.id, on: 0 }); continue; }       // they still think we are tied, we are not
+        if (e) { e.ts[P.id] = now; if (id !== GM.id) e.ts[id] = Math.max(e.ts[id] || 0, e.born); }
+        else if (id !== GM.id && gmLashAllowedKnown(P.id, id)) gmEdgeSet(P.id, id, true);
+    }
+}
+function gmLkSend() { if (GM.mode !== 'crowd') return; const ids = gmPartners(GM.id); if (ids.length) gmSend({ t: 'lk', ids: ids }); }
+function gmBindLash() {
+    const lb = byId('gmLashB'), ub = byId('gmUnlashB'), y = byId('gmAskY'), n = byId('gmAskN');
+    const tap = (el, fn) => { if (el) el.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); fn(); }); };
+    tap(lb, gmLashPress); tap(ub, gmUnlashAll); tap(y, () => gmLashReply(true)); tap(n, () => gmLashReply(false));
+}
 function gmLS(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { /* storage blocked */ } return null; }
 
 // ------------------------------------------------------------ audio (made with oscillators, nothing to download)
@@ -10851,7 +11064,10 @@ const GM_SFX = {
     coin: () => { gmTone(1175, 1175, 0.05, 'square', 0.05); gmTone(1568, 1568, 0.09, 'square', 0.05, 0.05); },
     ab: () => { gmTone(300, 900, 0.22, 'sawtooth', 0.07); gmNoise(0.18, 0.05); }, djump: () => gmTone(520, 880, 0.14, 'triangle', 0.12), buy: () => [659, 880, 1175].forEach((f, i) => gmTone(f, f, 0.1, 'triangle', 0.12, i * 0.06)),
     shake: () => { gmNoise(0.12, 0.08); gmTone(240, 120, 0.14, 'square', 0.06, 0.04); gmTone(420, 280, 0.1, 'square', 0.05, 0.12); }, lamp: () => { gmTone(660, 990, 0.18, 'sine', 0.1); gmTone(990, 1320, 0.22, 'sine', 0.08, 0.1); },
-    tapsw: () => { gmTone(520, 520, 0.04, 'square', 0.07); gmTone(780, 780, 0.07, 'square', 0.07, 0.05); }
+    tapsw: () => { gmTone(520, 520, 0.04, 'square', 0.07); gmTone(780, 780, 0.07, 'square', 0.07, 0.05); },
+    whistle: () => gmTone(1500, 420, 0.38, 'sine', 0.05), boom: () => { gmNoise(0.32, 0.16); gmTone(120, 40, 0.3, 'sine', 0.2); },
+    rumble: () => { gmNoise(0.34, 0.07); gmTone(58, 44, 0.34, 'sine', 0.1); },
+    lash: () => { gmTone(392, 392, 0.08, 'triangle', 0.12); gmTone(587, 587, 0.12, 'triangle', 0.12, 0.08); }, unlash: () => gmTone(587, 330, 0.18, 'triangle', 0.1)
 };
 function gmSfx(n) { try { if (GM_SFX[n]) GM_SFX[n](); } catch (e) { /* audio blocked */ } }
 const GM_EMO_SND = {
@@ -11028,31 +11244,78 @@ function gmLeave() {
 }
 
 // ------------------------------------------------------------ signalling (ntfy) + peers (WebRTC)
-function gmSigOpen(topic, onmsg) {
-    if (window.__gmSigFactory) return window.__gmSigFactory(topic, onmsg);
-    let es = null; const seen = new Set(), url = GM_NTFY + topic;
+// Signalling goes out through ntfy.sh AND two public MQTT brokers at once (whichever works carries the hello and the offers). Every message has a random id, so a copy that arrives twice is dropped.
+const GM_MQTT = ['wss://broker.hivemq.com:8884/mqtt', 'wss://broker.emqx.io:8084/mqtt'];
+function gmNtfy(topic, onmsg) {
+    let es = null, up = false; const seen = new Set(), url = GM_NTFY + topic;
     try {
         es = new EventSource(url + '/sse?since=' + (Math.floor(Date.now() / 1000) - 20));
+        es.onopen = () => { up = true; }; es.onerror = () => { up = false; };
         es.onmessage = ev => { try { const j = JSON.parse(ev.data); if (j.event !== 'message' || seen.has(j.id)) return; seen.add(j.id); onmsg(JSON.parse(j.message)); } catch (e) { /* ignore junk */ } };
     } catch (e) { es = null; }
-    return { send(o) { try { fetch(url, { method: 'POST', body: JSON.stringify(o) }).catch(() => {}); } catch (e) { /* offline */ } }, close() { if (es) es.close(); } };
+    return { send(o) { try { fetch(url, { method: 'POST', body: JSON.stringify(o) }).catch(() => {}); } catch (e) { /* offline */ } }, close() { if (es) es.close(); }, ok() { return up; } };
 }
-function gmSig(o) { if (GM.sig) { o.f = GM.id; GM.sig.send(o); } }
+// a very small MQTT 3.1.1 client over WebSocket: connect, subscribe to one topic, publish, keep alive
+function gmMqtt(url, topic, onmsg) {
+    const tp = 'scrun/' + topic, enc = new TextEncoder(), dec = new TextDecoder(); let ws = null, up = false, dead = false, ping = 0, retry = 0, rt = 0, buf = new Uint8Array(0); const queue = [];
+    const cat = (...a) => { let n = 0; a.forEach(x => { n += x.length; }); const o = new Uint8Array(n); let p = 0; a.forEach(x => { o.set(x, p); p += x.length; }); return o; };
+    const u16 = s => { const b = enc.encode(s); return cat(Uint8Array.of(b.length >> 8, b.length & 255), b); };
+    const varlen = n => { const o = []; do { let d = n % 128; n = Math.floor(n / 128); if (n > 0) d |= 128; o.push(d); } while (n > 0); return Uint8Array.from(o); };
+    const pkt = (first, body) => cat(Uint8Array.of(first), varlen(body.length), body);
+    const put = b => { try { if (ws && ws.readyState === 1) ws.send(b); } catch (e) { /* closing */ } };
+    const handle = (first, body) => {
+        const type = first >> 4;
+        if (type === 2) { if (body.length >= 2 && body[1] === 0) { put(pkt(0x82, cat(Uint8Array.of(0, 1), u16(tp), Uint8Array.of(0)))); up = true; retry = 0; while (queue.length) put(queue.shift()); } }
+        else if (type === 3) {
+            const tl = (body[0] << 8) | body[1], qos = (first >> 1) & 3; let off = 2 + tl; if (qos > 0) off += 2;
+            if (dec.decode(body.subarray(2, 2 + tl)) === tp) { try { onmsg(JSON.parse(dec.decode(body.subarray(off)))); } catch (e) { /* junk */ } }
+        }
+    };
+    const feed = chunk => {
+        buf = cat(buf, chunk);
+        for (;;) {
+            if (buf.length < 2) return; let mul = 1, len = 0, i = 1, b;
+            do { if (i >= buf.length) return; b = buf[i++]; len += (b & 127) * mul; mul *= 128; } while ((b & 128) && i < 5);
+            if (buf.length < i + len) return; const first = buf[0], body = buf.slice(i, i + len); buf = buf.slice(i + len); handle(first, body);
+        }
+    };
+    const open = () => {
+        if (dead) return; try { ws = new WebSocket(url, 'mqtt'); } catch (e) { return; } ws.binaryType = 'arraybuffer'; buf = new Uint8Array(0);
+        ws.onopen = () => put(pkt(0x10, cat(u16('MQTT'), Uint8Array.of(4, 2, 0, 30), u16('sc' + Math.random().toString(36).slice(2, 12)))));
+        ws.onmessage = e => { if (e.data instanceof ArrayBuffer) feed(new Uint8Array(e.data)); };
+        ws.onclose = () => { up = false; clearInterval(ping); if (!dead) { retry++; rt = setTimeout(open, Math.min(15000, 1500 * retry)); } };
+        ws.onerror = () => { try { ws.close(); } catch (e) { /* ignore */ } };
+        clearInterval(ping); ping = setInterval(() => put(Uint8Array.of(0xC0, 0)), 20000);
+    };
+    open();
+    return {
+        send(o) { const b = pkt(0x30, cat(u16(tp), enc.encode(JSON.stringify(o)))); if (up) put(b); else { queue.push(b); if (queue.length > 12) queue.shift(); } },
+        close() { dead = true; clearTimeout(rt); clearInterval(ping); try { if (ws) ws.close(); } catch (e) { /* ignore */ } }, ok() { return up; }
+    };
+}
+function gmSigOpen(topic, onmsg) {
+    if (window.__gmSigFactory) return window.__gmSigFactory(topic, onmsg);
+    const parts = [gmNtfy(topic, onmsg)];
+    if (!window.__gmNoMqtt && window.WebSocket && window.TextEncoder) for (const u of (window.__gmMqtt || GM_MQTT)) { try { parts.push(gmMqtt(u, topic, onmsg)); } catch (e) { /* no websocket */ } }
+    return { send(o) { for (const q of parts) q.send(o); }, close() { for (const q of parts) q.close(); }, ok() { return parts.some(q => q.ok()); } };
+}
+function gmSig(o) { if (GM.sig) { o.f = GM.id; o.i = Math.random().toString(36).slice(2, 10); GM.sig.send(o); } }
 function gmNetStart(topic) {
     gmNetStop(); GM.seen = {}; GM.seenAt = {}; GM.sig = gmSigOpen(topic, gmOnSig); GM.hiN = 0;
     const hi = () => { if (!GM.sig) return; gmSig({ t: 'hi', n: GM.name }); GM.hiN++; };
     hi(); GM.hiTimers = [setTimeout(hi, 2500), setTimeout(hi, 6000), setTimeout(hi, 12000)];
-    GM.hiTimers.push(setInterval(() => { if (GM.sig && !GM.peers.size && (GM.screen === 'play' || GM.screen === 'lobby')) hi(); }, 40000));
-    GM.hiTimers.push(setInterval(gmNbSend, 2500));
+    GM.hiTimers.push(setInterval(() => { if (GM.sig && (GM.screen === 'play' || GM.screen === 'lobby') && (!GM.peers.size || (GM.mode === 'room' && !GM.host && !GM.started && !gmHostPeer()))) hi(); }, 15000));
+    GM.hiTimers.push(setInterval(gmNbSend, 2500)); GM.hiTimers.push(setInterval(gmLkSend, 2500));
 }
 function gmNetStop() {
-    GM.hiTimers.forEach(t => { clearTimeout(t); clearInterval(t); }); GM.hiTimers = []; clearTimeout(GM.joinTimer);
+    GM.hiTimers.forEach(t => { clearTimeout(t); clearInterval(t); }); GM.hiTimers = []; clearTimeout(GM.joinTimer); gmLashReset(false);
     for (const P of GM.peers.values()) gmPeerClose(P); GM.peers.clear();
     if (GM.sig) { GM.sig.close(); GM.sig = null; }
 }
 function gmMax() { return GM.mode === 'room' ? 3 : 8; }
 function gmOnSig(m) {
     if (!m || typeof m !== 'object' || m.f === GM.id || (m.to && m.to !== GM.id) || typeof m.f !== 'string') return;
+    if (typeof m.i === 'string') { if (!GM.sigSeen) GM.sigSeen = new Set(); if (GM.sigSeen.has(m.i)) return; GM.sigSeen.add(m.i); if (GM.sigSeen.size > 600) GM.sigSeen.clear(); }
     if (m.t === 'hi') gmOnHi(m);
     else if (m.t === 'o') gmOnOffer(m);
     else if (m.t === 'a') gmOnAnswer(m);
@@ -11089,7 +11352,7 @@ function gmConnect(id, initiator, name) {
         bind(pc.createDataChannel('st', { ordered: false, maxRetransmits: 0 })); bind(pc.createDataChannel('ev'));
         pc.createOffer().then(o => pc.setLocalDescription(o)).then(() => gmGather(pc)).then(() => gmSig({ t: 'o', to: id, sdp: gmSdp(pc.localDescription.sdp) })).catch(() => gmPeerGone(P));
     }
-    P.timer = setTimeout(() => { if (!P.open) gmPeerGone(P); }, 15000);
+    P.timer = setTimeout(() => { if (!P.open) gmPeerGone(P); }, 12000);
     return P;
 }
 function gmGather(pc) {
@@ -11114,6 +11377,7 @@ function gmPeerClose(P) { P.gone = true; clearTimeout(P.timer); try { if (P.st) 
 function gmPeerGone(P) {
     if (P.gone) return; gmPeerClose(P); if (GM.peers.get(P.id) === P) GM.peers.delete(P.id);
     for (const Q of Array.from(GM.peers.values())) if (Q.virtual && Q.via === P.id) gmPeerGone(Q);
+    gmEdgeDropPeer(P.id);
     if (GM.W) { for (let i = 0; i < GM.W.keyHolder.length; i++) if (GM.W.keyHolder[i] === P.id) GM.W.keyHolder[i] = null; }
     if (P.hang && GM.run) gmToast(P.name + ' left');
     if (GM.run && GM.me) gmRescueCheck();
@@ -11163,6 +11427,10 @@ function gmOnEvent(P, raw) {
         case 'cfg': if (!GM.host) { GM.chain = !!m.chain; if (GameCore.LEVELS[m.lvi]) GM.selLv = m.lvi; gmLvChips(); gmLobbyUI(); } break;
         case 'start': if (!GM.host && GM.mode === 'room' && Array.isArray(m.order)) { GM.chain = !!m.chain; gmBeginGame(m.order.filter(x => typeof x === 'string'), GM.chain, m.lvi, m.seed | 0); } break;
         case 'lvl': if (!GM.host && GM.mode === 'room' && GM.run && P.host && GameCore.LEVELS[m.i]) { GM.selLv = m.i; gmBeginGame(GM.order, GM.chain, m.i, m.seed | 0); } break;
+        case 'lreq': if (m.to === GM.id && P.lvi === GM.lvi) gmLashAsked(P); else if (m.to === GM.id) gmSend({ t: 'lres', to: P.id, ok: 0 }); break;
+        case 'lres': if (m.to === GM.id && GM.lashOut && GM.lashOut.to === P.id) { GM.lashOut = null; if (!m.ok) gmToast(m.why === 'full' ? P.name + "'s rope group is full" : P.name + ' said no'); gmLashUI(true); } break;
+        case 'lash': gmOnLash(P, m); break;
+        case 'lk': gmOnLk(P, m); break;
         case 'again': if (GM.run && GM.mode === 'room') gmReset(true); break;
         case 'sync': if (GM.W && same) { (m.d || []).forEach((v, i) => { if (v && i < GM.W.doorOpen.length) GM.W.doorOpen[i] = true; }); (m.g || []).forEach((v, i) => { if (v && i < GM.W.keyGone.length) GM.W.keyGone[i] = true; }); (m.s || []).forEach((v, i) => { if (v && i < GM.W.keyAge.length && GM.W.keyAge[i] < 0) GM.W.keyAge[i] = 1; }); (m.m || []).forEach((v, i) => { if (v && i < GM.W.lampOn.length) GM.W.lampOn[i] = true; }); } break;
         case 'shake': if (GM.W && same && GM.W.dropKeys()) { gmSfx('shake'); GM.shake = 0.5; gmToast(P.name + ' shook something loose'); } break;
@@ -11172,9 +11440,9 @@ function gmOnEvent(P, raw) {
         case 'door': if (GM.W && same && m.i >= 0 && m.i < GM.W.doorOpen.length) { GM.W.doorOpen[m.i] = true; if (m.k >= 0 && m.k < GM.W.keyGone.length) { GM.W.keyGone[m.k] = true; GM.W.keyHolder[m.k] = null; } gmSfx('door'); } break;
         case 'em': if (false && GM_EMOTES.includes(m.k)) { P.emote = { k: m.k, t: 0 }; if (GM.run && P.lvi === GM.lvi && performance.now() - (GM.lastEmSnd || 0) > 250) { GM.lastEmSnd = performance.now(); GM_EMO_SND[m.k](); } } break;
         case 'dead': if (GM.run && GM.W && P.lvi === GM.lvi && isFinite(m.x) && isFinite(m.y)) gmBurst(m.x + 10, m.y + 14, P.dc, 16); break;
-        case 'hang': P.hang = !!m.on; if (m.on) { P.hx = +m.hx; P.hangAt = performance.now(); if (GM.run) { gmSfx('hang'); gmToast(P.name + ' fell. Pull them up!'); } } if (GM.run && GM.me) gmRescueCheck(true); break;
-        case 'tap': if (same && GM.run) { GM.taps[P.id] = Math.max(GM.taps[P.id] || 0, m.n | 0); gmRescueCheck(true); } break;
-        case 'wipe': if (GM.run && !GM.finished && GM.mode === 'room') gmWipe(); break;
+        case 'hang': P.hang = !!m.on; if (m.on) { P.hx = +m.hx; P.hangAt = performance.now(); if (GM.run && gmInGroup(P.id)) { gmSfx('hang'); gmToast(P.name + ' fell. Pull them up!'); } } if (GM.run && GM.me) gmRescueCheck(true); break;
+        case 'tap': if (same && GM.run) { GM.taps[P.id] = Math.max(GM.taps[P.id] || 0, m.n | 0); if (m.r && gmInGroup(P.id)) GM.rocketPull = performance.now(); gmRescueCheck(true); } break;
+        case 'wipe': if (GM.run && !GM.finished && (GM.mode === 'room' || (Array.isArray(m.g) && m.g.indexOf(GM.id) >= 0))) gmWipe(P.name, m.why); break;
         case 'rescued': gmBurst(P.rx + 10, P.ry + 14, '#e2b56a', 14); gmSfx('rescue'); break;
         case 'win': if (GM.run && !GM.finished && GM.mode === 'room') gmWin(+m.time || 0, true); break;
     }
@@ -11197,7 +11465,7 @@ function gmJoin() {
     GM.host = false; GM.code = code; GM.mode = 'room'; GM.started = false; byId('gmRoomMsg').textContent = '';
     gmNetStart('scrun-room-' + code.toLowerCase()); byId('gmCodeShow').textContent = code; byId('gmLobbyKind').textContent = 'Joining room';
     gmShow('lobby'); gmLobbyUI();
-    clearTimeout(GM.joinTimer); GM.joinTimer = setTimeout(() => { if (!GM.started && GM.screen === 'lobby' && !gmHostPeer()) gmRoomFail('No room found with that code. Check the code, or the connection.'); }, window.__gmJoinMs || 16000);
+    clearTimeout(GM.joinTimer); GM.joinTimer = setTimeout(() => { if (!GM.started && GM.screen === 'lobby' && !gmHostPeer()) gmRoomFail(GM.sig && GM.sig.ok && !GM.sig.ok() ? 'Cannot reach the signalling servers. Check your internet connection.' : 'No room found with that code. Check the code, or the connection.'); }, window.__gmJoinMs || 34000);
 }
 function gmHostPeer() { for (const P of GM.peers.values()) if (P.open && P.host) return P; return null; }
 function gmCopyCode() { try { navigator.clipboard.writeText(GM.code); const b = byId('gmCopy'); b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1400); } catch (e) { /* clipboard blocked */ } }
@@ -11230,20 +11498,21 @@ function gmLevelFor(i, seed) { GM.lvCache = GM.lvCache || {}; const key = i + ':
 // the endless course: one course per day for the live crowd (everybody must see the same ground), a fresh random one otherwise
 function gmSeedFor() { if (GM.mode === 'crowd') { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); } return 1 + Math.floor(Math.random() * 999998); }
 function gmBeginGame(order, chain, lvi, seed) {
+    gmLashReset(true);
     if (typeof lvi !== 'number' || !GameCore.LEVELS[lvi]) lvi = GM.selLv;
     GM.seed = GameCore.LEVELS[lvi].seeded ? (seed || gmSeedFor()) : 0;
-    GM.lvi = lvi; GM.lv = gmLevelFor(lvi, GM.seed); GM.W = new GameCore.World(GM.lv); GM.order = order.slice(); GM.chain = !!chain; GM.started = true;
+    GM.lvi = lvi; GM.lv = gmLevelFor(lvi, GM.seed); GM.W = new GameCore.World(GM.lv); GM.order = order.slice(); GM.chain = !!chain; GM.started = true; GM.edgeVer++;
     for (const P of GM.peers.values()) { P.snap.length = 0; P.got = false; P.lvi = -1; P.hang = false; }
     gmFreshRun(); gmShow('play'); gmResize(); gmMuteUI(); gmEmoteBarBuild(); gmTeamUI(true); gmNetUI(); gmPlayUI();
     GM.run = true; GM.last = performance.now(); GM.acc = 0; cancelAnimationFrame(GM.raf); GM.raf = requestAnimationFrame(gmFrame);
     gmToast(GM.lv.name + (GM.seed ? ' #' + (GM.seed % 10000) : ''));
 }
 function gmFreshRun() {
-    const lv = GM.lv; GM.me = GameCore.makePlayer(lv.spawn.x, lv.spawn.y); GM.deaths = 0; GM.finished = false; GM.hang = null; GM.taps = {}; GM.link = {}; GM.parts.length = 0;
+    const lv = GM.lv; GM.me = GameCore.makePlayer(lv.spawn.x, lv.spawn.y); GM.deaths = 0; GM.finished = false; GM.hang = null; GM.taps = {}; GM.link = {}; GM.parts.length = 0; GM.qHint = GM.bHint = 0; GM.quakeI = 0; GM.bombSeen = new Map(); GM.wipeAt = 0;
     GM.t0 = performance.now(); GM.winT = 0; GM.emote = null; GM.camInit = false; GM.flash = 0; GM.respCd = 0; GM.hintTxt = ''; GM.paused = false; GM.cpSeen = -1; GM.coinEp = 0; GM.heavyOn = false; GM.lampLit = []; GM.mic.hold = false; GM.shk.n = 0; for (const a in GM.ab) { GM.ab[a].on = 0; GM.ab[a].cd = 0; }
     for (const id of ['gmEnd', 'gmPull', 'gmHang', 'gmPause', 'gmEmotes']) byId(id).hidden = true; GM.bar = false; byId('gmHint').classList.remove('on');
 }
-function gmPlayUI() { byId('gmInv').hidden = GM.mode !== 'crowd'; gmAbBuild(); gmCoinUI(); gmFsUI(); gmGadUI(); }
+function gmPlayUI() { byId('gmInv').hidden = GM.mode !== 'crowd'; gmAbBuild(); gmCoinUI(); gmFsUI(); gmGadUI(); gmLashUI(true); }
 function gmReset(fromNet) { GM.W.reset(); gmFreshRun(); if (!fromNet && GM.mode === 'room') gmSend({ t: 'again' }); gmToast('Again!'); }
 function gmAgain() { gmReset(false); }
 function gmNext() {
@@ -11269,8 +11538,8 @@ function gmCpWatch() {
 function gmResize() {
     const st = byId('gmStage'), cv = byId('gmCv'); if (!st || !cv) return;
     const r = st.getBoundingClientRect(); if (!r.width || !r.height) return;
-    GM.vw = r.width; GM.vh = r.height; GM.dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.round(r.width * GM.dpr); cv.height = Math.round(r.height * GM.dpr); GM.g = cv.getContext('2d');
+    GM.vw = r.width; GM.vh = r.height; GM.dpr = Math.max(1, Math.min(GM.dprCap, window.devicePixelRatio || 1));
+    cv.width = Math.round(r.width * GM.dpr); cv.height = Math.round(r.height * GM.dpr); GM.g = cv.getContext('2d', { alpha: false });
     const TS = GameCore.TS; GM.k = Math.max(0.6, Math.min(1.6, Math.min(r.width / (12.5 * TS), r.height / (11.5 * TS))));
 }
 function gmInput() {
@@ -11295,10 +11564,10 @@ function gmRemoteUpdate(now) {
 }
 // the neighbours that pull you (chain). A rope that is stretched far beyond its length (somebody was teleported) goes slack, it only links again when you meet.
 function gmNeighbors() {
-    const out = []; if (!GM.chain || GM.mode !== 'room' || !GM.me || !GM.me.alive || GM.me.hang) return out;
-    const i = GM.order.indexOf(GM.id); if (i < 0) return out; const me = GM.me;
-    for (const j of [i - 1, i + 1]) {
-        const id = GM.order[j], P = id && GM.peers.get(id); if (!P || !P.open || !P.got || P.lvi !== GM.lvi || !P.alive || P.hang) continue;
+    const out = []; if (!gmRope() || !GM.me || !GM.me.alive || GM.me.hang) return out;
+    const me = GM.me;
+    for (const id of gmPartners(GM.id)) {
+        const P = GM.peers.get(id); if (!P || !P.open || !P.got || P.lvi !== GM.lvi || !P.alive || P.hang) continue;
         const d = Math.hypot(P.rx - me.x, P.ry - me.y); let on = GM.link[id] !== false;
         if (on && d > GM_LINK_BREAK) on = false; else if (!on && d < GameCore.CHAIN.len) on = true;
         GM.link[id] = on; if (on) out.push(P);
@@ -11308,17 +11577,27 @@ function gmNeighbors() {
 function gmFrame(ts) {
     if (!GM.run) return;
     GM.raf = requestAnimationFrame(gmFrame);
-    const dt = Math.min(0.1, (ts - GM.last) / 1000); GM.last = ts; GM.acc += dt;
+    const raw = ts - GM.last, dt = Math.min(0.1, raw / 1000); GM.last = ts; GM.acc += dt; GM.camDt += dt;
+    if (raw > 0 && raw < 100) GM.fi += (raw - GM.fi) * 0.05;
     gmRemoteUpdate(ts);
     let n = 0; const DT = GameCore.DT;
     while (GM.acc >= DT && n < 5) { gmStep(DT); GM.acc -= DT; n++; }
     if (n === 5) GM.acc = 0;
-    gmCamera(dt); gmRender(ts); gmHud(ts);
+    // draw at most 60 times a second (phones with a 120 Hz screen would draw twice as much for nothing)
+    const since = ts - GM.rT;
+    if (since >= 16.67 - GM.fi * 0.5) {
+        gmCamera(GM.camDt); GM.camDt = 0; gmRender(ts); GM.rT = ts;
+        // too slow for a while: draw with fewer pixels (the picture stays sharp enough, the game gets smooth again)
+        if (since > 24 && since < 200) GM.slow++; else if (GM.slow > 0) GM.slow--;
+        if (GM.slow > 45 && GM.dpr > 1.01) { GM.slow = 0; GM.dprCap = Math.max(1, GM.dpr - 0.25); gmResize(); }
+        if (ts - GM.lashT > 100) { GM.lashT = ts; gmLashScan(); gmLashUI(false); }
+    }
+    gmHud(ts);
     if (ts - GM.sendT > 48) { GM.sendT = ts; gmSendState(ts); }
 }
 // x of the nearest card that hangs from the rope (the helpers cannot walk away from it)
 function gmHangerX() {
-    let best = null, bd = 1e9; for (const P of GM.peers.values()) if (P.open && P.hang && P.lvi === GM.lvi && P.hx !== undefined) { const d = Math.abs(P.hx - GM.me.x); if (d < bd) { bd = d; best = P.hx; } }
+    let best = null, bd = 1e9; for (const P of GM.peers.values()) if (P.open && P.hang && P.lvi === GM.lvi && P.hx !== undefined && gmInGroup(P.id)) { const d = Math.abs(P.hx - GM.me.x); if (d < bd) { bd = d; best = P.hx; } }
     return best;
 }
 function gmStep(dt) {
@@ -11341,6 +11620,7 @@ function gmStep(dt) {
     if (GM.respCd > 0) GM.respCd -= dt; if (GM.flash > 0) GM.flash = Math.max(0, GM.flash - dt * 3.2);
     for (let i = GM.parts.length - 1; i >= 0; i--) { const q = GM.parts[i]; q.life -= dt; if (q.life <= 0) { GM.parts.splice(i, 1); continue; } q.vy += 900 * dt; q.x += q.vx * dt; q.y += q.vy * dt; }
     if (GM.shake > 0) GM.shake = Math.max(0, GM.shake - dt * 3);
+    gmWorldFx(dt);
     gmCheckWin(dt);
 }
 function gmEvents(ev) {
@@ -11361,7 +11641,7 @@ function gmEvents(ev) {
 }
 // instant jump to a place (no sliding, no rope tug)
 function gmTeleport(pt) {
-    const me = GM.me; GameCore.respawn(me, pt); me.inv = 1.1; GM.camInit = false; GM.flash = 1; GM.link = {}; for (const id of GM.order) if (id !== GM.id) GM.link[id] = false;
+    const me = GM.me; GameCore.respawn(me, pt); me.inv = 1.1; GM.camInit = false; GM.flash = 1; GM.link = {}; for (const id of GM.order) if (id !== GM.id) GM.link[id] = false; for (const id of gmPartners(GM.id)) GM.link[id] = false;
     gmBurst(me.x + 10, me.y + 14, GM.dc, 10); me.t = 0;
 }
 function gmDie(why) {
@@ -11369,6 +11649,7 @@ function gmDie(why) {
     const hadKey = me.key, ox = me.x, oy = me.y;
     const keep = GM.inv.kl > 0 && hadKey >= 0; if (keep) { GM.inv.kl--; gmSaveWallet(); gmToast('Key locker used. You keep your key'); } GameCore.kill(me, GM.W, keep); if (why !== 'manual') { GM.deaths++; GM.shake = 0.25; gmSfx('die'); }
     gmBurst(ox + 10, oy + 14, GM.dc, 18); gmSend({ t: 'dead', x: ox, y: oy }); if (hadKey >= 0 && !keep) gmSend({ t: 'key', l: GM.lvi, i: hadKey, on: 0 });
+    if (why !== 'wipe' && GM.mode === 'room' && GM.chain && GM.peers.size) { GM.wipeAt = performance.now(); gmSend({ t: 'wipe', why: why === 'manual' ? 'reset' : 'death' }); }
     gmTeleport(GameCore.spawnFor(GM.lv, gmTeamCp()));
 }
 function gmRespawnMe(fromMenu) {
@@ -11377,10 +11658,10 @@ function gmRespawnMe(fromMenu) {
     GM.respCd = 1; gmDie('manual'); gmToast('Back at the flag'); if (fromMenu) gmPause(false);
 }
 // ---- falling into a pit: alone you restart, on a chain you hang from the rope
-function gmMates() { const a = []; for (const P of GM.peers.values()) if (P.open && P.got && P.lvi === GM.lvi && P.alive && !P.hang) a.push(P); return a; }
+function gmMates() { const a = []; for (const P of GM.peers.values()) if (P.open && P.got && P.lvi === GM.lvi && P.alive && !P.hang && gmInGroup(P.id)) a.push(P); return a; }
 function gmFall() {
     const me = GM.me; if (!me.alive || me.hang) return;
-    if (GM.chain && GM.mode === 'room' && gmMates().length) {
+    if (gmRope() && gmMates().length) {
         me.hang = true; me.vx = me.vy = 0; me.ride = null; GM.hang = { x0: me.x, t: 0 };
         gmSend({ t: 'hang', on: 1, hx: me.x, l: GM.lvi }); gmSfx('hang'); gmToast('Hang on! Your friends have to pull you up');
         gmPanelUI(null, true); return;
@@ -11395,35 +11676,38 @@ function gmHangStep(dt) {
         me.x += (tx - me.x) * f; me.y += (ty - me.y) * f;
     }
     me.vx = me.vy = 0; me.grounded = false;
-    if (h.t >= GameCore.HANG_TIME) { gmSend({ t: 'wipe' }); gmWipe(); return; }
+    if (h.t >= GameCore.HANG_TIME) { gmSend(GM.mode === 'crowd' ? { t: 'wipe', g: Array.from(gmGroupSet()) } : { t: 'wipe' }); gmWipe(); return; }
     gmRescueCheck();
 }
 // nobody pulled in time: everybody dies and is teleported to the checkpoint
-function gmWipe() {
-    const me = GM.me; if (!me || !GM.run) return;
+function gmWipe(who, why) {
+    const me = GM.me; if (!me || !GM.run) return; const now = performance.now();
+    if (who && now - GM.wipeAt < 900) return;           // two deaths at the same moment: one reset is enough
+    GM.wipeAt = now;
     me.hang = false; GM.hang = null; GM.taps = {}; for (const P of GM.peers.values()) P.hang = false;
-    gmDie('wipe'); gmToast('Nobody pulled in time. Everyone is back at the flag.'); gmPanelUI(null, true);
+    gmDie('wipe');
+    gmToast(why === 'death' ? who + ' died. The rope pulls everybody back to the flag.' : why === 'reset' ? who + ' went back to the flag. The rope takes everybody along.' : 'Nobody pulled in time. Everyone is back at the flag.'); gmPanelUI(null, true);
 }
 // who hangs, who helps, and how many taps each helper owes (5 taps per hanging card, shared between the helpers)
 function gmRescueInfo() {
     const members = [{ id: GM.id, hang: GM.me.hang, alive: GM.me.alive }];
-    for (const P of GM.peers.values()) if (P.open && P.got && P.lvi === GM.lvi) members.push({ id: P.id, hang: P.hang, alive: P.alive });
+    for (const P of GM.peers.values()) if (P.open && P.got && P.lvi === GM.lvi && gmInGroup(P.id)) members.push({ id: P.id, hang: P.hang, alive: P.alive });
     const hangers = members.filter(m => m.hang), rescuers = members.filter(m => !m.hang && m.alive).sort((a, b) => a.id < b.id ? -1 : 1);
     const H = hangers.length, R = rescuers.length, total = GameCore.RESCUE * H, quota = {};
     rescuers.forEach((m, i) => { quota[m.id] = Math.floor(total / R) + (i < total % R ? 1 : 0); });
     return { H: H, R: R, total: total, quota: quota, hangers: hangers, rescuers: rescuers };
 }
-function gmRescueDone(info) { if (!info.H || !info.R) return false; let sum = 0; for (const r of info.rescuers) sum += Math.min(GM.taps[r.id] || 0, info.quota[r.id]); return sum >= info.total; }
+function gmRescueDone(info) { if (!info.H || !info.R) return false; if (GM.rocketPull && performance.now() - GM.rocketPull < 3000) return true; let sum = 0; for (const r of info.rescuers) sum += Math.min(GM.taps[r.id] || 0, info.quota[r.id]); return sum >= info.total; }
 function gmRescueCheck(force) {
     if (!GM.run || !GM.me) return; const info = gmRescueInfo();
-    if (!info.H) { GM.taps = {}; gmPanelUI(info, true); return; }
+    if (!info.H) { GM.taps = {}; GM.rocketPull = 0; gmPanelUI(info, true); return; }
     if (GM.me.hang && gmRescueDone(info)) gmRescueMe();
     gmPanelUI(info, force);
 }
 function gmRescueMe() {
     const me = GM.me, mates = gmMates(); let best = null, bd = 1e9; for (const P of mates) { const d = Math.abs(P.rx - me.x); if (d < bd) { bd = d; best = P; } }
     const spot = best ? { x: best.rx, y: best.ry - 34 } : GameCore.spawnFor(GM.lv, gmTeamCp());
-    me.hang = false; me.x = spot.x; me.y = spot.y; me.vx = 0; me.vy = -380; me.inv = 1.3; me.grounded = false; GM.hang = null; GM.link = {};
+    GM.rocketPull = 0; me.hang = false; me.x = spot.x; me.y = spot.y; me.vx = 0; me.vy = -380; me.inv = 1.3; me.grounded = false; GM.hang = null; GM.link = {};
     gmSend({ t: 'hang', on: 0 }); gmSend({ t: 'rescued' }); gmSfx('rescue'); gmBurst(me.x + 10, me.y + 14, '#e2b56a', 14); gmToast('Back up!'); GM.camInit = false;
 }
 function gmPullTap() {
@@ -11442,7 +11726,7 @@ function gmPanelUI(info, force) {
     if (!info.H) { hang.hidden = true; if (!pull.hidden) pull.hidden = true; return; }
     let left = GameCore.HANG_TIME, who = '';
     if (me.hang && GM.hang) left = GameCore.HANG_TIME - GM.hang.t;
-    else for (const P of GM.peers.values()) if (P.hang && P.lvi === GM.lvi) { left = Math.min(left, GameCore.HANG_TIME - (performance.now() - (P.hangAt || performance.now())) / 1000); who = who || P.name; }
+    else for (const P of GM.peers.values()) if (P.hang && P.lvi === GM.lvi && gmInGroup(P.id)) { left = Math.min(left, GameCore.HANG_TIME - (performance.now() - (P.hangAt || performance.now())) / 1000); who = who || P.name; }
     left = Math.max(0, left); const sec = Math.ceil(left);
     hang.hidden = false; hang.classList.toggle('low', left < 4);
     const myQ = info.quota[GM.id], myT = GM.taps[GM.id] || 0;
@@ -11538,14 +11822,14 @@ function gmHud(ts) {
     const z = (lv.endless ? 'Endless - ' + Math.max(0, Math.floor((GM.me.x + 10) / GameCore.TS)) + '/' + lv.w + ' m' : lv.name.split(':')[0] + ' - ' + lv.zones[GameCore.zoneAt(lv, GM.me.x)].name) + (GM.deaths ? ' - ' + GM.deaths + (GM.deaths === 1 ? ' fall' : ' falls') : ''); const zel = byId('gmZone'); if (zel.textContent !== z) zel.textContent = z;
     let hint = ''; for (const h of lv.hints) if (tx >= h.x0 && tx <= h.x1) { hint = h.text; break; }
     if (hint !== GM.hintTxt) { GM.hintTxt = hint; const he = byId('gmHint'); if (hint) { he.textContent = hint; he.classList.add('on'); } else he.classList.remove('on'); }
-    gmNetUI(); gmTeamUI(false); gmAbUI(); if (GM.hang || gmRescueInfo().H || !byId('gmHang').hidden) gmPanelUI();
+    gmLashSweep(); gmNetUI(); gmTeamUI(false); gmAbUI(); if (GM.hang || gmRescueInfo().H || !byId('gmHang').hidden) gmPanelUI();
 }
 
 // ------------------------------------------------------------ camera + drawing
 function gmCamera(dt) {
     const lv = GM.lv, me = GM.me, TS = GameCore.TS, vw = GM.vw / GM.k, vh = GM.vh / GM.k, levelH = (lv.h + 3) * TS;
     let fx = me.x + 10, fy = me.y;
-    if (GM.chain) { const nb = gmNeighbors(); if (nb.length) { let sx = fx, n = 1; for (const P of nb) { sx += P.rx + 10; n++; } fx = fx * 0.5 + (sx / n) * 0.5; } }
+    if (gmRope()) { const nb = gmNeighbors(); if (nb.length) { let sx = fx, n = 1; for (const P of nb) { sx += P.rx + 10; n++; } fx = fx * 0.5 + (sx / n) * 0.5; } }
     let tx = fx - vw / 2 + me.vx * 0.3, ty;
     tx = Math.max(-TS, Math.min(lv.w * TS - vw + TS, tx));
     if (vh >= levelH) ty = levelH / 2 - vh * 0.4; else ty = Math.max(-TS, Math.min(levelH - vh, fy - vh * 0.55));
@@ -11555,7 +11839,7 @@ function gmCamera(dt) {
 const GM_LCOL = { p: '#38bdf8', q: '#a3b88c', r: '#e5736f' };
 function gmRender(ts) {
     const g = GM.g; if (!g) return; const lv = GM.lv, W = GM.W, TS = GameCore.TS, k = GM.k, dpr = GM.dpr, cam = GM.cam, t = ts / 1000;
-    const sx = GM.shake > 0 ? (Math.random() - 0.5) * GM.shake * 14 : 0, sy = GM.shake > 0 ? (Math.random() - 0.5) * GM.shake * 14 : 0;
+    const shk = Math.max(GM.shake, GM.quakeI * 0.5), sx = shk > 0 ? (Math.random() - 0.5) * shk * 14 : 0, sy = shk > 0 ? (Math.random() - 0.5) * shk * 14 : 0;
     g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#17110d'; g.fillRect(0, 0, g.canvas.width, g.canvas.height);
     // far shapes (cheap parallax)
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.fillStyle = 'rgba(255,238,220,0.035)';
@@ -11606,7 +11890,7 @@ function gmRender(ts) {
     { const e = lv.exit; g.fillStyle = 'rgba(226,181,106,0.12)'; g.fillRect(e.x, e.y, e.w, e.h); g.strokeStyle = '#e2b56a'; g.lineWidth = 3; g.strokeRect(e.x + 3, e.y + 3, e.w - 6, e.h - 6);
         for (let i = 0; i < 3; i++) { const u = (t * 0.7 + i / 3) % 1; g.globalAlpha = (1 - u) * 0.5; g.strokeStyle = '#e2b56a'; g.lineWidth = 2; g.strokeRect(e.x + 3 - u * 10, e.y + 3 - u * 10, e.w - 6 + u * 20, e.h - 6 + u * 20); } g.globalAlpha = 1; }
     // moving platforms, falling blocks, saws
-    for (let pi = 0; pi < W.platforms.length; pi++) { const m = W.platforms[pi], mic = lv.movers[pi] && lv.movers[pi].mic; if (mic) gmMicGuide(g, lv.movers[pi]); g.fillStyle = mic ? '#5eb8a8' : '#e2b56a'; g.fillRect(m.x, m.y, m.w, 10); g.fillStyle = 'rgba(20,14,10,0.35)'; g.fillRect(m.x, m.y + 7, m.w, 3); g.fillStyle = 'rgba(255,255,255,0.3)'; g.fillRect(m.x, m.y, m.w, 2); if (mic) gmMicBars(g, m, W, t); }
+    for (let pi = 0; pi < W.platforms.length; pi++) { const m = W.platforms[pi], mic = lv.movers[pi] && lv.movers[pi].mic; if (mic) gmMicGuide(g, lv.movers[pi]); g.fillStyle = mic ? '#5eb8a8' : (lv.movers[pi] && lv.movers[pi].vib ? '#d98a5a' : '#e2b56a'); g.fillRect(m.x, m.y, m.w, 10); g.fillStyle = 'rgba(20,14,10,0.35)'; g.fillRect(m.x, m.y + 7, m.w, 3); g.fillStyle = 'rgba(255,255,255,0.3)'; g.fillRect(m.x, m.y, m.w, 2); if (mic) gmMicBars(g, m, W.mmic[pi] || 0, t); }
     for (let i = 0; i < lv.thw.length; i++) {
         const w = lv.thw[i], s = W.th[i], X = w.tx * TS, Y = w.ty * TS + s.y; if (X < cam.x - TS || X > cam.x + GM.vw / k + TS) continue;
         g.strokeStyle = '#6b523c'; g.lineWidth = 2; g.beginPath(); g.moveTo(X + TS / 2, 0); g.lineTo(X + TS / 2, Y); g.stroke();
@@ -11615,17 +11899,20 @@ function gmRender(ts) {
         g.fillStyle = s.s === 1 ? '#ff6b5a' : '#2a211b'; g.fillRect(X + 8, Y + 9, 4, 4); g.fillRect(X + 20, Y + 9, 4, 4);
     }
     for (const s of W.saws) { if (s.x < cam.x - 40 || s.x > cam.x + GM.vw / k + 40) continue; g.save(); g.translate(s.x, s.y); g.rotate(t * 9); g.fillStyle = '#d8cbb8'; g.beginPath(); for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8, r = i & 1 ? s.r - 4 : s.r + 3; g.lineTo(Math.cos(a) * r, Math.sin(a) * r); } g.closePath(); g.fill(); g.fillStyle = '#17110d'; g.beginPath(); g.arc(0, 0, 3.5, 0, 6.2832); g.fill(); g.restore(); }
+    gmBombsDraw(g, t, cam);
     // chain
     gmChainDraw(g, t);
     // cards: others first, then you
     for (const P of GM.others) gmPlayerDraw(g, P.rx, P.ry, P.dc, P.face, P.alive, P.hang, P.grounded, P.vx, P.t, P.key, P.fx | 0);
     if (GM.me.alive || GM.me.hang) { const me = GM.me; if (me.inv > 0 && ((t * 14) | 0) & 1) { /* blink while protected */ } else gmPlayerDraw(g, me.x, me.y, GM.dc, me.face, true, me.hang, me.grounded, me.vx, t, me.key, (me.abRO > 0 ? 1 : 0) | (me.abSP > 0 ? 2 : 0)); }
+    if (GM.lashNear) { const P = GM.peers.get(GM.lashNear); if (P) { const pu = 0.5 + 0.5 * Math.sin(t * 6); g.lineWidth = 2; g.strokeStyle = 'rgba(226,181,106,' + (0.25 + 0.5 * pu).toFixed(2) + ')'; g.strokeRect(P.rx - 5, P.ry - 5, 30, 38); g.strokeStyle = 'rgba(226,181,106,' + (0.1 + 0.2 * pu).toFixed(2) + ')'; g.lineWidth = 4; g.strokeRect(P.rx - 9, P.ry - 9, 38, 46); } }
     // particles
     for (const q of GM.parts) { g.globalAlpha = Math.max(0, q.life / q.max); g.fillStyle = q.c; g.fillRect(q.x - q.s / 2, q.y - q.s / 2, q.s, q.s); } g.globalAlpha = 1;
     if (lv.dark) gmDark(g, t, sx, sy);
     // screen space: names, emotes
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.textAlign = 'center'; g.font = '600 10px ui-sans-serif, system-ui, sans-serif';
     const lab = (name, x, y, color, me) => { const px = (x + 10 - cam.x) * k + sx, py = (y - cam.y) * k + sy - 8; g.fillStyle = 'rgba(15,10,7,0.6)'; const w = g.measureText(name).width + 10; g.fillRect(px - w / 2, py - 11, w, 14); g.fillStyle = me ? '#fff' : color; g.fillText(name, px, py); };
+    if (GM.lashNear) { const P = GM.peers.get(GM.lashNear); if (P) { const px = (P.rx + 10 - cam.x) * k + sx, py = (P.ry - cam.y) * k + sy - 30; g.font = '700 10px ui-sans-serif, system-ui, sans-serif'; g.fillStyle = '#e2b56a'; g.fillText('LASH', px, py); g.font = '600 10px ui-sans-serif, system-ui, sans-serif'; } }
     for (const P of GM.others) { lab(P.name, P.rx, P.ry, P.dc, false); if (P.emote) gmEmoteDraw(g, P.emote, (P.rx + 10 - cam.x) * k + sx, (P.ry - cam.y) * k + sy - 34); }
     if (GM.me.alive) { lab(GM.name, GM.me.x, GM.me.y, GM.dc, true); if (GM.emote) gmEmoteDraw(g, GM.emote, (GM.me.x + 10 - cam.x) * k + sx, (GM.me.y - cam.y) * k + sy - 34); }
     // seconds left for whoever hangs on the rope
@@ -11658,11 +11945,17 @@ function gmPlayerDraw(g, x, y, color, face, alive, hang, grounded, vx, t, key, f
     gmDrawCard(g, x, y, 20, 28, color, { face: face, t: t, air: air, dead: !alive, rot: rot, sx: air ? 0.94 : 1, sy: air ? 1.07 : 1 });
     if (key >= 0) gmKey(g, x + 10 - face * 12, y + 8 + Math.sin(t * 6) * 2, 0.85, '#e2b56a');
 }
+function gmRopePairs() {
+    const out = [];
+    if (GM.mode === 'room') { if (GM.chain) for (let i = 0; i + 1 < GM.order.length; i++) out.push([GM.order[i], GM.order[i + 1]]); }
+    else if (GM.mode === 'crowd') for (const e of GM.edges.values()) out.push([e.a, e.b]);
+    return out;
+}
 function gmChainDraw(g, t) {
-    if (!GM.chain || GM.mode !== 'room') return; const L = GameCore.CHAIN.len, me = GM.me;
+    if (!gmRope()) return; const L = GameCore.CHAIN.len, me = GM.me;
     const pos = id => { if (id === GM.id) return { x: me.x + 10, y: me.y + 14, hang: me.hang }; const P = GM.peers.get(id); return P && P.open && P.got && P.lvi === GM.lvi ? { x: P.rx + 10, y: P.ry + 14, hang: P.hang } : null; };
-    for (let i = 0; i + 1 < GM.order.length; i++) {
-        const a = pos(GM.order[i]), b = pos(GM.order[i + 1]); if (!a || !b) continue; const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy), hang = a.hang || b.hang;
+    for (const pr of gmRopePairs()) {
+        const a = pos(pr[0]), b = pos(pr[1]); if (!a || !b) continue; const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy), hang = a.hang || b.hang;
         if (!hang && d > GM_LINK_BREAK) continue;           // slack rope: somebody was teleported, it links up again when they meet
         const slack = hang ? 0 : Math.max(0, L - d), taut = hang || d >= L;
         g.strokeStyle = taut ? '#e5a46f' : '#b9a58f'; g.lineWidth = taut ? 3 : 2.4; g.beginPath();
@@ -11687,6 +11980,7 @@ function gmKeyEvt(e, down) {
     else if (down && !e.repeat && (k === 'x' || k === 'X')) gmUseAb('sp');
     else if (down && !e.repeat && (k === 'c' || k === 'C')) gmUseAb('ro');
     else if (down && !e.repeat && (k === 'f' || k === 'F')) gmFs();
+    else if (down && !e.repeat && (k === 'l' || k === 'L')) gmLashKey();
     else if (k === 'm' || k === 'M') GM.mic.hold = down;
     else used = false;
     if (used) e.preventDefault();
@@ -11808,10 +12102,10 @@ function gmAbStep(dt) {
         const s = GM.ab[a], A = GameCore.ABIL[a];
         if (s.on > 0) { if (!(me[keys[a]] > 0)) { s.on = 0; s.cd = A.cd; } else s.on = me[keys[a]]; } else if (s.cd > 0) s.cd = Math.max(0, s.cd - dt);
     }
-    let hang = false; if (!me.hang) for (const P of GM.peers.values()) if (P.open && P.hang && P.lvi === GM.lvi) { hang = true; break; }
+    let hang = false; if (!me.hang) for (const P of GM.peers.values()) if (P.open && P.hang && P.lvi === GM.lvi && gmInGroup(P.id)) { hang = true; break; }
     me.heavy = hang ? 0.65 : 1;
     if (hang !== GM.heavyOn) { GM.heavyOn = hang; if (hang && (GM.inv.dj > 0 || GM.inv.ro > 0 || GM.ab.dj.on > 0 || GM.ab.ro.on > 0)) gmToast('Heavy! A friend hangs on the rope. Rocket and double jump help lift them.'); }
-    if (hang && me.abRO > 0 && me.vy < -60) { GM.assistT += dt; if (GM.assistT > 0.35) { GM.assistT = 0; gmAssist(1); } }
+    if (hang && me.abRO > 0) { GM.assistT += dt; if (GM.assistT > 0.6) { GM.assistT = -99; GM.rocketPull = performance.now(); gmSend({ t: 'tap', n: 5, r: 1, l: GM.lvi }); gmSfx('pull'); gmRescueCheck(true); } } else if (GM.assistT < 0 && !hang) GM.assistT = 0;
     if (me.abRO > 0 && GM.parts.length < 140 && Math.random() < 0.7) GM.parts.push({ x: me.x + 10 + (Math.random() - 0.5) * 8, y: me.y + 30, vx: (Math.random() - 0.5) * 40, vy: 120 + Math.random() * 120, life: 0.3, max: 0.3, c: Math.random() < 0.5 ? '#ff9a4d' : '#ffd166', s: 3 });
 }
 // rocket / double jump while a friend hangs: counts as pulling (limited to your own share)
@@ -11949,6 +12243,50 @@ function gmBindGads() {
     const mb = byId('gmMicB'); if (mb) mb.addEventListener('click', gmMicToggle);
     const sb = byId('gmShoutB'); if (sb) { const on = e => { e.preventDefault(); e.stopPropagation(); GM.mic.hold = true; gmMicUI(); }, off = () => { if (GM.mic.hold) { GM.mic.hold = false; gmMicUI(); } }; sb.addEventListener('pointerdown', on); sb.addEventListener('pointerup', off); sb.addEventListener('pointercancel', off); sb.addEventListener('pointerleave', off); sb.addEventListener('contextmenu', e => e.preventDefault()); }
     window.addEventListener('devicemotion', gmMotion);
+    gmBindLash();
+}
+// ------------------------------------------------------------ bombs and earthquakes (Endless): what you see and hear
+function gmWorldFx(dt) {
+    const W = GM.W, me = GM.me; if (!W || !me) return; const mx = me.x + 10, TS = GameCore.TS;
+    const bl = W.bombList; GM.quakeI = W.lv.quakes.length ? W.quakeAt(mx) : 0;
+    if (bl.length) {
+        for (const b of bl) {
+            const kk = b.key + ':' + b.ph; if (GM.bombSeen.has(kk)) continue; GM.bombSeen.set(kk, 1);
+            const d = Math.abs(b.x - mx); if (d > 14 * TS) continue;
+            if (b.ph === 1) gmSfx('whistle');
+            else if (b.ph === 2) { gmSfx('boom'); gmBurst(b.x, b.y - 6, '#ff9a4d', 14); gmBurst(b.x, b.y - 6, '#ffd166', 6); GM.shake = Math.max(GM.shake, Math.min(0.45, 0.45 * (1 - d / (14 * TS)))); }
+        }
+        if (GM.bombSeen.size > 240) GM.bombSeen.clear();
+        if (!GM.bHint && bl.some(b => Math.abs(b.x - mx) < 12 * TS)) { GM.bHint = 1; gmToast('Bombs! Run away from the red circles'); }
+    }
+    if (GM.quakeI > 0.15) {
+        if (!GM.qHint) { GM.qHint = 1; gmToast('Earthquake! Hold on and keep moving'); }
+        GM.rumT -= dt; if (GM.rumT <= 0 && GM.quakeI > 0.4) { GM.rumT = 0.36; gmSfx('rumble'); }
+        if (GM.quakeI > 0.5 && GM.parts.length < 120 && Math.random() < 0.35) GM.parts.push({ x: GM.cam.x + Math.random() * GM.vw / GM.k, y: GM.cam.y - 6, vx: (Math.random() - 0.5) * 20, vy: 40, life: 1.1, max: 1.1, c: '#8a6a4b', s: 2 + Math.random() * 2 });
+    }
+}
+function gmBombsDraw(g, t, cam) {
+    const W = GM.W, list = W.bombList; if (!list || !list.length) return; const vw = GM.vw / GM.k, R = GameCore.BOMB_R;
+    for (const b of list) {
+        if (b.x < cam.x - 70 || b.x > cam.x + vw + 70) continue;
+        if (b.ph < 2) {
+            const u = b.ph === 0 ? b.u : 1, pu = 0.5 + 0.5 * Math.sin(t * (10 + u * 14));
+            g.fillStyle = 'rgba(255,90,70,' + (0.08 + 0.12 * pu).toFixed(3) + ')'; g.beginPath(); g.ellipse(b.x, b.y - 2, R, 10, 0, 0, 6.2832); g.fill();
+            g.strokeStyle = 'rgba(255,107,90,' + (0.55 + 0.35 * pu).toFixed(2) + ')'; g.lineWidth = 2; g.beginPath(); g.ellipse(b.x, b.y - 2, R, 10, 0, 0, 6.2832); g.stroke();
+            g.fillStyle = 'rgba(255,107,90,' + (0.2 + 0.3 * u).toFixed(2) + ')'; g.beginPath(); g.ellipse(b.x, b.y - 2, R * (0.2 + 0.8 * u), 10 * (0.2 + 0.8 * u), 0, 0, 6.2832); g.fill();
+            g.fillStyle = '#ff6b5a'; g.fillRect(b.x - 1.5, b.y - 20, 3, 12); g.fillRect(b.x - 1.5, b.y - 5, 3, 3);
+        }
+        if (b.ph === 1) {
+            const top = cam.y - 30, y = top + (b.y - 16 - top) * (b.u * b.u);
+            g.fillStyle = 'rgba(255,107,90,0.18)'; g.fillRect(b.x - 1, top, 2, y - top);
+            g.fillStyle = '#2a211b'; g.beginPath(); g.arc(b.x, y, 8, 0, 6.2832); g.fill(); g.fillStyle = 'rgba(255,255,255,0.25)'; g.fillRect(b.x - 4, y - 5, 3, 3);
+            g.fillStyle = '#ffd166'; g.fillRect(b.x - 1, y - 14, 3, 5);
+        } else if (b.ph === 2) {
+            const k2 = b.u, r = R * (0.4 + 0.6 * Math.min(1, k2 * 2.2)), a = 1 - k2;
+            g.fillStyle = 'rgba(255,154,77,' + (0.85 * a).toFixed(2) + ')'; g.beginPath(); g.arc(b.x, b.y - 6, r, 0, 6.2832); g.fill();
+            g.fillStyle = 'rgba(255,214,102,' + (0.9 * a).toFixed(2) + ')'; g.beginPath(); g.arc(b.x, b.y - 6, r * 0.55, 0, 6.2832); g.fill();
+        }
+    }
 }
 function gmLamp(g, lv, W, x, y, t) {
     const X = x * 32, Y = y * 32, i = lv.lamps.findIndex(q => q.tx === x && q.ty === y), on = i >= 0 && W.lampOn[i], ground = y + 1 < lv.h && lv.t[(y + 1) * lv.w + x] === 35;
@@ -11981,9 +12319,9 @@ function gmKeysDraw(g, t, cam) {
 function gmMicGuide(g, m) {
     const TS = 32, x = (m.x0 + m.w / 2) * TS; g.strokeStyle = 'rgba(94,184,168,0.3)'; g.lineWidth = 2; g.setLineDash([4, 6]); g.beginPath(); g.moveTo(x, m.y0 * TS + 10); g.lineTo(x, m.y1 * TS); g.stroke(); g.setLineDash([]);
 }
-function gmMicBars(g, pf, W, t) {
+function gmMicBars(g, pf, lvl, t) {
     const cx = pf.x + pf.w / 2; g.fillStyle = '#7fd6c4';
-    for (let q = 0; q < 3; q++) { const h = 3 + W.mic * 9 * (0.55 + 0.45 * Math.sin(t * 14 + q * 1.9)); g.fillRect(cx - 10 + q * 8, pf.y - 2 - h, 4, h); }
+    for (let q = 0; q < 3; q++) { const h = 3 + lvl * 9 * (0.55 + 0.45 * Math.sin(t * 14 + q * 1.9)); g.fillRect(cx - 10 + q * 8, pf.y - 2 - h, 4, h); }
 }
 function gmDark(g, t, sx, sy) {
     const lv = GM.lv, W = GM.W, k = GM.k, dpr = GM.dpr, cam = GM.cam, cv = g.canvas, TS = GameCore.TS;
@@ -12040,7 +12378,7 @@ function gmRelaySt(P, csv) {
 }
 function gmVirtual(id, via) {
     let V = GM.peers.get(id); if (V) return V.virtual ? V : null;                // a real connection always wins
-    const sa = GM.seenAt && GM.seenAt[id]; if (sa && performance.now() - sa < 17000) return null;      // give the direct connection time to work first
+    const sa = GM.seenAt && GM.seenAt[id]; if (sa && performance.now() - sa < 9000) return null;      // give the direct connection time to work first
     if (GM.peers.size + 1 >= gmMax()) return null;
     V = gmNewPeer(id, null, '?'); V.virtual = true; V.via = via; V.open = true; V.last = performance.now(); GM.peers.set(id, V);
     gmColorFix(); gmLobbyUI(); gmNetUI(); gmTeamUI(true); return V;
